@@ -812,7 +812,7 @@
       btns.appendChild(b);
     };
     mk('Rotate 90° (R)', rotateSelected);
-    mk('Duplicate (Ctrl+D)', duplicateSelected);
+    mk('Duplicate (Ctrl/⌘+D)', duplicateSelected);
     mk('Delete (Del)', deleteSelected);
     el.appendChild(btns);
   }

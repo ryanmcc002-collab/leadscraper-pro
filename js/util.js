@@ -5,7 +5,7 @@
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v31';
+  BFT.VERSION = 'v32';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
