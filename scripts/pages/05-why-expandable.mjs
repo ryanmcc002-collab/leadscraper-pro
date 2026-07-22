@@ -1,0 +1,88 @@
+import { SITE, icons, layout, breadcrumbs, breadcrumbSchema, ctaBanner } from "../lib/layout.mjs";
+
+const REASONS = [
+  ["truck", "Transport advantages", "An expandable home ships at standard road width — 2.5m — so it travels on a normal truck with no escort vehicles, no oversize permits and no special routes. That's why we can deliver to a Bondi backyard or a station 400km past Broken Hill for a fraction of the cost of moving a fixed modular home."],
+  ["clock", "Quick installation", "The wings fold out on engineered hinges and lock down weather-tight in hours. Where a site build needs 20+ trade visits over a year, an expandable home needs a level pad, a day of installation and a plumber and electrician for connections."],
+  ["shield", "Modern construction", "Galvanised structural steel frames don't warp, rot or feed termites. 100mm insulated sandwich panels deliver wall insulation many project homes can't match, and the whole structure is built indoors — never rained on, never sun-damaged mid-build."],
+  ["tag", "Cost savings", "You skip the two biggest costs of conventional building: on-site labour and time. No months of trades, no builder's margin on every fitting, no rent paid while you wait. Complete homes from $18,900–$79,900, delivered."],
+  ["leaf", "Energy efficiency", "Insulated panels, double glazing and airtight construction mean small heating and cooling loads — most owners run a single split system even in Tasmania or Far North Queensland. Add solar and a battery and off-grid living is genuinely practical."],
+  ["gem", "Durability", "The same panel and steel technology used in commercial cold storage and mining accommodation — environments far harsher than any backyard. Engineered to AS/NZS 1170 wind actions with site-specific tie-down engineering available for cyclonic regions."],
+  ["home", "Investment potential", "A granny flat or cabin that costs $50k and rents for $350/week pays itself off in under four years — then keeps earning. Unlike a caravan, an approved secondary dwelling can also add lasting value to your property."],
+  ["bolt", "Environmental benefits", "Factory construction produces a fraction of the waste of a site build, transport is a single truck movement, and the home itself is relocatable — if your plans change, the home moves with you instead of being demolished."],
+];
+
+const body = `
+    <section class="page-hero">
+      <div class="wrap">
+        ${breadcrumbs([["Home", "index.html"], ["Why Expandable Homes", "why-expandable-homes.html"]])}
+        <span class="eyebrow">The smarter way to build</span>
+        <h1>Why expandable homes are winning</h1>
+        <p class="lead">Understand exactly how expandable construction works, why it costs so much less than building, and where the trade-offs genuinely are — so you can decide with your eyes open.</p>
+      </div>
+    </section>
+
+    <section class="section section-navy" aria-labelledby="how-h">
+      <div class="wrap">
+        <div class="center reveal">
+          <span class="eyebrow eyebrow-center">The concept in 20 seconds</span>
+          <h2 id="how-h">Ships like a container. Lives like a home.</h2>
+          <p class="lead center" style="margin-inline:auto">Your home is built and finished in a factory, folded to standard transport width, delivered on one truck, then expanded on site. Hinged wall, floor and roof sections lock into place and seal — turning a 2.5m-wide load into up to 6.6m of living space.</p>
+        </div>
+        <div class="expand-demo reveal" data-expand-demo style="margin-top:2.5rem">
+          <div class="stage">
+            <svg class="expand-home" viewBox="0 0 560 240" aria-hidden="true">
+              <g class="wing wing-l"><rect x="150" y="70" width="130" height="130" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/><rect x="170" y="95" width="90" height="60" rx="5" fill="#D6AF5E" opacity="0.9"/></g>
+              <g class="wing wing-r"><rect x="280" y="70" width="130" height="130" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/><rect x="300" y="95" width="90" height="60" rx="5" fill="#D6AF5E" opacity="0.9"/></g>
+              <rect x="190" y="60" width="180" height="140" rx="8" fill="#16304F" stroke="#3E5E7E" stroke-width="2"/>
+              <rect x="215" y="85" width="130" height="90" rx="5" fill="#F5D488"/>
+              <line x1="258" y1="85" x2="258" y2="175" stroke="#0F2743" stroke-width="5"/>
+              <line x1="301" y1="85" x2="301" y2="175" stroke="#0F2743" stroke-width="5"/>
+              <path d="M170 60 L 280 28 L 390 60" stroke="#0A1B30" stroke-width="14" fill="none" stroke-linecap="round"/>
+            </svg>
+            <div class="center"><button class="btn btn-gold expand-toggle" type="button" aria-pressed="false">Expand on site</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="reasons-h">
+      <div class="wrap">
+        <div class="center reveal"><span class="eyebrow eyebrow-center">Eight honest reasons</span><h2 id="reasons-h">The case for expandable</h2></div>
+        <div class="grid grid-2" style="margin-top:2.5rem">
+          ${REASONS.map(([icon, t, d], i) => `<article class="card reveal reveal-d${i % 2}"><div class="icon">${icons[icon]}</div><h3>${t}</h3><p>${d}</p></article>`).join("\n          ")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-white" aria-labelledby="honest-h">
+      <div class="wrap-narrow prose reveal">
+        <span class="eyebrow">And the honest fine print</span>
+        <h2 id="honest-h" style="margin-top:0">Where expandable homes aren't the answer</h2>
+        <p>Premium brands earn trust by telling you what the brochure won't. Three things to know:</p>
+        <ul>
+          <li><strong>Approvals are your project's critical path.</strong> The home arrives in weeks; council or certifier approval can take longer depending on your state and intended use. Start the approval conversation before you order — <a href="blog-do-tiny-homes-need-council-approval.html">our guide shows you how</a>.</li>
+          <li><strong>Sites need preparation.</strong> A reasonably level, accessible pad with services nearby keeps installation simple. Steep, tight or remote sites are all solvable — but budget for cranes, longer service runs or extra transport, which we'll always quote up front.</li>
+          <li><strong>Not every use suits every model.</strong> A family living permanently needs the approvals, insulation and space of our Grand Series — not a repurposed office pod. We'll steer you to the right model even when it's a cheaper one.</li>
+        </ul>
+        <p>If, after all that, a conventional build or kit granny flat is genuinely better for your situation — we'll say so. It costs us a sale occasionally. It's also why our referral rate is 93%.</p>
+      </div>
+    </section>
+
+    ${ctaBanner(
+      "See if expandable fits your block",
+      "A five-minute conversation about your site, plans and budget will tell you more than five hours of reading. Free, honest, no obligation."
+    )}
+`;
+
+export const page = {
+  path: "why-expandable-homes.html",
+  html: layout({
+    path: "why-expandable-homes.html",
+    title: "Why Expandable Homes? | Bondi Tiny Homes",
+    description:
+      "How expandable homes work, why they cost a fraction of a site build, and the honest trade-offs — speed, efficiency, durability and returns explained.",
+    body,
+    active: "why-expandable-homes.html",
+    schema: [breadcrumbSchema([["Home", ""], ["Why Expandable Homes", "why-expandable-homes.html"]])],
+  }),
+};

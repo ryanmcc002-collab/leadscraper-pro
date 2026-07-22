@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-label="20ft Expandable Tiny Home floor plan" font-family="Manrope, Arial, sans-serif">
+  <rect width="1000" height="560" fill="#FFFFFF"/>
+  <text x="90" y="60" font-size="26" font-weight="800" fill="#0D233F">Floor Plan</text>
+  <text x="90" y="88" font-size="17" fill="#5B6B7E">Expanded 6.0m × 6.6m &#183; 39m&#178; internal &#183; transports at 6.0m × 2.5m</text>
+  <rect x="80" y="110" width="840" height="340" rx="12" fill="#0D233F"/>
+  <g>
+      <rect x="93" y="123" width="240" height="314" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="213" y="280" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Bedroom</text>
+    </g>
+  <g>
+      <rect x="339" y="123" width="338.4" height="314" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="508.2" y="280" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Living / Dining</text>
+    </g>
+  <g>
+      <rect x="683.4" y="123" width="223.60000000000002" height="170" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="795.2" y="208" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Kitchen</text>
+    </g>
+  <g>
+      <rect x="683.4" y="299" width="223.60000000000002" height="138" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="795.2" y="368" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Bathroom</text>
+    </g>
+  <g stroke="#D6AF5E" stroke-width="2.5" stroke-dasharray="8 6" fill="none">
+    <rect x="237.6" y="94" width="524.8" height="372" rx="10"/>
+  </g>
+  <text x="500" y="502" text-anchor="middle" font-size="16" font-weight="700" fill="#C29A45">— — transport core (wings fold in for delivery) — —</text>
+  <g font-size="15" fill="#5B6B7E">
+    <text x="910" y="60" text-anchor="end" font-weight="700">Indicative layout</text>
+    <text x="910" y="82" text-anchor="end">Final dimensions confirmed on order</text>
+  </g>
+</svg>
