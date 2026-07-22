@@ -1018,7 +1018,13 @@
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const p = JSON.parse(reader.result);
+        let p;
+        if (/\.pdf$/i.test(file.name) || /^%PDF/.test(reader.result)) {
+          p = BFT.pdf.projectFromPDF(reader.result);
+          if (!p) throw new Error('this PDF has no embedded design data. Only Customer PDFs exported from ' + BFT.VERSION + ' or newer can be re-opened — for older drawings ask for the .bft.json project file');
+        } else {
+          p = JSON.parse(reader.result);
+        }
         if (!p.trailer || !p.items) throw new Error('not a BFT project');
         store.checkpoint();
         store.project = p;
@@ -1041,7 +1047,13 @@
 
   function customerPDF() {
     setMode('sales'); // show what's being sent
-    BFT.exporters.printScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, fileBase() + '-customer');
+    // real vector PDF with the whole project embedded, so the customer copy
+    // can be re-opened later (More > Open) and its layout edited
+    const pdf = BFT.pdf.pdfFromScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, {
+      title: (store.project.meta.project || 'Food Trailer') + ' — customer drawing',
+      project: store.project,
+    });
+    BFT.exporters.download(fileBase() + '-customer.pdf', pdf, 'application/pdf');
   }
 
   // ------------------------------------------------------------------
