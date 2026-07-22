@@ -1,0 +1,4061 @@
+
+
+<title>Bondi Trailer CAD — 2D Schematic Designer</title>
+<style>
+/* Bondi Trailer CAD */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --panel2: #f4f6f8;
+  --line: #d8dee6;
+  --text: #21303e;
+  --dim: #64748b;
+  --accent: #1f7a35;
+  --magenta: #a12d98;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%;
+  background: var(--bg); color: var(--text);
+  font: 13px/1.45 -apple-system, "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+  overflow: hidden;
+}
+#layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 265px;
+  grid-template-rows: 46px 1fr 26px;
+  grid-template-areas: "top top top" "left canvas right" "status status status";
+  height: 100vh;
+}
+
+/* toolbar */
+#topbar {
+  grid-area: top;
+  display: flex; align-items: center; gap: 6px;
+  background: var(--panel); border-bottom: 1px solid var(--line);
+  padding: 0 10px;
+}
+#topbar .brand { font-weight: 700; letter-spacing: .4px; margin-right: 10px; white-space: nowrap; }
+#topbar .brand span { color: var(--accent); }
+#topbar .sep { width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
+button {
+  background: var(--panel2); color: var(--text);
+  border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 11px; cursor: pointer; font: inherit;
+  white-space: nowrap;
+}
+button:hover { border-color: #9fb0c2; }
+button.active { background: #e2f3e7; border-color: var(--accent); color: #14532d; font-weight: 600; }
+button.primary { background: #1f7a35; border-color: #2ea44f; color: #fff; font-weight: 600; }
+button.primary:hover { background: #268f40; }
+button.primary2 { background: #1c5d8f; border-color: #2b83c4; color: #fff; font-weight: 600; }
+button.primary2:hover { background: #226da6; }
+
+.seg { display: flex; }
+.seg button { border-radius: 0; margin-left: -1px; }
+.seg button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.seg button:last-child { border-radius: 0 6px 6px 0; }
+.spacer { flex: 1 1 auto; }
+#tools-group.disabled { opacity: .35; pointer-events: none; }
+
+/* dropdown menu */
+.menu-wrap { position: relative; }
+.menu {
+  position: absolute; right: 0; top: 36px; z-index: 50;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  min-width: 240px; padding: 6px; box-shadow: 0 10px 28px rgba(30,48,62,.18);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.menu.hidden { display: none; }
+.menu button { text-align: left; border: 0; background: transparent; border-radius: 5px; }
+.menu button:hover { background: var(--panel2); }
+.menu-sep { height: 1px; background: var(--line); margin: 4px 2px; }
+
+/* welcome overlay */
+.overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(30,44,58,.45); display: flex; align-items: center; justify-content: center;
+}
+.overlay.hidden { display: none; }
+.modal {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  max-width: 620px; width: calc(100% - 40px); padding: 26px 30px;
+  box-shadow: 0 20px 60px rgba(30,44,58,.25);
+}
+.modal-brand { font-weight: 700; letter-spacing: .4px; color: var(--text); }
+.modal-brand span { color: var(--accent); }
+.modal h2 { margin: 10px 0 14px; font-size: 20px; }
+.modal ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.modal li { color: var(--dim); line-height: 1.55; }
+.modal li b { color: var(--text); }
+.modal-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 8px; }
+.modal-row label { color: var(--dim); display: flex; gap: 7px; align-items: center; }
+.modal-row input[type="checkbox"] { width: auto; }
+.modal-row span { display: flex; gap: 8px; }
+
+/* new-trailer wizard */
+.wiz-dots { display: flex; gap: 8px; margin: 8px 0 4px; }
+.wiz-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.wiz-dots .dot.active { background: var(--accent); }
+.step { display: none; }
+.step.active { display: block; }
+.step h2 { font-size: 17px; margin: 10px 0 12px; }
+.step .field input, .step .field select { max-width: 140px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.chip-row button { flex: 1; }
+.chip-row button.active { background: #e2f3e7; border-color: var(--accent); color: #14532d; }
+.wiz-summary { margin-top: 10px; padding: 8px 10px; background: var(--panel2); border: 1px solid var(--line); border-radius: 7px; color: var(--accent); font-weight: 600; }
+.wiz-group { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 7px; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--text); }
+.check input { width: auto; }
+.field.indent { margin-left: 24px; }
+.adv-box { border-left: 3px solid var(--line); padding-left: 8px; margin-top: 8px; }
+.bal-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; font-size: 12.5px; }
+.bal-row span { color: var(--dim); }
+.bal-row b { text-align: right; }
+
+/* side panels */
+#leftpanel, #rightpanel {
+  background: var(--panel); border-right: 1px solid var(--line);
+  overflow-y: auto; padding: 8px;
+}
+#rightpanel { grid-area: right; border-right: 0; border-left: 1px solid var(--line); }
+#leftpanel { grid-area: left; }
+.panel-head {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--dim); margin: 12px 2px 6px;
+}
+.panel-head:first-child { margin-top: 2px; }
+
+.cat-head { color: var(--accent); font-size: 11px; margin: 12px 2px 5px; text-transform: uppercase; letter-spacing: .8px; font-weight: 700; }
+.cat-item {
+  display: flex; width: 100%; text-align: left; gap: 6px; align-items: baseline;
+  margin-bottom: 4px; padding: 8px 10px; background: var(--panel2);
+}
+.cat-item::before { content: '+'; color: var(--accent); font-weight: 700; }
+.cat-item:hover { background: #e2f3e7; border-color: var(--accent); }
+.cat-item .zh { color: var(--magenta); opacity: .75; font-size: 12px; }
+.cat-item .sz { margin-left: auto; color: var(--dim); font-size: 11px; }
+
+/* canvas */
+#canvas-wrap { grid-area: canvas; position: relative; background: #ffffff; }
+#cv { display: block; width: 100%; height: 100%; touch-action: none; }
+
+/* layout warnings */
+#warnings {
+  position: absolute; top: 10px; left: 10px; z-index: 30;
+  background: #fff7e6; border: 1px solid #eab308; border-radius: 8px;
+  color: #7a5800; padding: 8px 12px; font-size: 12.5px; line-height: 1.7;
+  box-shadow: 0 4px 14px rgba(120,90,0,.15); max-width: 420px;
+}
+#warnings.hidden { display: none; }
+
+/* My Trailers library */
+#library-list { max-height: 55vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.lib-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; background: var(--panel2);
+}
+.lib-info { display: flex; flex-direction: column; }
+.lib-info span { color: var(--dim); font-size: 11.5px; }
+.lib-btns { display: flex; gap: 6px; }
+
+/* drawer toggles only appear on small screens */
+.drawer-btn { display: none; }
+
+/* download fallback toast */
+#dl-toast {
+  position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%);
+  z-index: 200; display: none; align-items: center; gap: 8px;
+  background: #103c1f; color: #eafbef; border: 1px solid #2ea44f;
+  border-radius: 10px; padding: 10px 14px; font-size: 13.5px;
+  box-shadow: 0 10px 30px rgba(16,60,31,.35); max-width: min(92vw, 560px);
+}
+#dl-toast a { color: #7ce69b; font-weight: 700; text-decoration: underline; white-space: nowrap; }
+#dl-toast button {
+  background: transparent; border: 0; color: #a9d9b6; cursor: pointer;
+  font-size: 14px; padding: 2px 4px;
+}
+
+/* status bar */
+#status {
+  grid-area: status; background: var(--panel);
+  border-top: 1px solid var(--line);
+  padding: 4px 12px; color: var(--dim); font-size: 12px;
+  white-space: nowrap; overflow: hidden;
+}
+
+/* fields */
+.field { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.field span { flex: 1 1 auto; color: var(--dim); font-size: 12px; }
+.field input { width: 92px; }
+input, select {
+  background: var(--panel2); color: var(--text);
+  border: 1px solid var(--line); border-radius: 5px;
+  padding: 4px 6px; font: inherit; width: 100%;
+}
+input[type="number"] { text-align: right; }
+select { margin-bottom: 6px; }
+
+.props-title { font-weight: 700; margin: 2px 0 8px; color: var(--magenta); }
+.hint { color: var(--dim); font-size: 12px; padding: 6px 2px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.btn-row button { flex: 1 1 auto; }
+
+.feat { border: 1px solid var(--line); border-radius: 7px; padding: 7px; margin-bottom: 8px; background: var(--panel2); }
+.feat-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-weight: 600; }
+.feat-head button { padding: 1px 7px; }
+
+/* tablet / small screens: canvas full width, panels slide in */
+@media (max-width: 1150px) {
+  #layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr 26px;
+    grid-template-areas: "top" "canvas" "status";
+  }
+  #topbar { flex-wrap: wrap; padding: 6px 8px; row-gap: 6px; height: auto; }
+  .drawer-btn { display: inline-block; font-size: 16px; padding: 6px 12px; }
+  #leftpanel, #rightpanel {
+    position: fixed; top: 0; bottom: 26px; width: min(330px, 86vw); z-index: 70;
+    padding-top: 14px; transition: transform .18s ease; box-shadow: 0 0 30px rgba(30,44,58,.25);
+  }
+  #leftpanel { left: 0; transform: translateX(-105%); border-right: 1px solid var(--line); }
+  #rightpanel { right: 0; left: auto; transform: translateX(105%); border-left: 1px solid var(--line); }
+  #leftpanel.open, #rightpanel.open { transform: none; }
+  button { padding: 8px 12px; }
+  .field input { width: 110px; }
+  #warnings { max-width: 75vw; }
+}
+
+kbd {
+  background: var(--panel2); border: 1px solid var(--line); border-bottom-width: 2px;
+  border-radius: 4px; padding: 0 5px; font-size: 11px;
+}
+.help { color: var(--dim); font-size: 11.5px; margin-top: 10px; line-height: 1.7; }
+
+</style>
+
+<div id="layout">
+
+  <div id="topbar">
+    <button id="btn-drawer-left" class="drawer-btn" title="Equipment">☰</button>
+    <div class="brand">BONDI <span>TRAILER CAD</span></div>
+    <div class="seg">
+      <button id="btn-mode-plan" class="active" title="Design your layout here">1. Design</button>
+      <button id="btn-mode-sheet" title="Preview the full factory drawing (5 views)">2. Factory drawing</button>
+      <button id="btn-mode-sales" title="Preview the simple customer drawing">3. Customer drawing</button>
+      <button id="btn-mode-heights" title="Front-on view of each bench wall — check appliance heights line up">Heights</button>
+    </div>
+    <div class="sep"></div>
+    <span id="tools-group">
+      <button id="btn-tool-select" class="active" title="Select & move items">Select</button>
+      <button id="btn-tool-dim" title="Measure: click two points to add a dimension">Measure</button>
+      <button id="btn-tool-note" title="Add a text note to the plan">Note</button>
+      <button id="btn-dims" title="Show every dimension while designing (the Factory drawing always has them all)">Dims</button>
+    </span>
+    <div class="sep"></div>
+    <button id="btn-undo" title="Undo (Ctrl+Z)">↩ Undo</button>
+    <button id="btn-redo" title="Redo (Ctrl+Y)">↪</button>
+    <button id="btn-fit" title="Zoom to fit everything">Fit</button>
+    <div class="spacer"></div>
+    <button id="btn-library" title="Saved customer builds">My Trailers</button>
+    <button id="btn-dxf-sheet" class="primary" title="The CAD file for your manufacturer — opens in ZWCAD/AutoCAD, real millimetres">⬇ Factory DXF</button>
+    <button id="btn-pdf-customer" class="primary2" title="Clean concept drawing to send your customer (print / save as PDF)">⬇ Customer PDF</button>
+    <div class="menu-wrap">
+      <button id="btn-more" title="More exports & project files">More ▾</button>
+      <div id="more-menu" class="menu hidden">
+        <button id="btn-png">PNG image (current view)</button>
+        <button id="btn-svg">SVG image (current view)</button>
+        <button id="btn-dxf-plan">DXF — plan only</button>
+        <button id="btn-print">Print current view</button>
+        <div class="menu-sep"></div>
+        <button id="btn-save">Save project…</button>
+        <button id="btn-open">Open project…</button>
+        <button id="btn-new">New project</button>
+        <div class="menu-sep"></div>
+        <button id="btn-clear-ann">Clear my measurements/notes</button>
+        <button id="btn-help">Help / quick guide</button>
+      </div>
+    </div>
+    <input type="file" id="file-open" accept=".json,.bft.json,application/json" style="display:none">
+    <button id="btn-drawer-right" class="drawer-btn" title="Trailer settings">⚙</button>
+  </div>
+
+  <div id="welcome" class="overlay hidden">
+    <div class="modal">
+      <div class="modal-brand">BONDI <span>TRAILER CAD</span></div>
+      <h2>Design it once — send it twice.</h2>
+      <ol>
+        <li><b>1. Design</b> — click equipment on the left to add it, drag it into place.
+            Click any item to type its exact size and position in millimetres.
+            Set your trailer's sizes and doors/windows in the right panel.</li>
+        <li><b>2. Factory</b> — preview the full manufacturing drawing, then press
+            <b>⬇ Factory DXF</b>. That file opens in your supplier's CAD
+            (ZWCAD/中望) with every measurement exact.</li>
+        <li><b>3. Customer</b> — preview the clean concept drawing, then press
+            <b>⬇ Customer PDF</b> to send it for approval.</li>
+      </ol>
+      <div class="modal-row">
+        <label><input type="checkbox" id="welcome-hide"> Don't show this again</label>
+        <span>
+          <button id="btn-welcome-example">Explore the example</button>
+          <button id="btn-welcome-new" class="primary">Start a new trailer ›</button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="library" class="overlay hidden">
+    <div class="modal">
+      <div class="modal-brand">MY TRAILERS <span>saved builds</span></div>
+      <div id="library-list"></div>
+      <p class="hint">Saved builds live in this browser only — <b>Export all</b> makes a backup file
+        that survives app updates and moves between computers. Import accepts backups and single
+        .bft.json project files.</p>
+      <div class="modal-row">
+        <span>
+          <button id="btn-lib-export">⬇ Export all (backup)</button>
+          <button id="btn-lib-import">Import…</button>
+        </span>
+        <span>
+          <button id="btn-lib-close">Close</button>
+          <button id="btn-lib-save" class="primary">+ Save current design</button>
+        </span>
+      </div>
+      <input type="file" id="lib-import-file" accept=".json,application/json" style="display:none">
+    </div>
+  </div>
+
+  <div id="wizard" class="overlay hidden">
+    <div class="modal">
+      <div class="modal-brand">NEW TRAILER <span>新餐车</span></div>
+      <div class="wiz-dots"><span class="dot" data-dot="1"></span><span class="dot" data-dot="2"></span><span class="dot" data-dot="3"></span></div>
+
+      <div class="step" id="wiz-step-1">
+        <h2>Step 1 of 3 — How long is the trailer?</h2>
+        <div class="chip-row">
+          <button data-preset="bft30" title="Single axle">3.0m</button>
+          <button data-preset="bft35" title="Double axle">3.5m</button>
+          <button data-preset="bft40" title="Double axle">4.0m</button>
+          <button data-preset="bft45" title="Double axle">4.5m</button>
+          <button data-preset="bft50" title="Double axle">5.0m</button>
+          <button data-preset="bft55" title="Double axle">5.5m</button>
+          <button data-preset="bft60" title="Double axle">6.0m</button>
+        </div>
+        <p class="hint">3.0m runs a single axle; 3.5m and up run double axles (set automatically).</p>
+        <label class="field"><span>Shell length (mm)</span><input type="number" id="wiz-len" step="10"></label>
+        <p class="hint">BFT standard shell: <b>2100 wide × 2450 high</b>, <b>40mm walls</b>,
+          <b>1.5m drawbar</b>, entry door on the rear (opposite the drawbar). Only the length changes.</p>
+        <div class="wiz-summary" id="wiz-summary"></div>
+      </div>
+
+      <div class="step" id="wiz-step-2">
+        <h2>Step 2 of 3 — Build details</h2>
+        <label class="field"><span>Bench height (mm)</span><input type="number" id="wiz-bench" value="850"></label>
+        <label class="field"><span>Axles</span>
+          <select id="wiz-axles" style="width:92px"><option value="1">1</option><option value="2" selected>2</option></select></label>
+        <div class="wiz-group">
+          <label class="check"><input type="radio" name="wiz-windows" id="wiz-win2" checked>
+            Two serving windows (standard)</label>
+          <label class="check"><input type="radio" name="wiz-windows" id="wiz-win1">
+            One serving window</label>
+          <label class="field indent"><span>Total serving opening (mm) — standard for size</span><input type="number" id="wiz-servery-w" value="3850"></label>
+          <label class="check"><input type="checkbox" id="wiz-dbwindow" checked> Drawbar end window (standard, 1200mm)</label>
+          <label class="field indent"><span>Drawbar window width (mm)</span><input type="number" id="wiz-dbwindow-w" value="1200"></label>
+          <label class="check"><input type="checkbox" id="wiz-cashdrawer" checked> Cash drawer on serving bench (standard, 450mm)</label>
+          <label class="check"><input type="checkbox" id="wiz-endbench"> End bench — U-shape layout (drawbar end, under the drawbar window)</label>
+          <label class="check"><input type="checkbox" id="wiz-bigsink"> Upgrade sink to 1200mm (960mm 3-bowl included as standard)</label>
+          <p class="hint">Included as standard: rear entry door (740mm, opposite the drawbar),
+            two bench spaces the full inside length (600mm wide, one along each side),
+            a 2m range hood on the cook-side wall (200mm off the wall), and a 960mm sink at
+            the rear of the cook bench.</p>
+        </div>
+      </div>
+
+      <div class="step" id="wiz-step-3">
+        <h2>Step 3 of 3 — Project details</h2>
+        <label class="field"><span>Project name</span><input type="text" id="wiz-project" placeholder="e.g. 4.0m Coffee Trailer"></label>
+        <label class="field"><span>Customer</span><input type="text" id="wiz-client" placeholder="who is it for?"></label>
+        <label class="field"><span>Drawing No</span><input type="text" id="wiz-dwg" placeholder="BFT-002"></label>
+        <label class="field"><span>Revision</span><input type="text" id="wiz-rev" value="A"></label>
+        <p class="hint">You can change any of this later in the right-hand panels.</p>
+      </div>
+
+      <div class="modal-row">
+        <button id="wiz-back">‹ Back</button>
+        <span>
+          <button id="wiz-cancel">Cancel</button>
+          <button id="wiz-next" class="primary">Next ›</button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="leftpanel">
+    <div class="panel-head">Equipment — click to add</div>
+    <input type="text" id="catalog-search" placeholder="🔍 Search equipment… (fryer, fridge, coffee)" style="margin-bottom:8px;">
+    <div id="catalog"></div>
+    <div class="help">
+      <b>Shortcuts</b><br>
+      <kbd>R</kbd> rotate &nbsp; <kbd>Del</kbd> delete &nbsp; <kbd>Ctrl+D</kbd> duplicate<br>
+      <kbd>←↑↓→</kbd> nudge 10mm (<kbd>Shift</kbd> = 1mm)<br>
+      <kbd>Shift</kbd>+drag disables snapping<br>
+      Wheel = zoom, drag empty space = pan
+    </div>
+  </div>
+
+  <div id="canvas-wrap">
+    <canvas id="cv"></canvas>
+    <div id="warnings" class="hidden"></div>
+  </div>
+
+  <div id="rightpanel">
+    <div class="panel-head">Selected equipment</div>
+    <div id="props"></div>
+    <div class="panel-head">Trailer</div>
+    <div id="trailer-form"></div>
+    <div class="panel-head">Weight & balance</div>
+    <div id="balance"></div>
+    <div class="panel-head">Doors & windows</div>
+    <div id="features"></div>
+    <div class="panel-head">Drawing info</div>
+    <div id="meta-form"></div>
+  </div>
+
+  <div id="status"></div>
+</div>
+
+<script>
+/* Bondi Trailer CAD — utilities. All units are millimetres unless stated. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+
+  const U = {
+    clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
+
+    snap(v, grid) { return Math.round(v / grid) * grid; },
+
+    // Format a millimetre value for dimension text (integers preferred).
+    fmt(mm) {
+      const r = Math.round(mm * 10) / 10;
+      return Number.isInteger(r) ? String(r) : r.toFixed(1);
+    },
+
+    deg2rad(d) { return (d * Math.PI) / 180; },
+
+    num(v, fallback) {
+      const n = parseFloat(v);
+      return Number.isFinite(n) ? n : fallback;
+    },
+
+    uid() {
+      return 'i' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+    },
+
+    deepCopy(o) { return JSON.parse(JSON.stringify(o)); },
+
+    // Footprint of an item after 90-degree-step rotation: [w, d] in world axes.
+    footprint(item) {
+      const r = ((item.rot || 0) % 180 + 180) % 180;
+      return r === 0 ? [item.w, item.d] : [item.d, item.w];
+    },
+
+    // Map a point in item-local coordinates (0..w, 0..d, y-up) to world
+    // coordinates given the item's position (footprint bottom-left) and rotation.
+    localToWorld(item, lx, ly) {
+      const rot = ((item.rot || 0) % 360 + 360) % 360;
+      const w = item.w, d = item.d;
+      let px, py;
+      switch (rot) {
+        case 90: px = d - ly; py = lx; break;
+        case 180: px = w - lx; py = d - ly; break;
+        case 270: px = ly; py = w - lx; break;
+        default: px = lx; py = ly;
+      }
+      return [item.x + px, item.y + py];
+    },
+
+    rectCorners(x, y, w, h) {
+      return [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+    },
+
+    pointInRect(px, py, x, y, w, h) {
+      return px >= x && px <= x + w && py >= y && py <= y + h;
+    },
+
+    dist(x1, y1, x2, y2) { return Math.hypot(x2 - x1, y2 - y1); },
+
+    todayISO() {
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, '0');
+      return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    },
+  };
+
+  BFT.util = U;
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — equipment catalog.
+   Sizes are typical commercial catering equipment footprints in mm:
+   w = width along the wall, d = depth from the wall, h = overall height.
+   Every size is editable per-item after placing. Labels are bilingual so
+   exported drawings are readable by Chinese manufacturers. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+
+  BFT.catalog = [
+    { id: 'stove4',    en: '4-Burner Stove',   zh: '四眼灶',   w: 800,  d: 650, h: 850,  sym: 'burners', burners: 4, cat: 'Cooking' },
+    { id: 'stove6',    en: '6-Burner Stove',   zh: '六眼灶',   w: 1100, d: 650, h: 850,  sym: 'burners', burners: 6, cat: 'Cooking' },
+    { id: 'bainmarie', en: 'Bain Marie',       zh: '保温汤池', w: 1020, d: 650, h: 850,  sym: 'pans', pans: 4, cat: 'Cooking' },
+    { id: 'fryer',     en: 'Deep Fryer',       zh: '炸炉',     w: 400,  d: 650, h: 850,  sym: 'pans', pans: 1, cat: 'Cooking' },
+    { id: 'fryer2',    en: 'Double Fryer',     zh: '双缸炸炉', w: 700,  d: 650, h: 850,  sym: 'pans', pans: 2, cat: 'Cooking' },
+    { id: 'griddle',   en: 'Griddle / Hotplate', zh: '扒炉',   w: 600,  d: 650, h: 850,  sym: 'plain', cat: 'Cooking' },
+    { id: 'chargrill', en: 'Char Grill',       zh: '烧烤炉',   w: 600,  d: 650, h: 850,  sym: 'grill', cat: 'Cooking' },
+    { id: 'oven',      en: 'BBQ Oven / Smoker', zh: '烤炉',    w: 1600, d: 740, h: 1200, sym: 'oven', cat: 'Cooking' },
+    { id: 'hood',      en: 'Exhaust Hood (overhead)', zh: '排烟罩', w: 2000, d: 200, h: 500, sym: 'hood', overhead: true, cat: 'Cooking' },
+
+    { id: 'bench',     en: 'Bench Space',      zh: '工作台',   w: 900,  d: 650, h: 850,  sym: 'plain', cat: 'Benches' },
+    { id: 'counter',   en: 'Cash Counter',     zh: '收银台',   w: 900,  d: 600, h: 850,  sym: 'plain', cat: 'Benches' },
+    { id: 'shelf',     en: 'Shelf Unit',       zh: '货架',     w: 900,  d: 450, h: 1800, sym: 'cross', cat: 'Benches' },
+
+    { id: 'sink3',     en: 'Triple Sink',      zh: '三星水槽', w: 1000, d: 650, h: 850,  sym: 'sink', bowls: 3, cat: 'Plumbing' },
+    { id: 'cashdrawer', en: 'Cash Drawer',     zh: '钱箱',     w: 450,  d: 450, h: 150,  sym: 'plain', cat: 'Benches' },
+    { id: 'sink2',     en: 'Double Sink',      zh: '双星水槽', w: 800,  d: 650, h: 850,  sym: 'sink', bowls: 2, cat: 'Plumbing' },
+    { id: 'sink1',     en: 'Single Sink',      zh: '单星水槽', w: 500,  d: 600, h: 850,  sym: 'sink', bowls: 1, cat: 'Plumbing' },
+    { id: 'handwash',  en: 'Hand Wash Basin',  zh: '洗手池',   w: 350,  d: 350, h: 850,  sym: 'sink', bowls: 1, cat: 'Plumbing' },
+    { id: 'watertank', en: 'Water Tank',       zh: '水箱',     w: 600,  d: 400, h: 500,  sym: 'cross', cat: 'Plumbing' },
+
+    { id: 'fridgeub',  en: 'Underbench Fridge', zh: '工作台冷柜', w: 1200, d: 600, h: 850, sym: 'fridge', cat: 'Refrigeration' },
+    { id: 'fridge',    en: 'Upright Fridge',   zh: '立式冰箱', w: 700,  d: 800, h: 2000, sym: 'fridge', cat: 'Refrigeration' },
+    { id: 'freezer',   en: 'Chest Freezer',    zh: '卧式冰柜', w: 1100, d: 700, h: 850,  sym: 'fridge', cat: 'Refrigeration' },
+    { id: 'coldwell',  en: 'Cold Display Well', zh: '冷藏展示柜', w: 1200, d: 700, h: 1200, sym: 'pans', pans: 3, cat: 'Refrigeration' },
+
+    { id: 'gas',       en: 'Gas Bottle 9kg',   zh: '煤气瓶',   w: 310,  d: 310, h: 580,  sym: 'circle', shape: 'circle', cat: 'Services', svc: true },
+    { id: 'gas45',     en: 'Gas Bottle 45kg',  zh: '煤气瓶45kg', w: 375, d: 375, h: 1250, sym: 'circle', shape: 'circle', cat: 'Services', svc: true },
+    { id: 'generator', en: 'Generator',        zh: '发电机',   w: 700,  d: 500, h: 550,  sym: 'cross', cat: 'Services' },
+    { id: 'switchbd',  en: 'Switchboard',      zh: '配电箱',   w: 400,  d: 150, h: 600,  sym: 'plain', fixture: true, cat: 'Services' },
+    // connection points: where the factory fits gas/power/water services.
+    // Marked with a letter symbol; put them on the wall they penetrate.
+    { id: 'pwr15',     en: 'Power Inlet 15A',  zh: '15A电源接口', w: 150, d: 150, h: 300, sym: 'svc', letter: 'P', fixture: true, svc: true, cat: 'Services' },
+    { id: 'pwr32',     en: 'Power Inlet 32A',  zh: '32A电源接口', w: 150, d: 150, h: 300, sym: 'svc', letter: 'P', fixture: true, svc: true, cat: 'Services' },
+    { id: 'gasbay',    en: 'Gas Inlet Point',  zh: '燃气接口',  w: 150, d: 150, h: 300,  sym: 'svc', letter: 'G', fixture: true, svc: true, cat: 'Services' },
+    { id: 'waterin',   en: 'Water Inlet',      zh: '进水口',    w: 150, d: 150, h: 300,  sym: 'svc', letter: 'W', fixture: true, svc: true, cat: 'Services' },
+    { id: 'waterout',  en: 'Waste Water Outlet', zh: '排水口',  w: 150, d: 150, h: 300,  sym: 'svc', letter: 'D', fixture: true, svc: true, cat: 'Services' },
+
+    { id: 'custom',    en: 'Custom Item',      zh: '自定义',   w: 600,  d: 600, h: 850,  sym: 'plain', cat: 'Custom' },
+  ];
+
+  BFT.catalogById = function (id) {
+    return BFT.catalog.find((c) => c.id === id) || null;
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — extended equipment catalog.
+   Generated from the Bondi quote tool inventory (dimensions only, no
+   pricing). w = width along the bench, d = depth, h = height, in mm.
+   Items whose spec sheet gives WxDxH use those; otherwise the layout
+   width from the quote tool with standard 600 depth. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+  const EXTRA = [
+  {"id":"qt_workbench_fridge","en":"Workbench Refrigerator 2000mm","desc":"2000×600×800mm — Dual Fridge/Freezer","w":2000,"d":600,"h":800,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_drinks_fridge","en":"Drinks Fridge","desc":"Compact / Display","w":500,"d":600,"h":850,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_upright_fridge_r","en":"Upright Refrigerator 380L (Fridge)","desc":"587*675*1950mm, 0~10°C","w":587,"d":675,"h":1950,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_upright_fridge_f","en":"Upright Refrigerator 380L (Freezer)","desc":"587*675*1950mm, -5~-15°C","w":587,"d":675,"h":1950,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_upright_fridge_d","en":"Upright Refrigerator 380L (Dual)","desc":"587*675*1950mm, Fridge & Freezer","w":587,"d":675,"h":1950,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_salad_fridge_1d","en":"Salad Sink Refrigerator (1 Door)","desc":"700*750*1075mm, 300L","w":700,"d":750,"h":1075,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_salad_fridge_2d","en":"Salad Sink Refrigerator (2 Door)","desc":"1180*750*1075mm, 450L","w":1180,"d":750,"h":1075,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_salad_fridge_3d","en":"Salad Sink Refrigerator (3 Door)","desc":"1787*750*1075mm, 500L","w":1787,"d":750,"h":1075,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_display_fridge_4d","en":"4-Door Refrigerator 800L","desc":"1200*700*1900mm","w":1200,"d":700,"h":1900,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_salad_cooler_2000","en":"Countertop Salad Display 2000mm","desc":"Counter top, 0~5 °C","w":2000,"d":600,"h":850,"cat":"Refrigeration & Cold Display","bench":"front"},
+  {"id":"qt_salad_cooler_1500","en":"Countertop Salad Display 1500mm","desc":"Counter top, 0~5 °C","w":1500,"d":600,"h":850,"cat":"Refrigeration & Cold Display","bench":"front"},
+  {"id":"qt_salad_cooler_1200","en":"Countertop Salad Display 1200mm","desc":"Counter top, 0~5 °C","w":1200,"d":600,"h":850,"cat":"Refrigeration & Cold Display","bench":"front"},
+  {"id":"qt_ice_cream_14t","en":"Ice Cream Freezer Display (14 Tray)","desc":"1390*810*900mm","w":1390,"d":810,"h":900,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_ice_cream_10p","en":"Ice Cream Freezer Display (10 Pot)","desc":"1000*680*1230mm","w":1000,"d":680,"h":1230,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_ice_storage","en":"Ice Storage Box (S304)","desc":"350*450*430mm","w":350,"d":450,"h":430,"cat":"Refrigeration & Cold Display"},
+  {"id":"qt_fryer_3b","en":"SuperFast Deep Fryer 3 Burner","desc":"RC300E — 23L, 2 baskets, 394×771×1354mm","w":394,"d":771,"h":1354,"cat":"Cooking - Fryers & Griddles","bench":"back"},
+  {"id":"qt_double_fryer","en":"SuperFast Deep Fryer 4 Burner","desc":"RC400ELPG LPG — 22L, 2 baskets, 394×771×1354mm","w":394,"d":771,"h":1354,"cat":"Cooking - Fryers & Griddles","bench":"back"},
+  {"id":"qt_fryer_5b","en":"SuperFast Deep Fryer 5 Burner","desc":"RC500ELPG LPG — 37L, 3 baskets, 534×771×1354mm","w":534,"d":771,"h":1354,"cat":"Cooking - Fryers & Griddles","bench":"back"},
+  {"id":"qt_griddle_2b","en":"GASMAX 2 Burner Griddle","desc":"600mm — JUS-TRG60ELPG LPG","w":600,"d":600,"h":850,"cat":"Cooking - Fryers & Griddles","bench":"back"},
+  {"id":"qt_chargrill_2b","en":"GASMAX 2 Burner Chargrill","desc":"600mm — JUS-TRH60ELPG LPG","w":600,"d":600,"h":850,"cat":"Cooking - Fryers & Griddles","bench":"back"},
+  {"id":"qt_griddle_3b","en":"Benchtop Griddle 3 Burner","desc":"900mm","w":900,"d":600,"h":850,"cat":"Cooking - Fryers & Griddles","bench":"back"},
+  {"id":"qt_gasmax_4","en":"Gasmax 4 Burner Stove","desc":"Bench top LPG","w":720,"d":600,"h":850,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_gasmax_2","en":"Gasmax 2 Burner Stove","desc":"Bench top LPG","w":360,"d":600,"h":850,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_gas_pizza_oven_1","en":"Gas Pizza Oven (Single Layer)","desc":"1020*600*545mm","w":1020,"d":600,"h":545,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_gas_pizza_oven_2","en":"Gas Pizza Oven (Double Layer)","desc":"1020*600*1030mm","w":1020,"d":600,"h":1030,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_wood_pizza_oven_1","en":"Wood Pizza Oven 104cm","desc":"Fits three 12-inch pizzas","w":1040,"d":600,"h":850,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_wood_pizza_oven_2","en":"Wood Pizza Oven 108cm","desc":"Fits two 12-inch pizzas","w":1086,"d":600,"h":850,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_elec_conveyor_pizza","en":"Electric Conveyor Pizza Oven","desc":"1125*580*435mm (max 12inch)","w":1125,"d":580,"h":435,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_gas_conveyor_pizza","en":"Gas Conveyor Pizza Oven","desc":"1520*1000*680mm","w":1520,"d":1000,"h":680,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_microwave_25l","en":"Microwave Oven 25L","desc":"1350W","w":510,"d":600,"h":850,"cat":"Cooking - Gas Stoves & Ovens","bench":"back"},
+  {"id":"qt_bain_marie_3","en":"Electric 3-Tank Bain Marie","desc":"580*360*260mm","w":580,"d":360,"h":260,"cat":"Warmers & Bain Maries","bench":"back"},
+  {"id":"qt_bain_marie_4","en":"Electric 4-Tank Bain Marie","desc":"690*580*260mm","w":690,"d":580,"h":260,"cat":"Warmers & Bain Maries","bench":"back"},
+  {"id":"qt_bain_marie_6","en":"Electric 6-Tank Bain Marie","desc":"680×600×250mm — EH-6","w":680,"d":600,"h":250,"cat":"Warmers & Bain Maries","bench":"back"},
+  {"id":"qt_chip_warmer","en":"S/S Chip Warmer","desc":"Benchstar DH-310E, 330×560×500mm","w":330,"d":560,"h":500,"cat":"Warmers & Bain Maries","bench":"back"},
+  {"id":"qt_gas_soup_pool_6","en":"Gas 6-Cylinder Soup Pool","desc":"700*570*350mm","w":700,"d":570,"h":350,"cat":"Warmers & Bain Maries","bench":"back"},
+  {"id":"qt_food_warmer_660","en":"Food Display Warmer 660mm","desc":"660*466*610mm","w":660,"d":466,"h":610,"cat":"Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_food_warmer_950","en":"Curved Glass Food Warmer 950mm","desc":"950*466*610mm","w":950,"d":466,"h":610,"cat":"Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_pizza_warmer","en":"Pizza Warmer Display","desc":"510*390*520mm","w":510,"d":390,"h":520,"cat":"Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_coffee_machine_auto","en":"Automatic Coffee Machine","desc":"1200W, 2L","w":400,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_coffee_machine_semi","en":"Semi-Auto Espresso Machine","desc":"2950W, 15 bar","w":700,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_coffee_grinder","en":"Commercial Bean Grinder","desc":"350W","w":220,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_slush_machine_2","en":"Slush Machine (Double Tank)","desc":"15L*2","w":400,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_slush_machine_3","en":"Slush Machine (Three Tank)","desc":"16L*3","w":550,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_juice_machine_2","en":"Juice Machine (Double Tank)","desc":"18L*2","w":400,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_ice_maker_60","en":"Ice Maker Machine 60kg","desc":"354*428*637mm","w":354,"d":428,"h":637,"cat":"Beverage & Bar Equipment","bench":"back"},
+  {"id":"qt_blender_comm","en":"Commercial Blender 1.8L","desc":"2600W","w":220,"d":600,"h":850,"cat":"Beverage & Bar Equipment","bench":"back"},
+  {"id":"qt_kegerator_1","en":"Single Tap Kegerator","desc":"600*600*890mm","w":600,"d":600,"h":890,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_kegerator_2","en":"Double Tap Kegerator","desc":"600*600*890mm","w":600,"d":600,"h":890,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_beer_cool_4","en":"Beer Cooling System (4 Taps)","desc":"1250×650×1000mm","w":1250,"d":650,"h":1000,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_sugar_cane_juice","en":"Sugar Cane Juicer","desc":"430*380*480mm","w":430,"d":380,"h":480,"cat":"Beverage & Bar Equipment","bench":"front"},
+  {"id":"qt_donut_auto","en":"Electric Auto Donut Machine","desc":"Single row 1050*400*650mm","w":1050,"d":400,"h":650,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_donut_manual","en":"Electric Manual Donut Maker","desc":"1050*700*650mm","w":1050,"d":700,"h":650,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_waffle_double","en":"Waffle Baker (Double Plate)","desc":"515*500*190mm","w":515,"d":500,"h":190,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_crepe_double","en":"Double Electric Crepe Maker","desc":"90*54*23cm, 6KW","w":900,"d":540,"h":230,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_churros_elec","en":"Electric Churros Machine","desc":"665*265*1120mm","w":665,"d":265,"h":1120,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_kebab_gas_4","en":"Gas Kebab Machine (4 Burners)","desc":"Capacity: 25-30KGS kebab","w":580,"d":600,"h":850,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_panini_double","en":"Electric Panini Machine (Double)","desc":"565*305*190mm, 3.6KW","w":565,"d":305,"h":190,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_hotdog_roller","en":"Hot Dog Roller Grill","desc":"18-dog capacity, 7 non-stick rollers","w":460,"d":600,"h":850,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"back"},
+  {"id":"qt_popcorn_mach","en":"Popcorn Machine","desc":"550*410*760mm","w":550,"d":410,"h":760,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"front"},
+  {"id":"qt_cotton_candy_lg","en":"Cotton Candy Machine (Large)","desc":"770*475*350mm, 1300W","w":770,"d":475,"h":350,"cat":"Specialty Snacks (Donuts, Waffles, etc.)","bench":"front"},
+  {"id":"qt_salad_sinks","en":"Salad / Prep Sinks","desc":"580×350×275mm — stainless steel, back bench","w":580,"d":350,"h":275,"cat":"Food Prep Machinery","bench":"back"},
+  {"id":"qt_dough_mixer_20l","en":"Dough Mixer 20L","desc":"520*420*770mm","w":520,"d":420,"h":770,"cat":"Food Prep Machinery","bench":"back"},
+  {"id":"qt_dough_mixer_15l","en":"Dough Mixer 15L","desc":"470*420*630mm","w":470,"d":420,"h":630,"cat":"Food Prep Machinery","bench":"back"},
+  {"id":"qt_meat_mincer","en":"Stainless Steel Meat Mincer","desc":"300KG/H capacity","w":400,"d":600,"h":850,"cat":"Food Prep Machinery","bench":"back"},
+  {"id":"qt_veg_cutter","en":"Commercial Vegetable Cutter","desc":"100-150KG/H","w":450,"d":600,"h":850,"cat":"Food Prep Machinery","bench":"back"},
+  {"id":"qt_dumpling_mach","en":"Dumpling Forming Machine","desc":"4800 pcs/h","w":600,"d":600,"h":850,"cat":"Food Prep Machinery","bench":"back"},
+  {"id":"qt_range_hood","en":"Commercial Range Hood","desc":"Extraction ($500 per metre)","w":600,"d":600,"h":850,"cat":"Ventilation & Climate Control"},
+  {"id":"qt_aircon","en":"Air Conditioning Unit","desc":"Reverse cycle, roof-mounted","w":600,"d":600,"h":850,"cat":"Ventilation & Climate Control"},
+  {"id":"qt_roof_ac_220","en":"Roof Air Conditioner 220V","desc":"Dometic B3200 (3000W Cool / 1600W Heat)","w":600,"d":600,"h":850,"cat":"Ventilation & Climate Control"},
+  {"id":"qt_roof_ac_110","en":"Roof Air Conditioner 110V","desc":"4000W Cool / 3000W Heat","w":600,"d":600,"h":850,"cat":"Ventilation & Climate Control"},
+  {"id":"qt_roof_fan_1","en":"RCU Roof Fan 1HP","desc":"Belt drive (non-adjustable)","w":600,"d":600,"h":850,"cat":"Ventilation & Climate Control"},
+  {"id":"qt_exhaust_fan","en":"Wall Exhaust Fan","desc":"Hole size 600*600mm","w":600,"d":600,"h":850,"cat":"Ventilation & Climate Control"},
+  {"id":"qt_upgrade_power_2x15","en":"Upgrade: 2x 15AMP Power Connectors","desc":"Replaces standard 1x15A","w":600,"d":600,"h":850,"cat":"Power & Generators"},
+  {"id":"qt_upgrade_power_1x32","en":"Upgrade: 1x 32AMP Power Connector","desc":"Replaces standard 1x15A","w":600,"d":600,"h":850,"cat":"Power & Generators"},
+  {"id":"qt_generator","en":"Generator Box (Compartment)","desc":"External compartment — diesel or LPG","w":600,"d":600,"h":850,"cat":"Power & Generators"},
+  {"id":"qt_gen_diesel_5","en":"Silent Diesel Generator 5KW","desc":"16L Tank, 110V/220V/380V","w":600,"d":600,"h":850,"cat":"Power & Generators"},
+  {"id":"qt_gen_diesel_10","en":"Silent Diesel Generator 10KW","desc":"16L Tank, 110V/220V/380V","w":600,"d":600,"h":850,"cat":"Power & Generators"},
+  {"id":"qt_gen_box","en":"Generator Box (Tow bar mounted)","desc":"Mounted on tow bar","w":600,"d":600,"h":850,"cat":"Power & Generators"},
+  {"id":"qt_wrap","en":"Full Vinyl Wrap","desc":"Custom branded wrap, design included","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_wrap_half","en":"Partial Vinyl Wrap","desc":"Custom branded partial wrap","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_canopy","en":"Fold-Down Canopy","desc":"Aluminium fold-down shade canopy","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_elec_brakes","en":"Electric Brake System","desc":"Front axle brake","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_sliding_window","en":"Sliding Window 1m","desc":"Service window upgrade","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_gas_box","en":"Gas Bottle Box","desc":"Mounted on tow bar","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_gas_ring","en":"Gas Bottle Ring","desc":"Internal/External mount","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_awning","en":"Retractable Awning","desc":"Water proof fabric","w":600,"d":600,"h":850,"cat":"Trailer Structural & Exterior"},
+  {"id":"qt_fire_suppression","en":"Fire Suppression System","desc":"Auto/Manual start","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_fire_ext","en":"Fire Extinguisher 3kg","desc":"Mounted","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_led","en":"LED Lighting Package","desc":"Interior & exterior LED strip lighting","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_led_logo","en":"LED Logo Lighting Box","desc":"Roof mounted (custom 8 letters)","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_led_strip","en":"LED Strip Lights (Flash)","desc":"Full 4 sides wrapped","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_menu_tv","en":"Embedded TV Menu 21.5\"","desc":"1080p, HDMI/USB","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_ad_screen","en":"Commercial LCD Ad Screen 27\"","desc":"Digital signage","w":600,"d":600,"h":850,"cat":"Lighting, Tech & Security"},
+  {"id":"qt_upper_cab","en":"Upper Cabinet / Overhead Cupboards","desc":"With sliding doors","w":600,"d":600,"h":850,"cat":"Storage & Cabinetry"},
+  {"id":"qt_upper_shelf","en":"Upper Shelf 1m","desc":"Stainless steel","w":600,"d":600,"h":850,"cat":"Storage & Cabinetry"},
+  {"id":"qt_trash_pullout","en":"Pull-out Trash Can","desc":"Underbench hidden mount","w":600,"d":600,"h":850,"cat":"Storage & Cabinetry"},
+  {"id":"qt_trash_can","en":"Standard Trash Can","desc":"Stainless steel","w":600,"d":600,"h":850,"cat":"Storage & Cabinetry"},
+  {"id":"qt_cup_dispenser","en":"Cup Dispenser (Double Hole)","desc":"Adjustable size","w":600,"d":600,"h":850,"cat":"Storage & Cabinetry"},
+  {"id":"qt_workbench_fridge_1800","en":"Workbench Refrigerator 1800mm","desc":"1800x600x800mm - 380L Dual Fridge/Freezer","w":1800,"d":600,"h":800,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_workbench_fridge_1500","en":"Workbench Refrigerator 1500mm","desc":"1500x600x800mm - 280L Dual Fridge/Freezer","w":1500,"d":600,"h":800,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_workbench_fridge_1200","en":"Workbench Refrigerator 1200mm","desc":"1200x600x800mm - 190L Dual Fridge/Freezer","w":1200,"d":600,"h":800,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_upright_fridge_170","en":"Upright Refrigerator 170L","desc":"460x470x1500mm - fridge & freezer chambers","w":460,"d":470,"h":1500,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_chest_freezer_72","en":"Standing / Deep Freezer 72L","desc":"520x480x730mm — BD/BC-72K129, 72L, first-class energy efficiency","w":520,"d":480,"h":730,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_beverage_fridge","en":"Beverage Refrigerator 338L","desc":"600x530x1750mm - 132W glass door","w":600,"d":530,"h":1750,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_ice_cream_counter","en":"Countertop Ice Cream Freezer","desc":"1095x610x570mm - 10 pots, sub -18C","w":1095,"d":610,"h":570,"cat":"More Refrigeration & Freezers","bench":"front"},
+  {"id":"qt_freezer_glass_1400","en":"Glass Sliding-Door Freezer","desc":"1400x650x870mm - 450L","w":1400,"d":650,"h":870,"cat":"More Refrigeration & Freezers"},
+  {"id":"qt_salad_cooler_900","en":"Countertop Salad Display 900mm","desc":"900x395x440mm - 0~5C","w":900,"d":395,"h":440,"cat":"More Refrigeration & Freezers","bench":"front"},
+  {"id":"qt_display_fridge_700","en":"Countertop Display Fridge","desc":"700x560x670mm - 120L, 2~8C","w":700,"d":560,"h":670,"cat":"More Refrigeration & Freezers","bench":"front"},
+  {"id":"qt_cake_display_1200","en":"Floor Cake Display Cabinet","desc":"1200x520x880mm - air cooling","w":1200,"d":520,"h":880,"cat":"More Refrigeration & Freezers","bench":"front"},
+  {"id":"qt_cooler_display_900","en":"Countertop Cooler Display 900mm","desc":"900x520x880mm - air cooling","w":900,"d":520,"h":880,"cat":"More Refrigeration & Freezers","bench":"front"},
+  {"id":"qt_fryer_elec_single","en":"Electric Single Fryer","desc":"280x450x300mm - 6L, 2.5kW","w":280,"d":450,"h":300,"cat":"More Cooking - Electric Fryers & Grills","bench":"back"},
+  {"id":"qt_griddle_elec_550","en":"Electric Hot Plate Griddle 550mm","desc":"550x450x230mm - 540x300 plate, 3kW","w":550,"d":450,"h":230,"cat":"More Cooking - Electric Fryers & Grills","bench":"back"},
+  {"id":"qt_griddle_elec_half","en":"Electric Griddle (Half Flat/Grooved)","desc":"730x470x220mm - EG-822, 4.4kW","w":730,"d":470,"h":220,"cat":"More Cooking - Electric Fryers & Grills","bench":"back"},
+  {"id":"qt_smokeless_grill_elec","en":"Electric Smokeless Grill","desc":"1100x480x240mm - 780x260 roast area, 7.8kW","w":1100,"d":480,"h":240,"cat":"More Cooking - Electric Fryers & Grills","bench":"back"},
+  {"id":"qt_elec_oven_1","en":"Electric Oven (1 Layer)","desc":"895x580x430mm - 3.2kW, 50-300C","w":895,"d":580,"h":430,"cat":"More Electric Ovens & Pizza","bench":"back"},
+  {"id":"qt_elec_oven_2","en":"Electric Oven (2 Layer)","desc":"895x580x810mm - 6.4kW, 50-300C","w":895,"d":580,"h":810,"cat":"More Electric Ovens & Pizza","bench":"back"},
+  {"id":"qt_pizza_oven_elec","en":"Electric Pizza Oven","desc":"530x530x560mm - 2800W","w":530,"d":530,"h":560,"cat":"More Electric Ovens & Pizza","bench":"back"},
+  {"id":"qt_pizza_cone","en":"Pizza Cone Machine","desc":"530x350x980mm - 2400W","w":530,"d":350,"h":980,"cat":"More Electric Ovens & Pizza","bench":"back"},
+  {"id":"qt_elec_conveyor_pizza_lg","en":"Electric Conveyor Pizza Oven (18in)","desc":"1460x580x435mm - 9.8kW, max 18in","w":1460,"d":580,"h":435,"cat":"More Electric Ovens & Pizza","bench":"back"},
+  {"id":"qt_bain_10","en":"Electric Bain Marie (10 Sink)","desc":"1360x570x220mm - 1.5kW","w":1360,"d":570,"h":220,"cat":"More Warmers & Bain Maries","bench":"back"},
+  {"id":"qt_chips_warmer_v6","en":"Electric Chips Warmer (V6)","desc":"600x710x670mm - 30~85C","w":600,"d":710,"h":670,"cat":"More Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_chips_warmer_v8","en":"Electric Chips Warmer (V8)","desc":"800x700x660mm - 900W","w":800,"d":700,"h":660,"cat":"More Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_food_warmer_4tray","en":"Food Display Warmer (4 Tray)","desc":"700x640x730mm - fan convection, 30-85C","w":700,"d":640,"h":730,"cat":"More Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_food_warmer_6tray","en":"Food Display Warmer (6 Tray)","desc":"1100x640x730mm - fan convection, 30-85C","w":1100,"d":640,"h":730,"cat":"More Warmers & Bain Maries","bench":"front"},
+  {"id":"qt_soft_serve_3","en":"Soft Serve Ice Cream (3 Flavour)","desc":"550x420x760mm - 18L/H, 1200W","w":550,"d":420,"h":760,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_soft_serve_1","en":"Soft Serve Ice Cream (Single)","desc":"665x210x700mm - 16L/H, 780W","w":665,"d":210,"h":700,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_ice_cream_vertical","en":"Vertical Ice Cream Machine","desc":"540x590x1360mm - 18-28L, 2200W","w":540,"d":590,"h":1360,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_juice_machine_3","en":"Juice Machine (3 Tank)","desc":"640x442x720mm - 16L x3, 330W","w":640,"d":442,"h":720,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_snow_cone","en":"Snow Cone Machine","desc":"500x410x660mm - 180kg/h","w":500,"d":410,"h":660,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_milkshake_machine","en":"Commercial Milkshake Machine","desc":"170x180x530mm - 300W","w":170,"d":180,"h":530,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_kegerator_wine_6","en":"Kegerator + Wine Column (6 Tap)","desc":"1450x650x1000mm - 6 taps","w":1450,"d":650,"h":1000,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_syrup_dispenser","en":"Sugar Syrup Dispenser","desc":"250x350x415mm - 8L, 500W","w":250,"d":350,"h":415,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_cup_sealer","en":"Automatic Cup Sealer","desc":"250x392x530mm - 350W","w":250,"d":392,"h":530,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_coffee_machine_lg","en":"Commercial Coffee Machine","desc":"730x500x300mm - 2100W","w":730,"d":500,"h":300,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_choc_fountain","en":"Chocolate Fondue Fountain","desc":"280x280x580mm - 150W","w":280,"d":280,"h":580,"cat":"More Beverage & Dessert","bench":"front"},
+  {"id":"qt_waffle_single","en":"Waffle Baker (Single Plate)","desc":"250x350x260mm - 1.2kW","w":250,"d":350,"h":260,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_crisp_machine","en":"Crisp / Tornado Machine","desc":"435x410x315mm - 1.5kW","w":435,"d":410,"h":315,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_muffin_elec","en":"Electric Muffin Machine","desc":"570x540x190mm - 1.6kW","w":570,"d":540,"h":190,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_donut_4hole","en":"Four-Hole Donut Machine","desc":"485x258x175mm - 1.1kW","w":485,"d":258,"h":175,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_panini_single","en":"Electric Panini Machine (Single)","desc":"370x305x210mm - 1.8kW","w":370,"d":305,"h":210,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_crepe_single","en":"Single Electric Crepe Maker","desc":"565x520x295mm - 3kW","w":565,"d":520,"h":295,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_sandwich_255","en":"Danish Sandwich Maker (Single)","desc":"255x500x215mm - 1.09kW","w":255,"d":500,"h":215,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_sandwich_515","en":"Danish Sandwich Maker (Double)","desc":"515x500x215mm - 2.18kW","w":515,"d":500,"h":215,"cat":"More Snacks & Specialty (Electric)","bench":"back"},
+  {"id":"qt_rice_cooker","en":"Commercial Rice Cooker 10L","desc":"420x300x300mm - 1600W","w":420,"d":300,"h":300,"cat":"More Prep & Extras (Electric)","bench":"back"},
+  {"id":"qt_chip_slicer","en":"Chips / Tart Slicer","desc":"260x138x115mm - manual","w":260,"d":138,"h":115,"cat":"More Prep & Extras (Electric)"},
+  {"id":"qt_water_heater_elec","en":"Electric Water Heater 25L","desc":"370x230x560mm - 2kW, warmer","w":370,"d":230,"h":560,"cat":"More Prep & Extras (Electric)","bench":"back"},
+  {"id":"qt_water_heater_instant","en":"Instant Water Heater 8L","desc":"240x218x370mm - 1500W","w":240,"d":218,"h":370,"cat":"More Prep & Extras (Electric)","bench":"back"},
+  ];
+  BFT.catalogExtra = EXTRA;
+  // merge into the main catalog: sym 'plain', no zh (quote-tool items are
+  // English-spec'd; the factory sees name + exact mm)
+  for (const e of EXTRA) {
+    BFT.catalog.push({ id: e.id, en: e.en, zh: '', w: e.w, d: e.d, h: e.h, sym: 'plain', cat: e.cat, desc: e.desc });
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — scene display list.
+   A "scene" is a flat list of drawing primitives in real-world millimetres,
+   y-up (CAD convention). The same scene is consumed by the canvas renderer,
+   the SVG exporter and the DXF exporter, so what you see on screen is exactly
+   what the supplier receives.
+
+   Primitive kinds:
+     {k:'line',   la, x1,y1,x2,y2}
+     {k:'pline',  la, pts:[[x,y],...], closed}
+     {k:'circle', la, cx,cy,r}
+     {k:'arc',    la, cx,cy,r,a1,a2}          angles in degrees CCW from +X
+     {k:'text',   la, x,y,h,s, rot, align, valign}
+     {k:'solid',  la, pts:[[x,y],[x,y],[x,y]]} filled triangle (dim arrows)
+*/
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+
+  // Layer table shared by all renderers. dxf = AutoCAD color index.
+  BFT.layers = {
+    OUTLINE:  { color: '#e8e8e8', dxf: 7, lw: 1.6 },
+    EQUIP:    { color: '#ff5cf4', dxf: 6, lw: 1.2 },
+    FIXTURE:  { color: '#4dd7ff', dxf: 4, lw: 1.2 },
+    HIDDEN:   { color: '#9a9a9a', dxf: 8, lw: 1.0, dash: [60, 40] },
+    CENTER:   { color: '#ff6b6b', dxf: 1, lw: 1.0, dash: [140, 40, 20, 40] },
+    DIMS:     { color: '#39d353', dxf: 3, lw: 1.0 },
+    TEXT:     { color: '#ff5cf4', dxf: 6, lw: 1.0 },
+    NOTES:    { color: '#ffd23f', dxf: 2, lw: 1.0 },
+    TITLE:    { color: '#e8e8e8', dxf: 7, lw: 1.2 },
+  };
+
+  class Scene {
+    constructor() { this.items = []; }
+    line(la, x1, y1, x2, y2) { this.items.push({ k: 'line', la, x1, y1, x2, y2 }); }
+    pline(la, pts, closed) { this.items.push({ k: 'pline', la, pts, closed: !!closed }); }
+    rect(la, x, y, w, h) { this.pline(la, BFT.util.rectCorners(x, y, w, h), true); }
+    circle(la, cx, cy, r) { this.items.push({ k: 'circle', la, cx, cy, r }); }
+    arc(la, cx, cy, r, a1, a2) { this.items.push({ k: 'arc', la, cx, cy, r, a1, a2 }); }
+    solid(la, pts) { this.items.push({ k: 'solid', la, pts }); }
+    text(la, x, y, h, s, opts) {
+      opts = opts || {};
+      this.items.push({
+        k: 'text', la, x, y, h, s: String(s),
+        rot: opts.rot || 0,
+        align: opts.align || 'left',
+        valign: opts.valign || 'base',
+      });
+    }
+
+    // ---- dimensioning -------------------------------------------------
+    // Arrow: filled triangle pointing from `tip` back along direction (dx,dy).
+    _arrow(la, tipX, tipY, dx, dy, size) {
+      const len = Math.hypot(dx, dy) || 1;
+      const ux = dx / len, uy = dy / len;          // points away from the tip
+      const px = -uy, py = ux;                     // perpendicular
+      const s = size, wHalf = size * 0.33;
+      this.solid(la, [
+        [tipX, tipY],
+        [tipX + ux * s + px * wHalf, tipY + uy * s + py * wHalf],
+        [tipX + ux * s - px * wHalf, tipY + uy * s - py * wHalf],
+      ]);
+    }
+
+    // Horizontal dimension between x1..x2, measured points at yRef,
+    // dimension line drawn at yDim. Text above the line.
+    dimH(x1, x2, yRef, yDim, opts) {
+      opts = opts || {};
+      const la = 'DIMS';
+      const th = opts.textH || 60, ar = opts.arrow || 55, ext = 30;
+      if (x2 < x1) { const t = x1; x1 = x2; x2 = t; }
+      const dir = yDim >= yRef ? 1 : -1;
+      this.line(la, x1, yRef + dir * 15, x1, yDim + dir * ext);
+      this.line(la, x2, yRef + dir * 15, x2, yDim + dir * ext);
+      this.line(la, x1, yDim, x2, yDim);
+      const label = opts.label != null ? opts.label : BFT.util.fmt(x2 - x1);
+      const inside = (x2 - x1) > ar * 3;
+      if (inside) {
+        this._arrow(la, x1, yDim, 1, 0, ar);
+        this._arrow(la, x2, yDim, -1, 0, ar);
+      } else {
+        this._arrow(la, x1, yDim, -1, 0, ar);
+        this._arrow(la, x2, yDim, 1, 0, ar);
+      }
+      this.text(la, (x1 + x2) / 2, yDim + th * 0.35, th, label, { align: 'center' });
+      return this;
+    }
+
+    // Vertical dimension between y1..y2, measured points at xRef,
+    // dimension line drawn at xDim. Text rotated 90deg beside the line.
+    dimV(y1, y2, xRef, xDim, opts) {
+      opts = opts || {};
+      const la = 'DIMS';
+      const th = opts.textH || 60, ar = opts.arrow || 55, ext = 30;
+      if (y2 < y1) { const t = y1; y1 = y2; y2 = t; }
+      const dir = xDim >= xRef ? 1 : -1;
+      this.line(la, xRef + dir * 15, y1, xDim + dir * ext, y1);
+      this.line(la, xRef + dir * 15, y2, xDim + dir * ext, y2);
+      this.line(la, xDim, y1, xDim, y2);
+      const label = opts.label != null ? opts.label : BFT.util.fmt(y2 - y1);
+      const inside = (y2 - y1) > ar * 3;
+      if (inside) {
+        this._arrow(la, xDim, y1, 0, 1, ar);
+        this._arrow(la, xDim, y2, 0, -1, ar);
+      } else {
+        this._arrow(la, xDim, y1, 0, -1, ar);
+        this._arrow(la, xDim, y2, 0, 1, ar);
+      }
+      this.text(la, xDim - th * 0.35, (y1 + y2) / 2, th, label, { align: 'center', rot: 90 });
+      return this;
+    }
+
+    // Chain of horizontal dimensions along shared yRef/yDim.
+    dimChainH(xs, yRef, yDim, opts) {
+      for (let i = 0; i < xs.length - 1; i++) {
+        if (xs[i + 1] - xs[i] > 1) this.dimH(xs[i], xs[i + 1], yRef, yDim, opts);
+      }
+    }
+
+    dimChainV(ys, xRef, xDim, opts) {
+      for (let i = 0; i < ys.length - 1; i++) {
+        if (ys[i + 1] - ys[i] > 1) this.dimV(ys[i], ys[i + 1], xRef, xDim, opts);
+      }
+    }
+
+    // Leader: text with a pointing line (like 炸炉 → item in the reference dwg).
+    leader(la, fromX, fromY, toX, toY, textH, s) {
+      this.line(la, fromX, fromY, toX, toY);
+      this._arrow(la, toX, toY, fromX - toX, fromY - toY, 45);
+      const align = fromX <= toX ? 'right' : 'left';
+      const pad = fromX <= toX ? -20 : 20;
+      this.text(la, fromX + pad, fromY - textH * 0.3, textH, s, { align });
+    }
+
+    // Append another scene translated by (dx,dy).
+    add(other, dx, dy) {
+      for (const it of other.items) this.items.push(translate(it, dx, dy));
+      return this;
+    }
+
+    bounds() {
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      const acc = (x, y) => {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      };
+      for (const it of this.items) {
+        switch (it.k) {
+          case 'line': acc(it.x1, it.y1); acc(it.x2, it.y2); break;
+          case 'pline': case 'solid': for (const p of it.pts) acc(p[0], p[1]); break;
+          case 'circle': case 'arc': acc(it.cx - it.r, it.cy - it.r); acc(it.cx + it.r, it.cy + it.r); break;
+          case 'text': {
+            // rough text extents so bounds account for labels
+            const w = it.s.length * it.h * 0.62;
+            const x0 = it.align === 'center' ? it.x - w / 2 : it.align === 'right' ? it.x - w : it.x;
+            if (it.rot) { acc(it.x - it.h, it.y - w / 2); acc(it.x + it.h, it.y + w / 2); }
+            else { acc(x0, it.y - it.h * 0.2); acc(x0 + w, it.y + it.h); }
+            break;
+          }
+        }
+      }
+      if (!isFinite(minX)) { minX = minY = 0; maxX = maxY = 1; }
+      return { minX, minY, maxX, maxY, w: maxX - minX, h: maxY - minY };
+    }
+  }
+
+  function translate(it, dx, dy) {
+    const c = Object.assign({}, it);
+    switch (it.k) {
+      case 'line': c.x1 += dx; c.y1 += dy; c.x2 += dx; c.y2 += dy; break;
+      case 'pline': case 'solid': c.pts = it.pts.map((p) => [p[0] + dx, p[1] + dy]); break;
+      case 'circle': case 'arc': c.cx += dx; c.cy += dy; break;
+      case 'text': c.x += dx; c.y += dy; break;
+    }
+    return c;
+  }
+
+  BFT.Scene = Scene;
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — parametric view generators.
+   Everything is generated in real millimetres from the project model, so the
+   plan on screen, the multi-view drawing sheet and every export share the
+   exact same geometry. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+  const U = () => BFT.util;
+
+  // ---------------------------------------------------------------------
+  // Equipment symbols, drawn in item-local coordinates (0..w, 0..d, y-up)
+  // and mapped through the item's rotation.
+  // ---------------------------------------------------------------------
+  function drawItemPlan(sc, item, selected) {
+    const u = U();
+    const la = item.overhead ? 'HIDDEN' : (item.fixture ? 'FIXTURE' : 'EQUIP');
+    const [fw, fd] = u.footprint(item);
+    const X = (lx, ly) => u.localToWorld(item, lx, ly);
+
+    const lpline = (pts, closed) => sc.pline(la, pts.map((p) => X(p[0], p[1])), closed);
+    const lrect = (x, y, w, h) => lpline([[x, y], [x + w, y], [x + w, y + h], [x, y + h]], true);
+    const lcircle = (cx, cy, r) => { const c = X(cx, cy); sc.circle(la, c[0], c[1], r); };
+
+    if (item.shape === 'circle') {
+      const r = Math.min(item.w, item.d) / 2;
+      lcircle(item.w / 2, item.d / 2, r);
+      lcircle(item.w / 2, item.d / 2, r * 0.55);
+    } else {
+      lrect(0, 0, item.w, item.d);
+    }
+
+    const w = item.w, d = item.d, m = Math.min(w, d);
+    switch (item.sym) {
+      case 'burners': {
+        const n = item.burners || 4, cols = Math.ceil(n / 2), rows = n > 1 ? 2 : 1;
+        const r = Math.min((w / cols), (d / rows)) * 0.30;
+        for (let i = 0; i < n; i++) {
+          const cx = ((i % cols) + 0.5) * (w / cols);
+          const cy = (Math.floor(i / cols) + 0.5) * (d / rows);
+          lcircle(cx, cy, r); lcircle(cx, cy, r * 0.45);
+        }
+        break;
+      }
+      case 'pans': {
+        const n = item.pans || 2, g = m * 0.09;
+        const pw = (w - g * (n + 1)) / n;
+        for (let i = 0; i < n; i++) lrect(g + i * (pw + g), g, pw, d - 2 * g);
+        break;
+      }
+      case 'sink': {
+        const n = item.bowls || 1, g = m * 0.10;
+        const pw = (w - g * (n + 1)) / n;
+        for (let i = 0; i < n; i++) {
+          lrect(g + i * (pw + g), g, pw, d - 2 * g);
+          lcircle(g + i * (pw + g) + pw / 2, d - g * 1.8, g * 0.5); // tap
+        }
+        break;
+      }
+      case 'grill': {
+        const g = w * 0.12;
+        for (let i = 1; i <= 5; i++) {
+          const y = (d / 6) * i;
+          lpline([[g, y], [w - g, y]], false);
+        }
+        break;
+      }
+      case 'oven': {
+        const r = m * 0.22;
+        lcircle(w * 0.28, d / 2, r);
+        lcircle(w * 0.72, d / 2, r);
+        break;
+      }
+      case 'fridge': {
+        lpline([[0, 0], [w, d]], false);
+        lpline([[0, d], [w, 0]], false);
+        break;
+      }
+      case 'cross': {
+        lpline([[0, 0], [w, d]], false);
+        break;
+      }
+      case 'hood': {
+        lpline([[0, 0], [w, d]], false);
+        lpline([[0, d], [w, 0]], false);
+        break;
+      }
+      case 'svc': {
+        // connection point: letter in the box (P power, G gas, W water, D drain)
+        const c = X(w / 2, d / 2);
+        sc.text(la, c[0], c[1] - Math.min(w, d) * 0.28, Math.min(w, d) * 0.75, item.letter || 'S', { align: 'center' });
+        break;
+      }
+    }
+
+    if (selected) {
+      // selection ticks on footprint corners (canvas-only layer semantics
+      // are fine: exports never pass selected=true)
+      const cs = 40;
+      const corners = [[0, 0], [fw, 0], [fw, fd], [0, fd]];
+      for (const c of corners) {
+        sc.line('NOTES', item.x + c[0] - cs, item.y + c[1], item.x + c[0] + cs, item.y + c[1]);
+        sc.line('NOTES', item.x + c[0], item.y + c[1] - cs, item.x + c[0], item.y + c[1] + cs);
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // Collision-aware labelling. Labels that genuinely fit inside their item
+  // (and don't clash with a label already placed) render in place; anything
+  // else becomes a numbered balloon with an equipment list beside the plan
+  // — so nothing ever overlaps, no matter how dense the cook line gets.
+  // ---------------------------------------------------------------------
+  function labelPass(sc, project, ox, oy, lang, nameOnly) {
+    const u = U();
+    const placed = [];   // world-mm AABBs of labels already on the plan
+    const callouts = [];
+    const collide = (b) => placed.some((p) =>
+      b.x1 < p.x2 + 30 && b.x2 > p.x1 - 30 && b.y1 < p.y2 + 30 && b.y2 > p.y1 - 30);
+    const displayName = (item) =>
+      lang === 'en' ? item.en : lang === 'zh' ? (item.zh || item.en) : (item.zh ? item.zh + ' ' + item.en : item.en);
+
+    const items = [...project.items].sort((a, b) => a.x - b.x || a.y - b.y);
+    for (const item of items) {
+      const [fw, fd] = u.footprint(item);
+      const X = ox + item.x, Y = oy + item.y;
+      const cx = X + fw / 2, cy = Y + fd / 2;
+      const name = displayName(item);
+      const size = u.fmt(item.w) + 'x' + u.fmt(item.d) + 'x' + u.fmt(item.h) + 'H';
+
+      if (item.catId === 'bench') {
+        const box = benchLabel(sc, project, item, ox, oy, lang, nameOnly);
+        if (box) placed.push(box);
+        continue;
+      }
+
+      if (item.svc && item.sym === 'svc') {
+        // connection markers: name beside the lettered square, if room
+        const th = 46, wpx = (name.length + 1) * th * 0.62;
+        const box = { x1: X + fw + 40, y1: cy - 70, x2: X + fw + 40 + wpx, y2: cy + 40 };
+        if (!collide(box)) { sc.text('TEXT', X + fw + 60, cy - 20, th, name); placed.push(box); continue; }
+        callouts.push({ item, name, size: null });
+        continue;
+      }
+
+      if (item.overhead) {
+        const s = name + (nameOnly ? '' : ' ' + size);
+        const th = 44, wpx = (s.length + 1) * th * 0.62;
+        const box = { x1: cx - wpx / 2, y1: cy - 70, x2: cx + wpx / 2, y2: cy + 50 };
+        if (wpx < fw - 40 && !collide(box)) {
+          sc.text('TEXT', cx, cy - 16, th, s, { align: 'center' });
+          placed.push(box);
+          continue;
+        }
+        callouts.push({ item, name, size });
+        continue;
+      }
+
+      const vertical = fd > fw * 1.35 && fw < 700;
+      if (!vertical) {
+        const th = Math.max(36, Math.min(60, fw / ((name.length + 1) * 0.66)));
+        const nameW = name.length * th * 0.62;
+        const sizeW = nameOnly ? 0 : size.length * 42 * 0.62;
+        const wpx = Math.max(nameW, sizeW);
+        const hpx = nameOnly ? th + 30 : th + 130;
+        const box = { x1: cx - wpx / 2, y1: cy - 100, x2: cx + wpx / 2, y2: cy - 100 + hpx };
+        if (nameW <= fw - 40 && hpx <= fd - 20 && !collide(box)) {
+          sc.text('TEXT', cx, cy + 10, th, name, { align: 'center' });
+          if (!nameOnly) sc.text('TEXT', cx, cy - 70, 42, size, { align: 'center' });
+          placed.push(box);
+          continue;
+        }
+      } else {
+        const th = Math.max(36, Math.min(58, fd / ((name.length + 1) * 0.66)));
+        const nameW = name.length * th * 0.62;
+        const wpx = nameOnly ? th + 30 : th + 130;
+        const box = { x1: cx - 90, y1: cy - nameW / 2, x2: cx - 90 + wpx, y2: cy + nameW / 2 };
+        if (nameW <= fd - 40 && wpx <= fw - 20 && !collide(box)) {
+          sc.text('TEXT', cx + th * 0.55, cy, th, name, { align: 'center', rot: 90 });
+          if (!nameOnly) sc.text('TEXT', cx - th * 1.0, cy, 40, size, { align: 'center', rot: 90 });
+          placed.push(box);
+          continue;
+        }
+      }
+      callouts.push({ item, name, size });
+    }
+
+    // leader labels: every remaining item still gets its name, written in
+    // the walkway with a pointer line to the item (supplier drawing style)
+    const iW = project.trailer.boxWidth - 2 * project.trailer.wall;
+    for (const c of callouts) {
+      const [fw, fd] = u.footprint(c.item);
+      const X = ox + c.item.x, Y = oy + c.item.y;
+      const cx = X + fw / 2;
+      const topRow = c.item.y + fd / 2 >= iW / 2;
+      const s = nameOnly || !c.size ? c.name : c.name + ' ' + c.size;
+      const th = 44, wpx = (s.length + 1) * th * 0.62;
+      let spot = null;
+      outer:
+      for (const tier of [260, 440, 620]) {
+        for (const dx of [0, 250, -250, 500, -500, 800, -800]) {
+          const ty = topRow ? Y - tier : Y + fd + tier;
+          const box = { x1: cx + dx - wpx / 2, y1: ty - 60, x2: cx + dx + wpx / 2, y2: ty + 70 };
+          if (!collide(box)) { spot = { tx: cx + dx, ty, box }; break outer; }
+        }
+      }
+      if (!spot) { // extremely dense: take the outermost tier anyway
+        const ty = topRow ? Y - 620 : Y + fd + 620;
+        spot = { tx: cx, ty, box: { x1: cx - wpx / 2, y1: ty - 60, x2: cx + wpx / 2, y2: ty + 70 } };
+      }
+      sc.text('TEXT', spot.tx, spot.ty - 16, th, s, { align: 'center' });
+      sc.line('TEXT', spot.tx, topRow ? spot.ty + 60 : spot.ty - 70, cx, topRow ? Y : Y + fd);
+      placed.push(spot.box);
+    }
+  }
+
+  // Bench labels move to the largest uncovered stretch of the bench so
+  // appliances placed on top stay readable; a fully-covered bench gets none.
+  function benchLabel(sc, project, bench, ox, oy, lang, nameOnly) {
+    const u = U();
+    const [bw, bd] = u.footprint(bench);
+    const horizontal = bw >= bd;
+    const lo = horizontal ? bench.x : bench.y;
+    const hi = lo + (horizontal ? bw : bd);
+    const spans = [];
+    for (const o of project.items) {
+      if (o.id === bench.id || o.overhead) continue;
+      const [ow, od] = u.footprint(o);
+      const crosses = horizontal
+        ? o.y < bench.y + bd - 10 && o.y + od > bench.y + 10
+        : o.x < bench.x + bw - 10 && o.x + ow > bench.x + 10;
+      if (!crosses) continue;
+      const a = horizontal ? o.x : o.y, b = a + (horizontal ? ow : od);
+      if (b > lo && a < hi) spans.push([Math.max(lo, a), Math.min(hi, b)]);
+    }
+    spans.sort((a, b) => a[0] - b[0]);
+    let cur = lo, best = [lo, hi], bestLen = -1;
+    for (const [a, b] of spans) {
+      if (a - cur > bestLen) { bestLen = a - cur; best = [cur, a]; }
+      cur = Math.max(cur, b);
+    }
+    if (hi - cur > bestLen) { bestLen = hi - cur; best = [cur, hi]; }
+    if (bestLen < 0) bestLen = hi - lo;
+    if (bestLen < 450) return null; // bench fully in use: appliances tell the story
+    const mid = (best[0] + best[1]) / 2;
+    const name = lang === 'en' ? bench.en : lang === 'zh' ? (bench.zh || bench.en) : (bench.zh ? bench.zh + ' ' + bench.en : bench.en);
+    const s = nameOnly ? name : name + ' ' + u.fmt(bench.w) + 'x' + u.fmt(bench.d) + 'x' + u.fmt(bench.h) + 'H';
+    const th = Math.max(34, Math.min(58, bestLen / ((s.length + 1) * 0.62)));
+    const wpx = s.length * th * 0.62;
+    if (horizontal) {
+      const cx = ox + mid, cy = oy + bench.y + bd / 2;
+      sc.text('TEXT', cx, cy - th * 0.35, th, s, { align: 'center' });
+      return { x1: cx - wpx / 2, y1: cy - 80, x2: cx + wpx / 2, y2: cy + 60 };
+    }
+    const cx = ox + bench.x + bw / 2, cy = oy + mid;
+    sc.text('TEXT', cx + th * 0.35, cy, th, s, { align: 'center', rot: 90 });
+    return { x1: cx - 60, y1: cy - wpx / 2, x2: cx + 80, y2: cy + wpx / 2 };
+  }
+
+  // ---------------------------------------------------------------------
+  // PLAN VIEW (top-down). Origin (0,0) = OUTSIDE bottom-left corner of box.
+  // Interior origin is at (wall, wall). Items live in interior coordinates.
+  // ---------------------------------------------------------------------
+  function buildPlan(project, opts) {
+    opts = opts || {};
+    const sc = new BFT.Scene();
+    const t = project.trailer;
+    const wall = t.wall;
+    const L = t.boxLength, W = t.boxWidth;
+    const iL = L - 2 * wall, iW = W - 2 * wall;
+    const ox = wall, oy = wall; // interior origin in plan coords
+
+    // walls: double line with feature openings
+    drawWalls(sc, t, project.features, opts.en);
+
+    // hitch / drawbar centreline at left
+    if (opts.hitch !== false && t.hitchLength > 0) {
+      const cy = W / 2;
+      sc.pline('OUTLINE', [[-t.hitchLength, cy], [-180, cy - 160], [-180, cy + 160], [-t.hitchLength, cy]], true);
+      sc.line('OUTLINE', -t.hitchLength, cy, -t.hitchLength - 120, cy);
+      sc.circle('OUTLINE', -t.hitchLength - 60, cy, 55);
+      sc.line('CENTER', -t.hitchLength - 200, cy, L + 200, cy);
+    }
+
+    // items
+    const sel = opts.selection || null;
+    for (const item of project.items) {
+      const world = Object.assign({}, item, { x: ox + item.x, y: oy + item.y });
+      drawItemPlan(sc, world, sel && sel.type === 'item' && sel.id === item.id);
+    }
+    if (opts.labels !== false) {
+      labelPass(sc, project, ox, oy, opts.en ? 'en' : (project.meta.lang || 'both'), opts.nameOnly);
+    }
+
+    // automatic dimensions
+    if (opts.dims !== false) autoDims(sc, project, ox, oy, iL, iW, opts.dims === 'overview');
+
+    // user dims + notes (stored in interior coordinates)
+    for (const dm of project.dims || []) {
+      if (dm.dir === 'h') sc.dimH(ox + dm.x1, ox + dm.x2, oy + dm.yRef, oy + dm.yDim);
+      else sc.dimV(oy + dm.y1, oy + dm.y2, ox + dm.xRef, ox + dm.xDim);
+    }
+    for (const n of project.notes || []) {
+      sc.text('NOTES', ox + n.x, oy + n.y, n.h || 70, n.text);
+    }
+    return sc;
+  }
+
+  function drawWalls(sc, t, features, enOnly) {
+    const featName = (f) => (f.type === 'door' ? (enOnly ? 'DOOR ' : 'DOOR 门 ') : (enOnly ? 'SERVERY ' : 'SERVERY 售卖窗 '));
+    const L = t.boxLength, W = t.boxWidth, wall = t.wall;
+    // Each wall drawn as outer + inner segment lines broken at openings.
+    const walls = [
+      { name: 'bottom', horiz: true, out: [[0, 0], [L, 0]], inn: [[wall, wall], [L - wall, wall]] },
+      { name: 'top',    horiz: true, out: [[0, W], [L, W]], inn: [[wall, W - wall], [L - wall, W - wall]] },
+      { name: 'left',   len: W, horiz: false, out: [[0, 0], [0, W]], inn: [[wall, wall], [wall, W - wall]] },
+      { name: 'right',  len: W, horiz: false, out: [[L, 0], [L, W]], inn: [[L - wall, wall], [L - wall, W - wall]] },
+    ];
+    for (const wd of walls) {
+      const feats = (features || []).filter((f) => f.wall === wd.name)
+        .map((f) => [f.offset, f.offset + f.width, f])
+        .sort((a, b) => a[0] - b[0]);
+      drawWallLine(sc, wd.out[0], wd.out[1], feats, wd.horiz, false);
+      drawWallLine(sc, wd.inn[0], wd.inn[1], feats, wd.horiz, true, wall);
+      // opening symbols
+      for (const [a, b, f] of feats) {
+        const mid = (a + b) / 2;
+        if (wd.horiz) {
+          const y = wd.out[0][1], yi = wd.inn[0][1];
+          sc.line('FIXTURE', a, Math.min(y, yi), a, Math.max(y, yi));
+          sc.line('FIXTURE', b, Math.min(y, yi), b, Math.max(y, yi));
+          if (f.type === 'door') {
+            const dir = y === 0 ? -1 : 1; // swing outwards
+            sc.line('FIXTURE', a, y, a, y + dir * f.width);
+            sc.arc('FIXTURE', a, y, f.width, dir === -1 ? 270 : 0, dir === -1 ? 360 : 90);
+          } else {
+            sc.line('FIXTURE', a, (y + yi) / 2, b, (y + yi) / 2);
+          }
+          const ty = y === 0 ? y - 260 : y + 140;
+          sc.text('FIXTURE', mid, ty, 55, featName(f) + BFT.util.fmt(f.width), { align: 'center' });
+        } else {
+          const x = wd.out[0][0], xi = wd.inn[0][0];
+          sc.line('FIXTURE', Math.min(x, xi), a, Math.max(x, xi), a);
+          sc.line('FIXTURE', Math.min(x, xi), b, Math.max(x, xi), b);
+          if (f.type === 'door') {
+            const dir = x === 0 ? -1 : 1;
+            sc.line('FIXTURE', x, a, x + dir * f.width, a);
+            sc.arc('FIXTURE', x, a, f.width, dir === -1 ? 90 : 0, dir === -1 ? 180 : 90);
+          } else {
+            sc.line('FIXTURE', (x + xi) / 2, a, (x + xi) / 2, b);
+          }
+          const tx = x === 0 ? x - 140 : x + 140;
+          sc.text('FIXTURE', tx, mid, 55, featName(f) + BFT.util.fmt(f.width), { align: 'center', rot: 90 });
+        }
+      }
+    }
+  }
+
+  function drawWallLine(sc, p1, p2, feats, horiz, isInner, wallThk) {
+    // walk along the wall, skipping openings
+    const fixed = horiz ? p1[1] : p1[0];
+    const from = horiz ? p1[0] : p1[1];
+    const to = horiz ? p2[0] : p2[1];
+    let pos = from;
+    const segs = [];
+    for (const [a, b] of feats) {
+      const A = Math.max(from, a), B = Math.min(to, b);
+      if (B > A) { segs.push([pos, A]); pos = B; }
+    }
+    segs.push([pos, to]);
+    for (const [a, b] of segs) {
+      if (b - a < 1) continue;
+      if (horiz) sc.line('OUTLINE', a, fixed, b, fixed);
+      else sc.line('OUTLINE', fixed, a, fixed, b);
+    }
+  }
+
+  // Automatic dimension chains, in the style of the supplier reference dwg:
+  // chains along top & bottom equipment rows, interior length/width, features.
+  function autoDims(sc, project, ox, oy, iL, iW, simple) {
+    const t = project.trailer;
+    const items = project.items.filter((i) => !i.overhead);
+    const u = U();
+
+    if (simple) {
+      // sales drawing: overall sizes + openings only
+      const W = t.boxWidth, L = t.boxLength;
+      sc.dimH(ox, ox + iL, oy + iW + t.wall, W + 320, { label: 'INTERNAL LENGTH ' + u.fmt(iL) + 'mm' });
+      if (t.hitchLength > 0) sc.dimH(-t.hitchLength, L, W, W + 680, { label: 'OVERALL LENGTH ' + u.fmt(L + t.hitchLength) + 'mm' });
+      sc.dimV(oy, oy + iW, ox, -320, { label: 'INTERNAL WIDTH ' + u.fmt(iW) + 'mm' });
+      for (const f of project.features || []) {
+        if (f.wall === 'bottom') sc.dimH(f.offset, f.offset + f.width, 0, -350);
+        if (f.wall === 'top') sc.dimH(f.offset, f.offset + f.width, W, W + 320);
+        if (f.wall === 'left') sc.dimV(f.offset, f.offset + f.width, 0, -700);
+        if (f.wall === 'right') sc.dimV(f.offset, f.offset + f.width, L, L + 350);
+      }
+      return;
+    }
+
+    // split items into top-row / bottom-row by centre line
+    const tops = [], bots = [];
+    for (const it of items) {
+      const [fw, fd] = u.footprint(it);
+      (it.y + fd / 2 >= iW / 2 ? tops : bots).push(it);
+    }
+    const edges = (arr) => {
+      const xs = new Set([0, iL]);
+      for (const it of arr) {
+        const [fw] = u.footprint(it);
+        xs.add(Math.round(it.x * 10) / 10);
+        xs.add(Math.round((it.x + fw) * 10) / 10);
+      }
+      return Array.from(xs).sort((a, b) => a - b);
+    };
+
+    // equipment chains along each bench row (depths are on the item labels)
+    if (tops.length) {
+      const yDim = oy + Math.min(...tops.map((i) => i.y)) - 170;
+      sc.dimChainH(edges(tops).map((x) => ox + x), oy + iW, yDim, {});
+    }
+    if (bots.length) {
+      const yDim = oy + Math.max(...bots.map((i) => i.y + u.footprint(i)[1])) + 170;
+      sc.dimChainH(edges(bots).map((x) => ox + x), oy, yDim, {});
+    }
+
+    const W = t.boxWidth, L = t.boxLength;
+    const feats = project.features || [];
+
+    // one clean chain per wall through ALL its openings (no overlapping
+    // dims when a wall carries two serving windows)
+    const wallChain = (wall) => {
+      const es = new Set();
+      for (const f of feats.filter((f) => f.wall === wall)) {
+        es.add(f.offset);
+        es.add(f.offset + f.width);
+      }
+      return es.size ? [0, ...Array.from(es).sort((a, b) => a - b), wall === 'left' || wall === 'right' ? W : L] : null;
+    };
+    const botChain = wallChain('bottom');
+    if (botChain) sc.dimChainH(botChain, 0, -350);
+    const topChain = wallChain('top');
+    if (topChain) sc.dimChainH(topChain, W, W + 320);
+    const leftChain = wallChain('left');
+    if (leftChain) sc.dimChainV(leftChain, 0, -t.hitchLength - 350);
+    const rightChain = wallChain('right');
+    if (rightChain) sc.dimChainV(rightChain, L, L + 950);
+
+    // only the sizes that matter: shell length, overall with drawbar,
+    // internal width (equipment chains already total the internal length)
+    let topStack = W + (topChain ? 620 : 320);
+    sc.dimH(0, L, W, topStack, { label: 'SHELL 外长 ' + u.fmt(L) });
+    if (t.hitchLength > 0) sc.dimH(-t.hitchLength, L, W, topStack + 300, { label: 'OVERALL 总长 ' + u.fmt(L + t.hitchLength) });
+    sc.dimV(oy, oy + iW, ox, -320, { label: 'INT 内宽 ' + u.fmt(iW) });
+
+    // overhead units (range hoods): width dim just below the unit (the
+    // projection is on the item label, no dimension line needed)
+    for (const it of project.items.filter((i) => i.overhead)) {
+      const [fw] = u.footprint(it);
+      sc.dimH(ox + it.x, ox + it.x + fw, oy + it.y, oy + it.y - 140);
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // ELEVATIONS
+  // ---------------------------------------------------------------------
+  // Side elevation seen from `side` ('bottom' = serving side, 'top' = road
+  // side). x axis = trailer length (hitch at left for 'bottom', mirrored for
+  // 'top' so the two views are consistent), y axis = height from ground.
+  function buildSideElevation(project, side, enOnly) {
+    const sc = new BFT.Scene();
+    const t = project.trailer;
+    const L = t.boxLength, floorH = t.chassisHeight, roofH = floorH + t.boxHeight;
+    const u = U();
+    const mirror = side === 'top';
+    const mx = (x) => (mirror ? L - x : x);
+
+    // ground line
+    sc.line('CENTER', -t.hitchLength - 300, 0, L + 300, 0);
+    // box
+    sc.rect('OUTLINE', 0, floorH, L, t.boxHeight);
+    // roof cap
+    sc.line('OUTLINE', -60, roofH, L + 60, roofH);
+    sc.line('OUTLINE', -60, roofH + 60, L + 60, roofH + 60);
+    // chassis rail
+    sc.line('OUTLINE', 0, floorH - 80, L, floorH - 80);
+
+    // bench level: everything inside finishes flush at this height
+    const benchLevel = floorH + t.worktopHeight;
+    sc.line('HIDDEN', 0, benchLevel, L, benchLevel);
+    sc.text('NOTES', 80, benchLevel + 40, 60,
+      (enOnly ? 'BENCH LEVEL ' : 'BENCH LEVEL 台面高 ') + u.fmt(t.worktopHeight));
+
+    // hitch
+    const hx1 = mirror ? L : 0, hx2 = mirror ? L + t.hitchLength : -t.hitchLength;
+    if (t.hitchLength > 0) {
+      sc.line('OUTLINE', hx1, floorH - 80, hx2, floorH - 200);
+      sc.line('OUTLINE', hx1, floorH - 20, hx2, floorH - 140);
+      sc.pline('OUTLINE', [[hx2, floorH - 200], [hx2 - (mirror ? -1 : 1) * 40, floorH - 320], [hx2, floorH - 320]], false);
+      // jockey wheel
+      sc.circle('OUTLINE', hx2 + (mirror ? -1 : 1) * 250, 100, 100);
+      sc.line('OUTLINE', hx2 + (mirror ? -1 : 1) * 250, 200, hx2 + (mirror ? -1 : 1) * 250, floorH - 150);
+    }
+
+    // wheels
+    const wr = t.wheelDia / 2;
+    const axX = t.axlePos != null ? t.axlePos : L * 0.55;
+    const axles = t.axles === 1 ? [axX] : [axX - t.wheelDia * 0.62, axX + t.wheelDia * 0.62];
+    for (const ax of axles) {
+      sc.circle('OUTLINE', mx(ax), wr, wr);
+      sc.circle('OUTLINE', mx(ax), wr, wr * 0.55);
+    }
+    // mudguard
+    const gLo = Math.min(...axles) - wr - 90, gHi = Math.max(...axles) + wr + 90;
+    sc.pline('OUTLINE', [[mx(gLo), floorH], [mx(gLo), wr + 190], [mx(gHi), wr + 190], [mx(gHi), floorH]], false);
+
+    // wall features on this side
+    for (const f of (project.features || []).filter((f) => f.wall === side)) {
+      const sill = f.sill != null ? f.sill : (f.type === 'door' ? 0 : 900);
+      const fh = f.height != null ? f.height : (f.type === 'door' ? t.boxHeight - 150 : 900);
+      const x1 = mirror ? L - f.offset - f.width : f.offset;
+      sc.rect('FIXTURE', x1, floorH + sill, f.width, fh);
+      if (f.type === 'window') {
+        // flip-up awning shown dashed
+        sc.pline('HIDDEN', [[x1, floorH + sill + fh], [x1 + f.width * 0.06, floorH + sill + fh + f.width * 0.28]], false);
+        sc.text('FIXTURE', x1 + f.width / 2, floorH + sill + fh / 2 - 27, 55, enOnly ? 'SERVERY' : 'SERVERY 售卖窗', { align: 'center' });
+      } else {
+        sc.line('FIXTURE', x1 + (mirror ? f.width - 120 : 60), floorH + sill + fh * 0.5, x1 + (mirror ? f.width - 60 : 120), floorH + sill + fh * 0.5);
+        sc.text('FIXTURE', x1 + f.width / 2, floorH + sill + fh * 0.72, 55, enOnly ? 'DOOR' : 'DOOR 门', { align: 'center' });
+      }
+    }
+
+    // dims: overall length, heights
+    sc.dimH(0, L, 0, -350, { label: u.fmt(L) });
+    if (t.hitchLength > 0) sc.dimH(Math.min(hx2, 0), Math.max(hx2, L), 0, -650, { label: (enOnly ? 'OVERALL ' : 'OVERALL 总长 ') + u.fmt(L + t.hitchLength) });
+    sc.dimV(0, roofH, L, L + 350, { label: 'H=' + u.fmt(roofH) });
+    sc.dimV(floorH, roofH, 0, -350, { label: u.fmt(t.boxHeight) });
+    return sc;
+  }
+
+  // ---------------------------------------------------------------------
+  // INTERIOR ELEVATION: stand in the walkway and look at one side wall.
+  // Shows benches and every appliance at true height so levels line up.
+  // side 'top' = cook side, 'bottom' = serving side. x = along trailer.
+  // ---------------------------------------------------------------------
+  function buildInteriorElevation(project, side, enOnly) {
+    const sc = new BFT.Scene();
+    const u = U();
+    const t = project.trailer;
+    const iL = t.boxLength - 2 * t.wall;
+    const iW = t.boxWidth - 2 * t.wall;
+    const iH = t.interiorHeight;
+    const benchH = t.worktopHeight;
+
+    // interior box: floor, walls, ceiling
+    sc.rect('OUTLINE', 0, 0, iL, iH);
+
+    const onSide = (it) => {
+      const [, fd] = u.footprint(it);
+      if (it.catId === 'bench' && fd > iW * 0.8) return true; // U-shape end bench shows in both
+      const cy = it.y + fd / 2;
+      return side === 'top' ? cy >= iW / 2 : cy < iW / 2;
+    };
+    const items = project.items.filter(onSide);
+
+    // benches first (the datum everything lines up to)
+    let sideBenchH = benchH;
+    for (const b of items.filter((i) => i.catId === 'bench')) {
+      const [fw] = u.footprint(b);
+      sc.rect('EQUIP', b.x, 0, fw, b.h);
+      sideBenchH = b.h;
+    }
+    // bench level line right across, labelled
+    sc.line('HIDDEN', 0, sideBenchH, iL, sideBenchH);
+    sc.text('NOTES', 60, sideBenchH + 40, 55, (enOnly ? 'BENCH LEVEL ' : 'BENCH LEVEL 台面 ') + u.fmt(sideBenchH));
+
+    // wall openings on this side (servery windows) for reference
+    const wallName = side === 'top' ? 'top' : 'bottom';
+    for (const f of (project.features || []).filter((f) => f.wall === wallName)) {
+      const sill = f.sill != null ? f.sill : 900;
+      const fh = f.height != null ? f.height : 900;
+      sc.rect('FIXTURE', f.offset - t.wall, sill, f.width, fh);
+      sc.text('FIXTURE', f.offset - t.wall + f.width / 2, sill + fh - 90, 50,
+        (f.type === 'door' ? 'DOOR' : 'SERVERY') + ' ' + u.fmt(f.width), { align: 'center' });
+    }
+
+    // appliances at true height; base worked out from mount setting
+    const placed = [];
+    const others = items.filter((i) => i.catId !== 'bench' && !(i.svc && i.sym === 'svc'));
+    others.sort((a, b) => a.x - b.x);
+    others.forEach((it, idx) => {
+      const [fw] = u.footprint(it);
+      let base;
+      if (it.mount === 'floor') base = 0;
+      else if (it.mount === 'bench') base = sideBenchH;
+      else if (it.overhead) base = iH - it.h;
+      else base = it.h <= 650 ? sideBenchH : 0; // small units sit on the bench
+      const la = it.overhead ? 'HIDDEN' : 'EQUIP';
+      sc.rect(la, it.x, base, fw, it.h);
+      const top = base + it.h;
+      const name = enOnly || !it.zh ? it.en : it.zh + ' ' + it.en;
+      const s = name + ' ' + u.fmt(it.h) + 'H' + (top !== sideBenchH && !it.overhead ? ' (top ' + u.fmt(top) + ')' : '');
+      const th = 48, wpx = (s.length + 1) * th * 0.62;
+      // stack labels above the unit, dodging ones already placed
+      let ty = (it.overhead ? base : top) + 90;
+      for (let tries = 0; tries < 4; tries++) {
+        const box = { x1: it.x + fw / 2 - wpx / 2, y1: ty - 40, x2: it.x + fw / 2 + wpx / 2, y2: ty + 70 };
+        if (!placed.some((p) => box.x1 < p.x2 + 30 && box.x2 > p.x1 - 30 && box.y1 < p.y2 + 20 && box.y2 > p.y1 - 20)) {
+          placed.push(box);
+          break;
+        }
+        ty += 150;
+      }
+      sc.text('TEXT', it.x + fw / 2, ty, th, s, { align: 'center' });
+      if (ty > top + 120) sc.line('TEXT', it.x + fw / 2, ty - 50, it.x + fw / 2, top + 10);
+    });
+
+    // height dims
+    sc.dimV(0, iH, iL, iL + 320, { label: (enOnly ? 'INT HEIGHT ' : 'INT 净高 ') + u.fmt(iH) });
+    sc.dimV(0, sideBenchH, 0, -320, {});
+    return sc;
+  }
+
+  // End view seen from `end` ('left' = hitch end, 'right' = rear).
+  function buildEndView(project, end) {
+    const sc = new BFT.Scene();
+    const t = project.trailer;
+    const W = t.boxWidth, floorH = t.chassisHeight, roofH = floorH + t.boxHeight;
+    const u = U();
+    sc.line('CENTER', -300, 0, W + 300, 0);
+    sc.rect('OUTLINE', 0, floorH, W, t.boxHeight);
+    sc.line('OUTLINE', -60, roofH, W + 60, roofH);
+    sc.line('OUTLINE', -60, roofH + 60, W + 60, roofH + 60);
+    // axle + wheels behind box (dashed)
+    const wr = t.wheelDia / 2;
+    const trackInset = 120;
+    for (const wx of [trackInset, W - trackInset]) {
+      sc.pline('HIDDEN', [[wx - 110, 0], [wx - 110, wr * 2 * 0.62], [wx + 110, wr * 2 * 0.62], [wx + 110, 0]], false);
+    }
+    sc.line('HIDDEN', trackInset, wr, W - trackInset, wr);
+    // features on this end wall
+    for (const f of (project.features || []).filter((f) => f.wall === end)) {
+      const sill = f.sill != null ? f.sill : (f.type === 'door' ? 0 : 900);
+      const fh = f.height != null ? f.height : (f.type === 'door' ? t.boxHeight - 150 : 900);
+      const x1 = end === 'right' ? f.offset : W - f.offset - f.width; // keep orientation consistent when walking around the trailer
+      sc.rect('FIXTURE', x1, floorH + sill, f.width, fh);
+    }
+    sc.dimH(0, W, 0, -350, { label: u.fmt(W) });
+    sc.dimV(0, roofH, W, W + 350, { label: u.fmt(roofH) });
+    return sc;
+  }
+
+  // ---------------------------------------------------------------------
+  // DRAWING SHEET: 5 views + notes + title block, like the supplier's dwg.
+  // ---------------------------------------------------------------------
+  function buildSheet(project) {
+    const sc = new BFT.Scene();
+    const t = project.trailer;
+    const u = U();
+    const gap = 1400;
+
+    const plan = buildPlan(project, { labels: true, dims: true });
+    const sideFront = buildSideElevation(project, 'bottom');
+    const sideBack = buildSideElevation(project, 'top');
+    const endL = buildEndView(project, 'left');
+    const endR = buildEndView(project, 'right');
+
+    const bPlan = plan.bounds(), bSF = sideFront.bounds(), bSB = sideBack.bounds();
+    const bEL = endL.bounds(), bER = endR.bounds();
+
+    // middle row: endL | plan | endR, centred vertically on the plan
+    const rowY = 0;
+    const planX = 0;
+    sc.add(plan, planX - bPlan.minX, rowY - bPlan.minY);
+    const planW = bPlan.w, planH = bPlan.h;
+    sc.add(endL, planX - bEL.w - gap - bEL.minX, rowY + (planH - bEL.h) / 2 - bEL.minY);
+    sc.add(endR, planX + planW + gap - bER.minX, rowY + (planH - bER.h) / 2 - bER.minY);
+
+    // top row: serving-side elevation centred over the plan
+    const topY = rowY + planH + gap;
+    sc.add(sideFront, planX + (planW - bSF.w) / 2 - bSF.minX, topY - bSF.minY);
+    // bottom row: road-side elevation
+    const botY = rowY - gap - bSB.h;
+    sc.add(sideBack, planX + (planW - bSB.w) / 2 - bSB.minX, botY - bSB.minY);
+
+    // interior elevations: appliance heights against the bench line
+    const intCook = buildInteriorElevation(project, 'top');
+    const intServe = buildInteriorElevation(project, 'bottom');
+    const bIC = intCook.bounds(), bIS = intServe.bounds();
+    const icY = botY - gap - bIC.h;
+    sc.add(intCook, planX + (planW - bIC.w) / 2 - bIC.minX, icY - bIC.minY);
+    const isY = icY - gap - bIS.h;
+    sc.add(intServe, planX + (planW - bIS.w) / 2 - bIS.minX, isY - bIS.minY);
+
+    // view titles
+    const tt = 110;
+    sc.text('TITLE', planX + planW / 2, topY + bSF.h + 250, tt, 'SERVING SIDE ELEVATION 售卖侧立面', { align: 'center' });
+    sc.text('TITLE', planX + planW / 2, rowY + planH + 350, tt, 'PLAN VIEW 平面图', { align: 'center' });
+    sc.text('TITLE', planX - gap - bEL.w / 2, rowY + (planH + bEL.h) / 2 + 300, tt, 'FRONT 前视', { align: 'center' });
+    sc.text('TITLE', planX + planW + gap + bER.w / 2, rowY + (planH + bER.h) / 2 + 300, tt, 'REAR 后视', { align: 'center' });
+    sc.text('TITLE', planX + planW / 2, botY - 350, tt, 'ROAD SIDE ELEVATION 道路侧立面', { align: 'center' });
+    sc.text('TITLE', planX + planW / 2, icY - 350, tt, 'COOK SIDE INTERIOR 烹饪侧内立面', { align: 'center' });
+    sc.text('TITLE', planX + planW / 2, isY - 350, tt, 'SERVING SIDE INTERIOR 售卖侧内立面', { align: 'center' });
+
+    // drawing frame with notes + title block band + equipment schedule
+    const bal = BFT.balance(project);
+    const schedule = project.items.map((it) => {
+      const nm = (it.zh ? it.zh + ' ' : '') + it.en;
+      return nm + '  ' + u.fmt(it.w) + 'x' + u.fmt(it.d) + 'x' + u.fmt(it.h) + '  ' + (it.kg || 0) + 'kg';
+    });
+    sheetFrame(sc, project, false, [
+      'ALL DIMENSIONS IN MILLIMETRES 所有尺寸单位为毫米',
+      'DO NOT SCALE - USE FIGURED DIMENSIONS 以标注尺寸为准',
+      'ALL BENCH TOPS LEVEL AT 台面同高 ' + u.fmt(t.worktopHeight) + 'mm; INTERNAL HEIGHT 净高 ' + u.fmt(t.interiorHeight) + 'mm',
+      'WALL THICKNESS 墙体厚度: ' + u.fmt(t.wall) + 'mm',
+      'EST. WEIGHT 估重 ' + bal.total + 'kg (SHELL ' + bal.tare + ' + EQUIP ' + bal.equipment + '), BALL LOAD 球载 ~' + bal.ball + 'kg (' + bal.ballPct + '%)',
+    ], schedule);
+    return sc;
+  }
+
+  // ---------------------------------------------------------------------
+  // CUSTOMER / SALES SHEET: simplified concept drawing for clients —
+  // English-only, equipment names, headline dimensions, no factory detail.
+  // ---------------------------------------------------------------------
+  function buildCustomerSheet(project) {
+    const sc = new BFT.Scene();
+    const t = project.trailer;
+    const u = U();
+    const gap = 1600;
+
+    const plan = buildPlan(project, { en: true, nameOnly: true, dims: 'overview' });
+    const side = buildSideElevation(project, 'bottom', true);
+    const bPlan = plan.bounds(), bSide = side.bounds();
+
+    sc.add(plan, -bPlan.minX, -bPlan.minY);
+    sc.add(side, (bPlan.w - bSide.w) / 2 - bSide.minX, bPlan.h + gap - bSide.minY);
+
+    const tt = 120;
+    sc.text('TITLE', bPlan.w / 2, bPlan.h + gap + bSide.h + 300, tt, 'SIDE VIEW', { align: 'center' });
+    sc.text('TITLE', bPlan.w / 2, -450 - 0, tt, 'FLOOR PLAN', { align: 'center' });
+
+    sheetFrame(sc, project, true, [
+      'ALL SIZES IN MILLIMETRES',
+      'INTERNAL HEIGHT: ' + u.fmt(t.interiorHeight) + 'mm',
+      'BENCH HEIGHT: ' + u.fmt(t.worktopHeight) + 'mm',
+      'EXTERNAL BOX: ' + u.fmt(t.boxLength) + ' x ' + u.fmt(t.boxWidth) + 'mm',
+      'CONCEPT LAYOUT FOR APPROVAL - NOT A MANUFACTURING DRAWING',
+    ]);
+    return sc;
+  }
+
+  // Drawing frame (double border), general-notes area and a standard
+  // three-column title block along the bottom band — the layout a
+  // manufacturer expects on an incoming drawing.
+  function sheetFrame(sc, project, sales, notes, schedule) {
+    const m = project.meta;
+    const b = sc.bounds();
+    const M = 500;            // content margin inside the frame
+    const TB_H = 1750;        // title band height
+    const x1 = b.minX - M, x2 = b.maxX + M;
+    const bandTop = b.minY - M;
+    const y1 = bandTop - TB_H, y2 = b.maxY + M;
+
+    // double border
+    sc.rect('TITLE', x1, y1, x2 - x1, y2 - y1);
+    sc.rect('TITLE', x1 - 90, y1 - 90, x2 - x1 + 180, y2 - y1 + 180);
+    sc.line('TITLE', x1, bandTop, x2, bandTop);
+
+    // ---- title block: right side of the band
+    const TB_W = Math.min(6200, (x2 - x1) * 0.5);
+    const bx = x2 - TB_W;
+    sc.line('TITLE', bx, y1, bx, bandTop);
+    const rowY = y1 + TB_H * 0.52;
+    sc.line('TITLE', bx, rowY, x2, rowY);
+
+    // company band
+    sc.text('TITLE', bx + 170, rowY + (TB_H * 0.48) * 0.42, 185, m.company || 'BONDI FOOD TRAILERS');
+    if (m.contact) sc.text('TITLE', bx + 170, rowY + 110, 78, m.contact);
+
+    // three columns of label/value pairs
+    const cols = [bx, bx + TB_W * 0.42, bx + TB_W * 0.72, x2];
+    sc.line('TITLE', cols[1], y1, cols[1], rowY);
+    sc.line('TITLE', cols[2], y1, cols[2], rowY);
+    const pair = (cx, topY, label, value) => {
+      sc.text('TITLE', cx + 140, topY - 200, 62, label);
+      sc.text('TITLE', cx + 140, topY - 420, 96, value || '-');
+    };
+    const half = rowY - y1;
+    const t1 = rowY, t2 = rowY - half / 2;
+    if (sales) {
+      pair(cols[0], t1, 'PROJECT', m.project);
+      pair(cols[0], t2, 'PREPARED FOR', m.client);
+      pair(cols[1], t1, 'DRAWING', 'CONCEPT LAYOUT');
+      pair(cols[1], t2, 'DATE', m.date);
+      pair(cols[2], t1, 'STATUS', 'FOR APPROVAL');
+      pair(cols[2], t2, 'REV', m.revision || 'A');
+    } else {
+      pair(cols[0], t1, 'PROJECT 项目', m.project);
+      pair(cols[0], t2, 'CLIENT 客户', m.client);
+      pair(cols[1], t1, 'DWG NO 图号', m.drawingNo);
+      pair(cols[1], t2, 'DATE 日期', m.date);
+      pair(cols[2], t1, 'UNITS 单位', 'mm (1:1 model)');
+      pair(cols[2], t2, 'REV 版本', m.revision || 'A');
+    }
+
+    // ---- general notes: left side of the band
+    if (notes && notes.length) {
+      sc.text('TITLE', x1 + 170, bandTop - 260, 84, sales ? 'NOTES' : 'GENERAL NOTES 说明');
+      notes.forEach((s, i) => sc.text('NOTES', x1 + 170, bandTop - 500 - i * 210, 84, (i + 1) + '. ' + s));
+    }
+
+    // ---- equipment schedule (heights & weights) between notes and titleblock
+    if (schedule && schedule.length) {
+      const sx = x1 + 7600;
+      const room = bx - sx - 200;
+      if (room > 2600) {
+        sc.text('TITLE', sx, bandTop - 260, 84, 'EQUIPMENT SCHEDULE 设备明细 (WxDxH, kg)');
+        const perCol = 6;
+        const colW = Math.max(2600, room / Math.min(2, Math.ceil(schedule.length / perCol)));
+        schedule.slice(0, perCol * 2).forEach((s, i) => {
+          const col = Math.floor(i / perCol), row = i % perCol;
+          if (sx + col * colW + colW <= bx) {
+            sc.text('NOTES', sx + col * colW, bandTop - 500 - row * 195, 62, s);
+          }
+        });
+        if (schedule.length > perCol * 2) {
+          sc.text('NOTES', sx, bandTop - 500 - perCol * 195, 62, '+ ' + (schedule.length - perCol * 2) + ' more 另有 - see plan 见平面图');
+        }
+      }
+    }
+  }
+
+  // Heights view: both interior elevations stacked, live in the app.
+  function buildHeightsView(project) {
+    const sc = new BFT.Scene();
+    const cook = buildInteriorElevation(project, 'top', true);
+    const serve = buildInteriorElevation(project, 'bottom', true);
+    const bC = cook.bounds(), bS = serve.bounds();
+    const gap = 1200;
+    sc.add(cook, -bC.minX, gap + bS.h - bC.minY);
+    sc.add(serve, -bS.minX, -bS.minY);
+    sc.text('TITLE', bC.w / 2, gap + bS.h + bC.h + 250, 110, 'COOK SIDE — LOOKING AT THE WALL', { align: 'center' });
+    sc.text('TITLE', bS.w / 2, -420, 110, 'SERVING SIDE — LOOKING AT THE WALL', { align: 'center' });
+    return sc;
+  }
+
+  BFT.views = { buildPlan, buildSideElevation, buildEndView, buildInteriorElevation, buildHeightsView, buildSheet, buildCustomerSheet, drawItemPlan };
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — DXF exporter.
+   Writes an AutoCAD 2000 (AC1015) ASCII DXF in MODEL SPACE MILLIMETRES
+   ($INSUNITS = 4), which opens directly in AutoCAD, ZWCAD (中望CAD), ZW3D,
+   DraftSight, LibreCAD, etc. Non-ASCII text (Chinese labels) is written as
+   \U+XXXX escape sequences so the file itself stays pure ASCII and renders
+   correctly regardless of the receiving system's codepage. Dimensions are
+   exported as plain geometry (lines/solids/text) so nothing depends on the
+   receiver's dimension-style setup. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+
+  function esc(s) {
+    let out = '';
+    for (const ch of String(s)) {
+      const cp = ch.codePointAt(0);
+      if (cp > 126) out += '\\U+' + cp.toString(16).toUpperCase().padStart(4, '0');
+      else out += ch;
+    }
+    return out;
+  }
+
+  function dxfFromScene(scene, layersDef) {
+    const L = [];                       // output lines
+    const P = (code, val) => { L.push(String(code)); L.push(String(val)); };
+    let handle = 0x30;
+    const H = () => (++handle).toString(16).toUpperCase();
+    const N = (v) => (Math.round(v * 1000) / 1000).toString();
+
+    const layers = Object.keys(layersDef);
+
+    // ---------- HEADER ----------
+    P(0, 'SECTION'); P(2, 'HEADER');
+    P(9, '$ACADVER'); P(1, 'AC1015');
+    P(9, '$INSBASE'); P(10, 0); P(20, 0); P(30, 0);
+    P(9, '$EXTMIN'); P(10, N(scene.bounds().minX)); P(20, N(scene.bounds().minY)); P(30, 0);
+    P(9, '$EXTMAX'); P(10, N(scene.bounds().maxX)); P(20, N(scene.bounds().maxY)); P(30, 0);
+    P(9, '$INSUNITS'); P(70, 4);        // 4 = millimetres
+    P(9, '$MEASUREMENT'); P(70, 1);     // metric
+    P(9, '$LTSCALE'); P(40, 1.0);
+    P(9, '$HANDSEED'); P(5, 'FFFF');
+    P(0, 'ENDSEC');
+
+    // ---------- CLASSES ----------
+    P(0, 'SECTION'); P(2, 'CLASSES'); P(0, 'ENDSEC');
+
+    // ---------- TABLES ----------
+    P(0, 'SECTION'); P(2, 'TABLES');
+
+    // VPORT
+    const vportTbl = H();
+    P(0, 'TABLE'); P(2, 'VPORT'); P(5, vportTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 1);
+    P(0, 'VPORT'); P(5, H()); P(330, vportTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbViewportTableRecord');
+    P(2, '*ACTIVE'); P(70, 0);
+    P(10, 0); P(20, 0); P(11, 1); P(21, 1); P(12, 0); P(22, 0);
+    P(13, 0); P(23, 0); P(14, 10); P(24, 10); P(15, 10); P(25, 10);
+    P(16, 0); P(26, 0); P(36, 1); P(17, 0); P(27, 0); P(37, 0);
+    P(40, 5000); P(41, 1.5); P(42, 50); P(43, 0); P(44, 0);
+    P(50, 0); P(51, 0); P(71, 0); P(72, 100); P(73, 1); P(74, 3);
+    P(75, 0); P(76, 0); P(77, 0); P(78, 0); P(281, 0); P(65, 1);
+    P(110, 0); P(120, 0); P(130, 0); P(111, 1); P(121, 0); P(131, 0);
+    P(112, 0); P(122, 1); P(132, 0); P(79, 0); P(146, 0);
+    P(0, 'ENDTAB');
+
+    // LTYPE
+    const ltypeTbl = H();
+    P(0, 'TABLE'); P(2, 'LTYPE'); P(5, ltypeTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 4);
+    const ltype = (name, desc, pattern) => {
+      P(0, 'LTYPE'); P(5, H()); P(330, ltypeTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbLinetypeTableRecord');
+      P(2, name); P(70, 0); P(3, desc); P(72, 65); P(73, pattern.length);
+      P(40, N(pattern.reduce((a, b) => a + Math.abs(b), 0)));
+      for (const seg of pattern) { P(49, N(seg)); P(74, 0); }
+    };
+    ltype('ByBlock', '', []); ltype('ByLayer', '', []); ltype('Continuous', 'Solid line', []);
+    ltype('DASHED', 'Dashed __ __ __', [60, -40]);
+    ltype('CENTER', 'Center ____ _ ____', [140, -40, 20, -40]);
+    P(0, 'ENDTAB');
+
+    // LAYER
+    const layerTbl = H();
+    P(0, 'TABLE'); P(2, 'LAYER'); P(5, layerTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, layers.length + 1);
+    const layerRec = (name, color, lt) => {
+      P(0, 'LAYER'); P(5, H()); P(330, layerTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbLayerTableRecord');
+      P(2, name); P(70, 0); P(62, color); P(6, lt); P(370, -3); P(390, 'F');
+    };
+    layerRec('0', 7, 'Continuous');
+    for (const name of layers) {
+      const def = layersDef[name];
+      const lt = def.dash ? (name === 'CENTER' ? 'CENTER' : 'DASHED') : 'Continuous';
+      layerRec(name, def.dxf, lt);
+    }
+    P(0, 'ENDTAB');
+
+    // STYLE
+    const styleTbl = H();
+    P(0, 'TABLE'); P(2, 'STYLE'); P(5, styleTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 1);
+    P(0, 'STYLE'); P(5, H()); P(330, styleTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbTextStyleTableRecord');
+    P(2, 'Standard'); P(70, 0); P(40, 0); P(41, 1); P(50, 0); P(71, 0); P(42, 2.5); P(3, 'txt'); P(4, '');
+    P(0, 'ENDTAB');
+
+    // VIEW / UCS (empty)
+    P(0, 'TABLE'); P(2, 'VIEW'); P(5, H()); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 0); P(0, 'ENDTAB');
+    P(0, 'TABLE'); P(2, 'UCS'); P(5, H()); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 0); P(0, 'ENDTAB');
+
+    // APPID
+    const appidTbl = H();
+    P(0, 'TABLE'); P(2, 'APPID'); P(5, appidTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 1);
+    P(0, 'APPID'); P(5, H()); P(330, appidTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbRegAppTableRecord');
+    P(2, 'ACAD'); P(70, 0);
+    P(0, 'ENDTAB');
+
+    // DIMSTYLE
+    const dimTbl = H();
+    P(0, 'TABLE'); P(2, 'DIMSTYLE'); P(5, dimTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 1); P(100, 'AcDbDimStyleTable');
+    P(0, 'DIMSTYLE'); P(105, H()); P(330, dimTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbDimStyleTableRecord');
+    P(2, 'Standard'); P(70, 0);
+    P(0, 'ENDTAB');
+
+    // BLOCK_RECORD
+    const msHandle = '20', psHandle = '21';
+    const blkTbl = H();
+    P(0, 'TABLE'); P(2, 'BLOCK_RECORD'); P(5, blkTbl); P(330, 0); P(100, 'AcDbSymbolTable'); P(70, 2);
+    P(0, 'BLOCK_RECORD'); P(5, msHandle); P(330, blkTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbBlockTableRecord'); P(2, '*Model_Space');
+    P(0, 'BLOCK_RECORD'); P(5, psHandle); P(330, blkTbl); P(100, 'AcDbSymbolTableRecord'); P(100, 'AcDbBlockTableRecord'); P(2, '*Paper_Space');
+    P(0, 'ENDTAB');
+    P(0, 'ENDSEC');
+
+    // ---------- BLOCKS ----------
+    P(0, 'SECTION'); P(2, 'BLOCKS');
+    const blockPair = (name, recHandle) => {
+      P(0, 'BLOCK'); P(5, H()); P(330, recHandle); P(100, 'AcDbEntity'); P(8, '0');
+      P(100, 'AcDbBlockBegin'); P(2, name); P(70, 0); P(10, 0); P(20, 0); P(30, 0); P(3, name); P(1, '');
+      P(0, 'ENDBLK'); P(5, H()); P(330, recHandle); P(100, 'AcDbEntity'); P(8, '0'); P(100, 'AcDbBlockEnd');
+    };
+    blockPair('*Model_Space', msHandle);
+    blockPair('*Paper_Space', psHandle);
+    P(0, 'ENDSEC');
+
+    // ---------- ENTITIES ----------
+    P(0, 'SECTION'); P(2, 'ENTITIES');
+    const entHead = (type) => {
+      P(0, type); P(5, H()); P(330, msHandle); P(100, 'AcDbEntity');
+    };
+    for (const it of scene.items) {
+      switch (it.k) {
+        case 'line':
+          entHead('LINE'); P(8, it.la); P(100, 'AcDbLine');
+          P(10, N(it.x1)); P(20, N(it.y1)); P(30, 0);
+          P(11, N(it.x2)); P(21, N(it.y2)); P(31, 0);
+          break;
+        case 'pline':
+          entHead('LWPOLYLINE'); P(8, it.la); P(100, 'AcDbPolyline');
+          P(90, it.pts.length); P(70, it.closed ? 1 : 0);
+          for (const p of it.pts) { P(10, N(p[0])); P(20, N(p[1])); }
+          break;
+        case 'circle':
+          entHead('CIRCLE'); P(8, it.la); P(100, 'AcDbCircle');
+          P(10, N(it.cx)); P(20, N(it.cy)); P(30, 0); P(40, N(it.r));
+          break;
+        case 'arc':
+          entHead('ARC'); P(8, it.la); P(100, 'AcDbCircle');
+          P(10, N(it.cx)); P(20, N(it.cy)); P(30, 0); P(40, N(it.r));
+          P(100, 'AcDbArc'); P(50, N(it.a1)); P(51, N(it.a2));
+          break;
+        case 'solid':
+          entHead('SOLID'); P(8, it.la); P(100, 'AcDbTrace');
+          P(10, N(it.pts[0][0])); P(20, N(it.pts[0][1])); P(30, 0);
+          P(11, N(it.pts[1][0])); P(21, N(it.pts[1][1])); P(31, 0);
+          P(12, N(it.pts[2][0])); P(22, N(it.pts[2][1])); P(32, 0);
+          P(13, N(it.pts[2][0])); P(23, N(it.pts[2][1])); P(33, 0);
+          break;
+        case 'text': {
+          entHead('TEXT'); P(8, it.la); P(100, 'AcDbText');
+          P(10, N(it.x)); P(20, N(it.y)); P(30, 0);
+          P(40, N(it.h)); P(1, esc(it.s));
+          if (it.rot) P(50, N(it.rot));
+          const hj = it.align === 'center' ? 1 : it.align === 'right' ? 2 : 0;
+          if (hj) {
+            P(72, hj);
+            P(11, N(it.x)); P(21, N(it.y)); P(31, 0); // alignment point
+          }
+          P(100, 'AcDbText');
+          break;
+        }
+      }
+    }
+    P(0, 'ENDSEC');
+
+    // ---------- OBJECTS ----------
+    P(0, 'SECTION'); P(2, 'OBJECTS');
+    P(0, 'DICTIONARY'); P(5, 'C'); P(330, 0); P(100, 'AcDbDictionary'); P(281, 1);
+    P(3, 'ACAD_GROUP'); P(350, 'D');
+    P(0, 'DICTIONARY'); P(5, 'D'); P(330, 'C'); P(100, 'AcDbDictionary'); P(281, 1);
+    P(0, 'ENDSEC');
+
+    P(0, 'EOF');
+    return L.join('\r\n') + '\r\n';
+  }
+
+  BFT.dxf = { dxfFromScene, esc };
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — project model, presets, undo history, persistence.
+   Item coordinates are INTERIOR millimetres: x from the inside face of the
+   left (hitch-end) wall, y from the inside face of the serving-side wall. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+  const u = () => BFT.util;
+
+  // Bondi Food Trailers standard build: every shell is 2100 wide and 2450
+  // high with the entry door on the rear (opposite the drawbar) — only the
+  // length varies between models.
+  BFT.STANDARD = {
+    boxWidth: 2100,
+    boxHeight: 2450,
+    wall: 40,             // standard wall thickness
+    drawbar: 1500,        // every BFT trailer runs a 1.5m drawbar
+    doorWidth: 740,
+    benchDepth: 600,
+    serveryFrac: 0.75,    // fallback: servery window ≈ 75% of the shell length
+    // standard total serving-window opening per shell length (quote tool)
+    windowBySize: { 3000: 2500, 3500: 3000, 4000: 3000, 4500: 3850, 5000: 4000, 5500: 4800, 6000: 5000 },
+    hoodWidth: 2000,      // 2m range hood on the non-serving side
+    hoodDepth: 200,       // hangs over only 200mm off the wall
+    sinkWidth: 960,       // standard sink at the rear of the cook bench
+    sinkWidthBig: 1200,   // optional upgrade
+    cashDrawerWidth: 450, // standard cash drawer on the serving bench
+    endBenchDepth: 600,   // optional U-shape end bench at the drawbar end
+  };
+
+  const std = (boxLength, extra) => Object.assign({
+    boxLength,
+    boxWidth: BFT.STANDARD.boxWidth,
+    boxHeight: BFT.STANDARD.boxHeight,
+    wall: BFT.STANDARD.wall, hitchLength: BFT.STANDARD.drawbar,
+    interiorHeight: 2100, worktopHeight: 850,
+    chassisHeight: 600, wheelDia: 620, axles: 2,
+    axlePos: Math.round(boxLength * 0.55 / 10) * 10,
+    tareKg: Math.round(boxLength * 0.22), // empty shell estimate, editable
+  }, extra);
+  BFT.stdTrailer = std;
+
+  // BFT model range: 3.0m is single axle, everything above runs double axles.
+  BFT.trailerPresets = [
+    { id: 'bft30', name: 'BFT 3.0m — single axle', trailer: std(3000, { axles: 1, wheelDia: 600 }) },
+    { id: 'bft35', name: 'BFT 3.5m — double axle', trailer: std(3500) },
+    { id: 'bft40', name: 'BFT 4.0m — double axle', trailer: std(4000) },
+    { id: 'bft45', name: 'BFT 4.5m — double axle', trailer: std(4500) },
+    { id: 'bft50', name: 'BFT 5.0m — double axle', trailer: std(5000) },
+    { id: 'bft55', name: 'BFT 5.5m — double axle', trailer: std(5500) },
+    { id: 'bft60', name: 'BFT 6.0m — double axle', trailer: std(6000) },
+  ];
+
+  function defaultKg(c) {
+    if (c.kg != null) return c.kg;
+    if (c.id === 'bench') return Math.max(15, Math.round(c.w * 0.022));
+    const cat = (c.cat || '') + ' ' + c.en;
+    if (/fridge|freezer|refriger|cool|ice|kegerator/i.test(cat)) return 65;
+    if (/oven|smoker/i.test(cat)) return 90;
+    if (/Cooking|griddle|fryer|grill|stove|bain/i.test(cat)) return 35;
+    if (/svc|inlet|outlet/i.test(cat)) return 2;
+    return 25;
+  }
+
+  function itemFromCatalog(catId, x, y, rot) {
+    const c = BFT.catalogById(catId) || BFT.catalogById('custom');
+    return {
+      id: u().uid(), catId: c.id,
+      en: c.en, zh: c.zh,
+      w: c.w, d: c.d, h: c.h,
+      kg: defaultKg(c),
+      x: x || 0, y: y || 0, rot: rot || 0,
+      sym: c.sym, burners: c.burners, pans: c.pans, bowls: c.bowls,
+      shape: c.shape, overhead: !!c.overhead,
+      fixture: !!c.fixture, svc: !!c.svc, letter: c.letter,
+    };
+  }
+
+  // Weight & balance: shell tare spread over the box plus every item at its
+  // own position. Simple lever model about the axle group gives the ball
+  // (drawbar) load; Australian guidance is roughly 5-15% of total on the ball.
+  BFT.balance = function (p) {
+    const t = p.trailer;
+    const tare = t.tareKg != null ? t.tareKg : Math.round(t.boxLength * 0.22);
+    let W = tare;
+    let Mx = tare * (t.boxLength / 2);
+    let servingKg = 0, roadKg = 0;
+    for (const it of p.items || []) {
+      const kg = it.kg || 0;
+      const fp = BFT.util.footprint(it);
+      const cx = t.wall + it.x + fp[0] / 2;
+      const cy = t.wall + it.y + fp[1] / 2;
+      W += kg;
+      Mx += kg * cx;
+      if (cy < t.boxWidth / 2) servingKg += kg; else roadKg += kg;
+    }
+    const cogX = Mx / W;
+    const xBall = -t.hitchLength;
+    const xAxle = t.axlePos || t.boxLength * 0.55;
+    const ball = W * (xAxle - cogX) / (xAxle - xBall);
+    return {
+      total: Math.round(W), tare,
+      equipment: Math.round(W - tare),
+      ball: Math.round(ball),
+      ballPct: W > 0 ? Math.round((ball / W) * 100) : 0,
+      axleLoad: Math.round(W - ball),
+      cogX: Math.round(cogX),
+      servingKg: Math.round(servingKg), roadKg: Math.round(roadKg),
+    };
+  };
+
+  // Default project reproduces the layout from the supplier's reference
+  // drawing: cook line along the road side (800+1020+350/530+1000 = 3700 int
+  // kitchen), fridge/counter/bench along the serving side, BBQ oven at rear.
+  function defaultProject() {
+    // the example layout replicates the 5.45m supplier reference drawing
+    const t = BFT.stdTrailer(5450);
+    const iW = t.boxWidth - 2 * t.wall; // 2060
+    const topY = (d) => iW - d;
+    const items = [];
+    const put = (catId, x, y, over) => {
+      const it = itemFromCatalog(catId, x, y, 0);
+      Object.assign(it, over || {});
+      items.push(it);
+      return it;
+    };
+    // cook line (top / road side), depth 650
+    put('stove4', 0, topY(650));
+    put('bainmarie', 800, topY(650));
+    put('fryer', 1820, topY(650), { w: 350 });
+    put('bench', 2170, topY(650), { w: 530, d: 650 });
+    put('sink3', 2700, topY(650));
+    // exhaust hood along the cook-side wall (dashed, 200mm off the wall)
+    put('hood', 0, topY(200), { w: 2200, d: 200 });
+    // serving side (bottom), depth 600
+    put('fridgeub', 0, 0);
+    put('counter', 1200, 0, { w: 900, d: 600 });
+    put('bench', 2100, 0, { w: 1600, d: 600 });
+    // BBQ zone at the rear end
+    put('oven', 4610, 200, { rot: 90 });
+
+    return {
+      version: 1,
+      meta: {
+        company: 'BONDI FOOD TRAILERS',
+        contact: 'ryan@bondifoodtrailers.com.au',
+        project: '5.5m Food Trailer',
+        client: '',
+        drawingNo: 'BFT-001',
+        revision: 'A',
+        date: u().todayISO(),
+        lang: 'both', // item labels: 'en' | 'zh' | 'both'
+      },
+      trailer: t,
+      items,
+      features: [
+        { id: u().uid(), wall: 'bottom', type: 'window', offset: 900, width: 2000, sill: 900, height: 900 },
+        // entry door: always the rear end, opposite the drawbar (BFT standard)
+        { id: u().uid(), wall: 'right', type: 'door', offset: Math.round((t.boxWidth - BFT.STANDARD.doorWidth) / 2), width: BFT.STANDARD.doorWidth, sill: 0, height: 2000 },
+        // drawbar-end servery window (front wall, centred)
+        { id: u().uid(), wall: 'left', type: 'window', offset: 450, width: 1200, sill: 900, height: 900 },
+      ],
+      dims: [],
+      notes: [],
+    };
+  }
+
+  class Store {
+    constructor() {
+      this.project = defaultProject();
+      this.undoStack = [];
+      this.redoStack = [];
+      this.listeners = [];
+    }
+    onChange(fn) { this.listeners.push(fn); }
+    emit() { for (const fn of this.listeners) fn(this.project); }
+
+    // call BEFORE mutating
+    checkpoint() {
+      this.undoStack.push(JSON.stringify(this.project));
+      if (this.undoStack.length > 100) this.undoStack.shift();
+      this.redoStack.length = 0;
+    }
+    undo() {
+      if (!this.undoStack.length) return;
+      this.redoStack.push(JSON.stringify(this.project));
+      this.project = JSON.parse(this.undoStack.pop());
+      this.emit();
+    }
+    redo() {
+      if (!this.redoStack.length) return;
+      this.undoStack.push(JSON.stringify(this.project));
+      this.project = JSON.parse(this.redoStack.pop());
+      this.emit();
+    }
+
+    save() {
+      try { localStorage.setItem('bft-project', JSON.stringify(this.project)); } catch (e) { /* private mode */ }
+    }
+    load() {
+      try {
+        const raw = localStorage.getItem('bft-project');
+        if (raw) this.project = JSON.parse(raw);
+      } catch (e) { /* keep default */ }
+      this.migrate();
+    }
+
+    // bring designs saved by older versions up to current BFT standards
+    migrate() {
+      const p = this.project;
+      if (!p || !p.trailer) return;
+      const iW = p.trailer.boxWidth - 2 * p.trailer.wall;
+      for (const it of p.items || []) {
+        // standard road-side hood hangs over only 200mm off the wall
+        if (it.catId === 'hood' && it.overhead && Math.abs(it.y + it.d - iW) < 1 && it.d !== 200) {
+          it.d = 200;
+          it.y = iW - 200;
+        }
+        // items saved before weights existed get their catalog default
+        if (it.kg == null) {
+          const c = BFT.catalogById(it.catId);
+          it.kg = c ? defaultKg(Object.assign({}, c, { w: it.w })) : 25;
+        }
+      }
+    }
+    reset() {
+      this.checkpoint();
+      this.project = defaultProject();
+      this.emit();
+    }
+
+    interior() {
+      const t = this.project.trailer;
+      return { iL: t.boxLength - 2 * t.wall, iW: t.boxWidth - 2 * t.wall };
+    }
+  }
+
+  BFT.itemFromCatalog = itemFromCatalog;
+  BFT.defaultProject = defaultProject;
+  BFT.Store = Store;
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — SVG / PNG / JSON / print exporters.
+   All exporters consume the same Scene the canvas draws, so exports match
+   the screen exactly. SVG/PNG are for quick sharing (WhatsApp/WeChat/email);
+   DXF (see dxf.js) is the manufacturing file. */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+
+  const XML = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  // px per mm in the SVG viewBox; geometry stays in mm via viewBox units.
+  function svgFromScene(scene, layersDef, opts) {
+    opts = opts || {};
+    const margin = opts.margin != null ? opts.margin : 300;
+    const dark = opts.dark !== false;
+    const b = scene.bounds();
+    const minX = b.minX - margin, w = b.w + 2 * margin;
+    const minY = b.minY - margin, h = b.h + 2 * margin;
+    const flipY = (y) => -(y); // SVG y-down; mirror the world
+    const vb = `${r3(minX)} ${r3(-(b.maxY + margin))} ${r3(w)} ${r3(h)}`;
+    const out = [];
+    out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" width="${Math.round(w / 5)}" height="${Math.round(h / 5)}" font-family="Arial, 'Microsoft YaHei', sans-serif">`);
+    if (dark) out.push(`<rect x="${r3(minX)}" y="${r3(-(b.maxY + margin))}" width="${r3(w)}" height="${r3(h)}" fill="#111318"/>`);
+    const lightDef = dark ? null : lightLayers(layersDef);
+    for (const it of scene.items) {
+      const def = (dark ? layersDef : lightDef)[it.la] || layersDef.OUTLINE;
+      const col = def.color;
+      const sw = (def.lw || 1.2) * 2.2; // mm stroke width
+      const dash = def.dash ? ` stroke-dasharray="${def.dash.join(' ')}"` : '';
+      switch (it.k) {
+        case 'line':
+          out.push(`<line x1="${r3(it.x1)}" y1="${r3(flipY(it.y1))}" x2="${r3(it.x2)}" y2="${r3(flipY(it.y2))}" stroke="${col}" stroke-width="${sw}"${dash}/>`);
+          break;
+        case 'pline': {
+          const pts = it.pts.map((p) => `${r3(p[0])},${r3(flipY(p[1]))}`).join(' ');
+          out.push(`<${it.closed ? 'polygon' : 'polyline'} points="${pts}" fill="none" stroke="${col}" stroke-width="${sw}"${dash}/>`);
+          break;
+        }
+        case 'circle':
+          out.push(`<circle cx="${r3(it.cx)}" cy="${r3(flipY(it.cy))}" r="${r3(it.r)}" fill="none" stroke="${col}" stroke-width="${sw}"${dash}/>`);
+          break;
+        case 'arc': {
+          const a1 = BFT.util.deg2rad(it.a1), a2 = BFT.util.deg2rad(it.a2);
+          let sweep = it.a2 - it.a1; while (sweep < 0) sweep += 360;
+          const large = sweep > 180 ? 1 : 0;
+          const x1 = it.cx + it.r * Math.cos(a1), y1 = it.cy + it.r * Math.sin(a1);
+          const x2 = it.cx + it.r * Math.cos(a2), y2 = it.cy + it.r * Math.sin(a2);
+          out.push(`<path d="M ${r3(x1)} ${r3(flipY(y1))} A ${r3(it.r)} ${r3(it.r)} 0 ${large} 0 ${r3(x2)} ${r3(flipY(y2))}" fill="none" stroke="${col}" stroke-width="${sw}"${dash}/>`);
+          break;
+        }
+        case 'solid': {
+          const pts = it.pts.map((p) => `${r3(p[0])},${r3(flipY(p[1]))}`).join(' ');
+          out.push(`<polygon points="${pts}" fill="${col}" stroke="none"/>`);
+          break;
+        }
+        case 'text': {
+          const anchor = it.align === 'center' ? 'middle' : it.align === 'right' ? 'end' : 'start';
+          const rot = it.rot ? ` transform="rotate(${-it.rot} ${r3(it.x)} ${r3(flipY(it.y))})"` : '';
+          out.push(`<text x="${r3(it.x)}" y="${r3(flipY(it.y))}" font-size="${r3(it.h * 1.35)}" fill="${col}" text-anchor="${anchor}"${rot}>${XML(it.s)}</text>`);
+          break;
+        }
+      }
+    }
+    out.push('</svg>');
+    return out.join('\n');
+  }
+
+  function r3(v) { return Math.round(v * 1000) / 1000; }
+
+  function darkOnWhite(c) {
+    // keep saturated colors, swap near-white linework to black for print
+    const map = { '#e8e8e8': '#111111', '#9a9a9a': '#777777' };
+    return map[c] || c;
+  }
+
+  // Saving a file, most reliable path first:
+  //  1. the browser's real "Save as…" dialog (Chrome/Edge desktop) — works
+  //     even where downloads are blocked
+  //  2. a programmatic download click
+  //  3. a toast with a direct link, a Share button (tablets/phones: save to
+  //     Files or send straight to WhatsApp) and a Copy button for text files
+  let toastTimer = null;
+  async function download(filename, content, mime) {
+    const type = mime || 'application/octet-stream';
+    const blob = content instanceof Blob ? content : new Blob([content], { type });
+    if (window.showSaveFilePicker) {
+      try {
+        const handle = await window.showSaveFilePicker({ suggestedName: filename });
+        const w = await handle.createWritable();
+        await w.write(blob);
+        await w.close();
+        downloadToast(filename, blob, content, true);
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return; // user cancelled the dialog
+        // blocked or unsupported here: fall through
+      }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    try { a.click(); } catch (e) { /* the toast covers it */ }
+    a.remove();
+    setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 60000);
+    downloadToast(filename, blob, content, false);
+  }
+
+  function downloadToast(filename, blob, content, saved) {
+    let t = document.getElementById('dl-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'dl-toast';
+      document.body.appendChild(t);
+    }
+    t.innerHTML = '';
+    const hide = () => { t.style.display = 'none'; };
+    const label = document.createElement('span');
+    label.textContent = (saved ? '✓ Saved ' : '📄 ') + filename;
+    t.appendChild(label);
+
+    if (!saved) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'Save';
+      t.appendChild(link);
+
+      // share sheet: the reliable path on iPads/phones (Files, AirDrop,
+      // WhatsApp/WeChat straight to the factory)
+      try {
+        const file = new File([blob], filename, { type: blob.type });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          const share = document.createElement('a');
+          share.href = '#';
+          share.textContent = 'Share…';
+          share.onclick = (e) => {
+            e.preventDefault();
+            navigator.share({ files: [file], title: filename }).catch(() => {});
+          };
+          t.appendChild(share);
+        }
+      } catch (e) { /* File constructor unsupported: skip share */ }
+
+      if (typeof content === 'string' && navigator.clipboard) {
+        const copy = document.createElement('a');
+        copy.href = '#';
+        copy.textContent = 'Copy';
+        copy.title = 'Copy the file contents — paste into a text editor and save as ' + filename;
+        copy.onclick = (e) => {
+          e.preventDefault();
+          navigator.clipboard.writeText(content).then(() => { copy.textContent = 'Copied ✓'; }).catch(() => {});
+        };
+        t.appendChild(copy);
+      }
+
+      // images can go straight to the clipboard: paste into WhatsApp/email
+      if (blob.type === 'image/png' && navigator.clipboard && window.ClipboardItem) {
+        const copyImg = document.createElement('a');
+        copyImg.href = '#';
+        copyImg.textContent = 'Copy image';
+        copyImg.title = 'Copy the drawing to the clipboard — paste it into WhatsApp or an email';
+        copyImg.onclick = (e) => {
+          e.preventDefault();
+          navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+            .then(() => { copyImg.textContent = 'Copied ✓ — paste it anywhere'; })
+            .catch(() => { copyImg.textContent = 'Copy blocked here too'; });
+        };
+        t.appendChild(copyImg);
+      }
+
+      // embedded viewers (apps, artifact frames) can block ALL file saving;
+      // say so instead of leaving the user guessing
+      let embedded = false;
+      try { embedded = window.top !== window.self; } catch (e) { embedded = true; }
+      if (embedded) {
+        const note = document.createElement('span');
+        note.style.opacity = '0.85';
+        note.textContent = '— if nothing saves, this viewer blocks downloads: use the desktop file version.';
+        t.appendChild(note);
+      }
+    }
+
+    const close = document.createElement('button');
+    close.textContent = '✕';
+    close.onclick = hide;
+    t.appendChild(close);
+    t.style.display = 'flex';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hide, saved ? 6000 : 60000);
+  }
+
+  // Layer table recolored for white-background (customer/print) output.
+  function lightLayers(layersDef) {
+    const out = {};
+    for (const [name, def] of Object.entries(layersDef)) {
+      out[name] = Object.assign({}, def, { color: darkOnWhite(def.color) });
+    }
+    // saturated screen colors read better slightly darker on white
+    if (out.EQUIP) out.EQUIP.color = '#c8189f';
+    if (out.TEXT) out.TEXT.color = '#c8189f';
+    if (out.DIMS) out.DIMS.color = '#0b8f3a';
+    if (out.FIXTURE) out.FIXTURE.color = '#0e7fa8';
+    if (out.NOTES) out.NOTES.color = '#8a6d00';
+    return out;
+  }
+
+  // Render the scene to a PNG using an offscreen canvas.
+  function pngFromScene(scene, layersDef, pxWidth, done, opts) {
+    opts = opts || {};
+    const layers = opts.light ? lightLayers(layersDef) : layersDef;
+    const b = scene.bounds();
+    const margin = 300;
+    const w = b.w + 2 * margin, h = b.h + 2 * margin;
+    const scale = pxWidth / w;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(w * scale);
+    canvas.height = Math.round(h * scale);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = opts.light ? '#ffffff' : '#111318';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const cam = {
+      z: scale,
+      ox: -(b.minX - margin) * scale,
+      oy: (b.maxY + margin) * scale,
+    };
+    BFT.render.drawScene(ctx, scene, layers, cam);
+    canvas.toBlob((blob) => done(blob), 'image/png');
+  }
+
+  // Print: open a window containing the sheet SVG (white background) and
+  // trigger the browser's print dialog -> user saves as PDF at any size.
+  function printScene(scene, layersDef, title) {
+    const svg = svgFromScene(scene, layersDef, { dark: false });
+    const win = window.open('', '_blank');
+    if (!win) {
+      // popups blocked (some browsers / embedded viewers): give the file anyway
+      download((title || 'drawing') + '.svg', svg, 'image/svg+xml');
+      alert('Popups are blocked here, so the drawing was saved as an SVG file instead.\nOpen it in any browser and print from there, or allow popups to print directly.');
+      return;
+    }
+    win.document.write(
+      '<!doctype html><html><head><title>' + XML(title || 'Drawing') + '</title>' +
+      '<style>@page{size:A3 landscape;margin:8mm} html,body{margin:0} svg{width:100%;height:auto;display:block}</style>' +
+      '</head><body>' + svg + '</body></html>'
+    );
+    win.document.close();
+    win.focus();
+    setTimeout(() => win.print(), 400);
+  }
+
+  BFT.exporters = { svgFromScene, pngFromScene, printScene, download, lightLayers };
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — canvas renderer.
+   Draws a Scene (world mm, y-up) onto a 2D canvas with pan/zoom camera.
+   cam = { z: px per mm, ox, oy: screen position of world origin }.
+   Screen: sx = ox + x*z ; sy = oy - y*z (y flipped). */
+(function (root) {
+  'use strict';
+  const BFT = (root.BFT = root.BFT || {});
+
+  function drawScene(ctx, scene, layersDef, cam, opts) {
+    opts = opts || {};
+    const X = (x) => cam.ox + x * cam.z;
+    const Y = (y) => cam.oy - y * cam.z;
+
+    for (const it of scene.items) {
+      const def = layersDef[it.la] || layersDef.OUTLINE;
+      ctx.strokeStyle = def.color;
+      ctx.fillStyle = def.color;
+      ctx.lineWidth = Math.max(0.6, (def.lw || 1) * Math.min(1.6, cam.z * 14));
+      ctx.setLineDash(def.dash ? def.dash.map((d) => Math.max(2, d * cam.z)) : []);
+      switch (it.k) {
+        case 'line':
+          ctx.beginPath();
+          ctx.moveTo(X(it.x1), Y(it.y1));
+          ctx.lineTo(X(it.x2), Y(it.y2));
+          ctx.stroke();
+          break;
+        case 'pline': {
+          ctx.beginPath();
+          it.pts.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
+          if (it.closed) ctx.closePath();
+          ctx.stroke();
+          break;
+        }
+        case 'circle':
+          ctx.beginPath();
+          ctx.arc(X(it.cx), Y(it.cy), it.r * cam.z, 0, Math.PI * 2);
+          ctx.stroke();
+          break;
+        case 'arc': {
+          // world CCW from +X; canvas y is flipped so angles negate,
+          // and CCW world = clockwise-flag true in canvas coords.
+          ctx.beginPath();
+          ctx.arc(X(it.cx), Y(it.cy), it.r * cam.z, -BFT.util.deg2rad(it.a1), -BFT.util.deg2rad(it.a2), true);
+          ctx.stroke();
+          break;
+        }
+        case 'solid': {
+          ctx.beginPath();
+          it.pts.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
+          ctx.closePath();
+          ctx.fill();
+          break;
+        }
+        case 'text': {
+          const px = it.h * cam.z * 1.35;
+          if (px < 3.5) break; // unreadable, skip for speed
+          ctx.setLineDash([]);
+          ctx.font = px + 'px Arial, "Microsoft YaHei", sans-serif';
+          ctx.textAlign = it.align === 'center' ? 'center' : it.align === 'right' ? 'right' : 'left';
+          ctx.textBaseline = 'alphabetic';
+          if (it.rot) {
+            ctx.save();
+            ctx.translate(X(it.x), Y(it.y));
+            ctx.rotate(-BFT.util.deg2rad(it.rot));
+            ctx.fillText(it.s, 0, 0);
+            ctx.restore();
+          } else {
+            ctx.fillText(it.s, X(it.x), Y(it.y));
+          }
+          break;
+        }
+      }
+    }
+    ctx.setLineDash([]);
+  }
+
+  function drawGrid(ctx, cam, wpx, hpx, spacing, color) {
+    // world-aligned grid; spacing in mm
+    const step = spacing * cam.z;
+    if (step < 7) return;
+    ctx.strokeStyle = color || 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    const x0 = ((cam.ox % step) + step) % step;
+    const y0 = ((cam.oy % step) + step) % step;
+    ctx.beginPath();
+    for (let x = x0; x < wpx; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, hpx); }
+    for (let y = y0; y < hpx; y += step) { ctx.moveTo(0, y); ctx.lineTo(wpx, y); }
+    ctx.stroke();
+  }
+
+  BFT.render = { drawScene, drawGrid };
+})(typeof window !== 'undefined' ? window : globalThis);
+if (typeof module !== 'undefined') module.exports = globalThis.BFT;
+
+</script>
+<script>
+/* Bondi Trailer CAD — application/UI. */
+(function (root) {
+  'use strict';
+  const BFT = root.BFT;
+  const U = BFT.util;
+
+  const store = new BFT.Store();
+  let cam = { z: 0.12, ox: 120, oy: 520 };
+  let mode = 'plan';            // 'plan' | 'sheet'
+  let tool = 'select';          // 'select' | 'dim' | 'note'
+  let selection = null;         // {type:'item', id} | {type:'feature', id}
+  let scene = null;             // cached scene for current mode
+  let dimPick = [];             // dimension tool: picked points (interior mm)
+  let mouseMM = { x: 0, y: 0 };
+  let cv, ctx, statusEl;
+  let showDims = false; // design-view dimension detail toggle
+
+  const $ = (id) => document.getElementById(id);
+
+  // ------------------------------------------------------------------
+  // scene building
+  // ------------------------------------------------------------------
+  function rebuild() {
+    const p = store.project;
+    // design canvas: headline dims by default, everything via the Dims
+    // toggle, nothing at all mid-drag (the green guides carry the numbers);
+    // the factory drawing and exports always carry the full set
+    const dragging = drag && drag.kind === 'item';
+    scene = mode === 'sheet' ? BFT.views.buildSheet(p)
+      : mode === 'sales' ? BFT.views.buildCustomerSheet(p)
+      : mode === 'heights' ? BFT.views.buildHeightsView(p)
+      : BFT.views.buildPlan(p, {
+          selection, en: true,
+          dims: dragging ? false : (showDims ? 'full' : 'overview'),
+        });
+    refreshWarnings();
+    draw();
+  }
+
+  // scene for exports: what the current mode shows (plan exports without
+  // selection markers)
+  function exportScene() {
+    const p = store.project;
+    return mode === 'sheet' ? BFT.views.buildSheet(p)
+      : mode === 'sales' ? BFT.views.buildCustomerSheet(p)
+      : BFT.views.buildPlan(p, {});
+  }
+
+  let LIGHTLAYERS = null;
+  function draw() {
+    if (!ctx || !scene) return;
+    if (!LIGHTLAYERS) LIGHTLAYERS = BFT.exporters.lightLayers(BFT.layers);
+    const w = cv.width, h = cv.height;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, w, h);
+    if (mode === 'plan') {
+      BFT.render.drawGrid(ctx, cam, w, h, 100, 'rgba(40,70,100,0.06)');
+      BFT.render.drawGrid(ctx, cam, w, h, 1000, 'rgba(40,70,100,0.13)');
+    }
+    BFT.render.drawScene(ctx, scene, LIGHTLAYERS, cam);
+    if (mode === 'plan') { drawGuides(); drawWarningHighlights(); drawBalanceMarkers(); }
+
+    // empty-trailer guidance
+    if (mode === 'plan' && !store.project.items.length && !drag) {
+      const t = store.project.trailer;
+      const cxs = cam.ox + (t.boxLength / 2) * cam.z;
+      const cys = cam.oy - (t.boxWidth / 2) * cam.z;
+      ctx.fillStyle = 'rgba(40,55,70,0.55)';
+      ctx.font = '15px Arial, "Microsoft YaHei", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Your trailer is ready — click equipment on the left to add it', cxs, cys);
+    }
+
+    // dimension tool feedback
+    if (tool === 'dim' && dimPick.length) {
+      const t = store.project.trailer;
+      ctx.fillStyle = '#b8860b';
+      for (const p of dimPick) {
+        const sx = cam.ox + (p.x + t.wall) * cam.z, sy = cam.oy - (p.y + t.wall) * cam.z;
+        ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    // snap marker
+    if (tool === 'dim' && snapMark) {
+      const t = store.project.trailer;
+      const sx = cam.ox + (snapMark.x + t.wall) * cam.z, sy = cam.oy - (snapMark.y + t.wall) * cam.z;
+      ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(sx - 6, sy - 6, 12, 12);
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // layout sanity warnings: overlaps, walkway clearance, blocked door,
+  // items outside the interior. Benches are the base layer (equipment
+  // sits on them); overhead hoods and connection markers are exempt.
+  // ------------------------------------------------------------------
+  let warnings = [];
+
+  function layoutWarnings() {
+    const p = store.project;
+    const { iL, iW } = store.interior();
+    const t = p.trailer;
+    const warns = [];
+    const rects = p.items
+      .filter((i) => !i.overhead && !i.svc)
+      .map((it) => {
+        const [fw, fd] = U.footprint(it);
+        return { it, x: it.x, y: it.y, w: fw, d: fd };
+      });
+
+    // overhangs (past a bench edge or wall line) are deliberate all the
+    // time in real builds - only true clashes get flagged
+    const isBench = (r) => r.it.catId === 'bench';
+    for (let i = 0; i < rects.length; i++) {
+      for (let j = i + 1; j < rects.length; j++) {
+        const a = rects[i], b = rects[j];
+        if (isBench(a) || isBench(b)) continue;
+        const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+        const oy = Math.min(a.y + a.d, b.y + b.d) - Math.max(a.y, b.y);
+        if (ox > 5 && oy > 5) warns.push({ msg: a.it.en + ' overlaps ' + b.it.en, ids: [a.it.id, b.it.id] });
+      }
+    }
+
+    // anything parked in front of a door opening
+    for (const f of (p.features || []).filter((f) => f.type === 'door')) {
+      const depth = 600; // clear zone inside the door
+      let zone = null;
+      if (f.wall === 'right') zone = { x: iL - depth, y: f.offset - t.wall, w: depth, d: f.width };
+      if (f.wall === 'left') zone = { x: 0, y: f.offset - t.wall, w: depth, d: f.width };
+      if (f.wall === 'bottom') zone = { x: f.offset - t.wall, y: 0, w: f.width, d: depth };
+      if (f.wall === 'top') zone = { x: f.offset - t.wall, y: iW - depth, w: f.width, d: depth };
+      if (!zone) continue;
+      for (const r of rects) {
+        const ox = Math.min(r.x + r.w, zone.x + zone.w) - Math.max(r.x, zone.x);
+        const oy = Math.min(r.y + r.d, zone.y + zone.d) - Math.max(r.y, zone.y);
+        if (ox > 30 && oy > 30) warns.push({ msg: r.it.en + ' blocks the door', ids: [r.it.id] });
+      }
+    }
+    return warns;
+  }
+
+  function refreshWarnings() {
+    warnings = mode === 'plan' ? layoutWarnings() : [];
+    const el = $('warnings');
+    if (!warnings.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+    el.classList.remove('hidden');
+    el.innerHTML = warnings.slice(0, 5).map((w) => '<div>⚠ ' + w.msg + '</div>').join('') +
+      (warnings.length > 5 ? '<div>… and ' + (warnings.length - 5) + ' more</div>' : '');
+  }
+
+  function drawWarningHighlights() {
+    if (!warnings.length) return;
+    const t = store.project.trailer;
+    const flagged = new Set(warnings.flatMap((w) => w.ids));
+    ctx.save();
+    ctx.strokeStyle = '#d92626';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 5]);
+    for (const it of store.project.items) {
+      if (!flagged.has(it.id)) continue;
+      const [fw, fd] = U.footprint(it);
+      const x = cam.ox + (it.x + t.wall) * cam.z, y = cam.oy - (it.y + t.wall + fd) * cam.z;
+      ctx.strokeRect(x - 4, y - 4, fw * cam.z + 8, fd * cam.z + 8);
+    }
+    ctx.restore();
+  }
+
+  // Balance markers: axle line and the load's balance point on the plan.
+  function drawBalanceMarkers() {
+    const t = store.project.trailer;
+    const b = BFT.balance(store.project);
+    const ax = cam.ox + (t.axlePos || t.boxLength * 0.55) * cam.z;
+    const gx = cam.ox + b.cogX * cam.z;
+    const yTop = cam.oy - t.boxWidth * cam.z, yBot = cam.oy;
+    ctx.save();
+    // axle line
+    ctx.strokeStyle = 'rgba(90,110,130,0.55)';
+    ctx.setLineDash([10, 6]);
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(ax, yTop - 14); ctx.lineTo(ax, yBot + 14); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(90,110,130,0.8)';
+    ctx.font = 'bold 10px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('AXLES', ax, yBot + 26);
+    // balance point ⊕
+    const gy = cam.oy - (t.boxWidth / 2) * cam.z;
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(gx, gy, 9, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(gx - 13, gy); ctx.lineTo(gx + 13, gy);
+    ctx.moveTo(gx, gy - 13); ctx.lineTo(gx, gy + 13);
+    ctx.stroke();
+    ctx.fillStyle = '#b45309';
+    ctx.fillText('BALANCE', gx, gy - 18);
+    ctx.restore();
+  }
+
+  // Guides for a selected window/door: highlight the opening and show the
+  // distance from each end of its wall.
+  function drawFeatureGuides(f) {
+    const t = store.project.trailer;
+    const horiz = f.wall === 'bottom' || f.wall === 'top';
+    const wallLen = featureWallLength(f);
+    const X = (x) => cam.ox + x * cam.z;
+    const Y = (y) => cam.oy - y * cam.z;
+    ctx.save();
+    ctx.strokeStyle = '#0b8f3a';
+    ctx.fillStyle = '#0b8f3a';
+    ctx.font = 'bold 12px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    const label = (x, y, s) => {
+      const wpx = ctx.measureText(s).width + 10;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x - wpx / 2, y - 10, wpx, 15);
+      ctx.fillStyle = '#0b8f3a';
+      ctx.fillText(s, x, y + 2);
+    };
+    // highlight the opening
+    ctx.lineWidth = 3;
+    if (horiz) {
+      const y = f.wall === 'bottom' ? Y(t.wall / 2) : Y(t.boxWidth - t.wall / 2);
+      ctx.beginPath(); ctx.moveTo(X(f.offset), y); ctx.lineTo(X(f.offset + f.width), y); ctx.stroke();
+      ctx.lineWidth = 1.3;
+      ctx.setLineDash([6, 4]);
+      const gy = f.wall === 'bottom' ? Y(-260) : Y(t.boxWidth + 260);
+      if (f.offset > 1) {
+        ctx.beginPath(); ctx.moveTo(X(0), gy); ctx.lineTo(X(f.offset), gy); ctx.stroke();
+        ctx.setLineDash([]);
+        label((X(0) + X(f.offset)) / 2, gy - 9, U.fmt(f.offset) + ' mm');
+        ctx.setLineDash([6, 4]);
+      }
+      const rem = wallLen - f.offset - f.width;
+      if (rem > 1) {
+        ctx.beginPath(); ctx.moveTo(X(f.offset + f.width), gy); ctx.lineTo(X(wallLen), gy); ctx.stroke();
+        ctx.setLineDash([]);
+        label((X(f.offset + f.width) + X(wallLen)) / 2, gy - 9, U.fmt(rem) + ' mm');
+      }
+    } else {
+      const x = f.wall === 'left' ? X(t.wall / 2) : X(t.boxLength - t.wall / 2);
+      ctx.beginPath(); ctx.moveTo(x, Y(f.offset)); ctx.lineTo(x, Y(f.offset + f.width)); ctx.stroke();
+      ctx.lineWidth = 1.3;
+      ctx.setLineDash([6, 4]);
+      const gx = f.wall === 'left' ? X(-260) : X(t.boxLength + 260);
+      if (f.offset > 1) {
+        ctx.beginPath(); ctx.moveTo(gx, Y(0)); ctx.lineTo(gx, Y(f.offset)); ctx.stroke();
+        ctx.setLineDash([]);
+        label(gx, (Y(0) + Y(f.offset)) / 2, U.fmt(f.offset) + ' mm');
+        ctx.setLineDash([6, 4]);
+      }
+      const rem = wallLen - f.offset - f.width;
+      if (rem > 1) {
+        ctx.beginPath(); ctx.moveTo(gx, Y(f.offset + f.width)); ctx.lineTo(gx, Y(wallLen)); ctx.stroke();
+        ctx.setLineDash([]);
+        label(gx, (Y(f.offset + f.width) + Y(wallLen)) / 2, U.fmt(rem) + ' mm');
+      }
+    }
+    ctx.restore();
+  }
+
+  // Live guides while designing: how far the selected item sits from the
+  // drawbar end and from the serving side, in plain millimetres.
+  function drawGuides() {
+    const sf = selectedFeature();
+    if (sf) return drawFeatureGuides(sf);
+    const it = selectedItem();
+    if (!it) return;
+    const t = store.project.trailer;
+    const [fw, fd] = U.footprint(it);
+    const X = (x) => cam.ox + (x + t.wall) * cam.z;
+    const Y = (y) => cam.oy - (y + t.wall) * cam.z;
+    ctx.save();
+    ctx.strokeStyle = '#0b8f3a';
+    ctx.fillStyle = '#0b8f3a';
+    ctx.lineWidth = 1.3;
+    ctx.setLineDash([6, 4]);
+    ctx.font = 'bold 12px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    const label = (x, y, s) => {
+      const wpx = ctx.measureText(s).width + 10;
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x - wpx / 2, y - 10, wpx, 15);
+      ctx.fillStyle = '#0b8f3a';
+      ctx.fillText(s, x, y + 2);
+      ctx.setLineDash([6, 4]);
+    };
+    if (it.x > 1) {
+      const gy = Y(it.y + fd / 2);
+      ctx.beginPath(); ctx.moveTo(X(0), gy); ctx.lineTo(X(it.x), gy); ctx.stroke();
+      label((X(0) + X(it.x)) / 2, gy - 9, U.fmt(it.x) + ' mm');
+    }
+    if (it.y > 1) {
+      const gx = X(it.x + fw / 2);
+      ctx.beginPath(); ctx.moveTo(gx, Y(0)); ctx.lineTo(gx, Y(it.y)); ctx.stroke();
+      label(gx, (Y(0) + Y(it.y)) / 2, U.fmt(it.y) + ' mm');
+    }
+    ctx.restore();
+  }
+
+  // ------------------------------------------------------------------
+  // camera helpers
+  // ------------------------------------------------------------------
+  function fit() {
+    const b = scene.bounds();
+    const pad = 60;
+    const zx = (cv.width - 2 * pad) / b.w;
+    const zy = (cv.height - 2 * pad) / b.h;
+    cam.z = Math.min(zx, zy);
+    cam.ox = (cv.width - b.w * cam.z) / 2 - b.minX * cam.z;
+    cam.oy = cv.height - ((cv.height - b.h * cam.z) / 2) + b.minY * cam.z;
+    draw();
+  }
+
+  function screenToWorld(sx, sy) {
+    return { x: (sx - cam.ox) / cam.z, y: (cam.oy - sy) / cam.z };
+  }
+
+  // world (plan coords) -> interior coords
+  function worldToInterior(wpt) {
+    const t = store.project.trailer;
+    return { x: wpt.x - t.wall, y: wpt.y - t.wall };
+  }
+
+  // ------------------------------------------------------------------
+  // hit testing & snapping (interior mm)
+  // ------------------------------------------------------------------
+  function hitItem(ipt) {
+    const items = store.project.items;
+    for (let i = items.length - 1; i >= 0; i--) {
+      const it = items[i];
+      const [fw, fd] = U.footprint(it);
+      if (U.pointInRect(ipt.x, ipt.y, it.x, it.y, fw, fd)) return it;
+    }
+    return null;
+  }
+
+  // windows/doors live on the walls: a click band along each wall selects them
+  function hitFeature(wpt) {
+    const t = store.project.trailer;
+    const L = t.boxLength, W = t.boxWidth;
+    const band = Math.max(180, 14 / cam.z);
+    for (const f of store.project.features || []) {
+      const a = f.offset - 60, b = f.offset + f.width + 60;
+      if (f.wall === 'bottom' && wpt.y > -band && wpt.y < t.wall + band && wpt.x >= a && wpt.x <= b) return f;
+      if (f.wall === 'top' && wpt.y > W - t.wall - band && wpt.y < W + band && wpt.x >= a && wpt.x <= b) return f;
+      if (f.wall === 'left' && wpt.x > -band && wpt.x < t.wall + band && wpt.y >= a && wpt.y <= b) return f;
+      if (f.wall === 'right' && wpt.x > L - t.wall - band && wpt.x < L + band && wpt.y >= a && wpt.y <= b) return f;
+    }
+    return null;
+  }
+
+  function selectedFeature() {
+    if (!selection || selection.type !== 'feature') return null;
+    return (store.project.features || []).find((f) => f.id === selection.id) || null;
+  }
+
+  function featureWallLength(f) {
+    const t = store.project.trailer;
+    return f.wall === 'left' || f.wall === 'right' ? t.boxWidth : t.boxLength;
+  }
+
+  function snapPositions(dragged) {
+    const { iL, iW } = store.interior();
+    const xs = [0, iL], ys = [0, iW];
+    for (const it of store.project.items) {
+      if (it.id === dragged.id) continue;
+      const [fw, fd] = U.footprint(it);
+      xs.push(it.x, it.x + fw);
+      ys.push(it.y, it.y + fd);
+    }
+    return { xs, ys };
+  }
+
+  function applySnap(item, nx, ny, disable) {
+    const grid = 10;
+    const [fw, fd] = U.footprint(item);
+    if (disable) return { x: nx, y: ny };
+    let x = U.snap(nx, grid), y = U.snap(ny, grid);
+    const tol = Math.max(8, 12 / cam.z);
+    const { xs, ys } = snapPositions(item);
+    for (const e of xs) {
+      if (Math.abs(nx - e) < tol) x = e;
+      if (Math.abs(nx + fw - e) < tol) x = e - fw;
+    }
+    for (const e of ys) {
+      if (Math.abs(ny - e) < tol) y = e;
+      if (Math.abs(ny + fd - e) < tol) y = e - fd;
+    }
+    return { x, y };
+  }
+
+  let snapMark = null;
+  function snapPoint(ipt) {
+    // for the dimension tool: wall corners + item corners + item mid-edges
+    const { iL, iW } = store.interior();
+    const pts = [
+      { x: 0, y: 0 }, { x: iL, y: 0 }, { x: 0, y: iW }, { x: iL, y: iW },
+    ];
+    for (const it of store.project.items) {
+      const [fw, fd] = U.footprint(it);
+      pts.push(
+        { x: it.x, y: it.y }, { x: it.x + fw, y: it.y },
+        { x: it.x, y: it.y + fd }, { x: it.x + fw, y: it.y + fd },
+        { x: it.x + fw / 2, y: it.y }, { x: it.x + fw / 2, y: it.y + fd },
+        { x: it.x, y: it.y + fd / 2 }, { x: it.x + fw, y: it.y + fd / 2 }
+      );
+    }
+    for (const f of store.project.features) {
+      const t = store.project.trailer;
+      if (f.wall === 'bottom') { pts.push({ x: f.offset - t.wall, y: -t.wall }, { x: f.offset + f.width - t.wall, y: -t.wall }); }
+      if (f.wall === 'top') { pts.push({ x: f.offset - t.wall, y: iW + t.wall }, { x: f.offset + f.width - t.wall, y: iW + t.wall }); }
+    }
+    let best = null, bd = Math.max(60, 14 / cam.z);
+    for (const p of pts) {
+      const d = U.dist(ipt.x, ipt.y, p.x, p.y);
+      if (d < bd) { bd = d; best = p; }
+    }
+    return best || { x: Math.round(ipt.x), y: Math.round(ipt.y) };
+  }
+
+  // ------------------------------------------------------------------
+  // pointer interaction
+  // ------------------------------------------------------------------
+  let drag = null; // {kind:'pan'|'item', ...}
+  let spaceDown = false;
+  const touches = new Map(); // active pointers for pinch zoom
+  let pinch = null;
+
+  function onPointerDown(e) {
+    cv.setPointerCapture(e.pointerId);
+    touches.set(e.pointerId, { x: e.offsetX, y: e.offsetY });
+    if (touches.size === 2) {
+      // two fingers: switch from dragging to pinch-zoom
+      drag = null;
+      const [a, b] = [...touches.values()];
+      pinch = { d0: Math.hypot(b.x - a.x, b.y - a.y), z0: cam.z };
+      return;
+    }
+    const sx = e.offsetX, sy = e.offsetY;
+    if (e.button === 1 || spaceDown || mode === 'sheet') {
+      drag = { kind: 'pan', sx, sy, ox: cam.ox, oy: cam.oy };
+      return;
+    }
+    const wpt = screenToWorld(sx, sy);
+    const ipt = worldToInterior(wpt);
+
+    if (tool === 'dim') {
+      const p = snapPoint(ipt);
+      dimPick.push(p);
+      if (dimPick.length === 2) {
+        const [a, b] = dimPick;
+        store.checkpoint();
+        const dx = Math.abs(b.x - a.x), dy = Math.abs(b.y - a.y);
+        if (dx >= dy) {
+          store.project.dims.push({ dir: 'h', x1: Math.min(a.x, b.x), x2: Math.max(a.x, b.x), yRef: (a.y + b.y) / 2, yDim: (a.y + b.y) / 2 + 300 });
+        } else {
+          store.project.dims.push({ dir: 'v', y1: Math.min(a.y, b.y), y2: Math.max(a.y, b.y), xRef: (a.x + b.x) / 2, xDim: (a.x + b.x) / 2 + 300 });
+        }
+        dimPick = [];
+        commit();
+      }
+      rebuild();
+      return;
+    }
+
+    if (tool === 'note') {
+      const text = prompt('Note text 备注:');
+      if (text) {
+        store.checkpoint();
+        store.project.notes.push({ x: Math.round(ipt.x), y: Math.round(ipt.y), text, h: 70 });
+        commit();
+      }
+      setTool('select');
+      return;
+    }
+
+    // select tool: equipment first, then wall openings, then pan
+    const hit = hitItem(ipt);
+    if (hit) {
+      selection = { type: 'item', id: hit.id };
+      store.checkpoint();
+      drag = { kind: 'item', id: hit.id, offX: ipt.x - hit.x, offY: ipt.y - hit.y, moved: false };
+    } else {
+      const f = hitFeature(wpt);
+      if (f) {
+        selection = { type: 'feature', id: f.id };
+        store.checkpoint();
+        const axisPos = f.wall === 'left' || f.wall === 'right' ? wpt.y : wpt.x;
+        drag = { kind: 'feature', id: f.id, grab: axisPos - f.offset, moved: false };
+      } else {
+        selection = null;
+        drag = { kind: 'pan', sx, sy, ox: cam.ox, oy: cam.oy };
+      }
+    }
+    refreshProps();
+    rebuild();
+  }
+
+  function onPointerMove(e) {
+    if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.offsetX, y: e.offsetY });
+    if (pinch && touches.size === 2) {
+      const [a, b] = [...touches.values()];
+      const d = Math.hypot(b.x - a.x, b.y - a.y);
+      if (pinch.d0 > 10) {
+        const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        const w = screenToWorld(mid.x, mid.y);
+        cam.z = U.clamp(pinch.z0 * (d / pinch.d0), 0.01, 6);
+        cam.ox = mid.x - w.x * cam.z;
+        cam.oy = mid.y + w.y * cam.z;
+        draw();
+      }
+      return;
+    }
+    const sx = e.offsetX, sy = e.offsetY;
+    const wpt = screenToWorld(sx, sy);
+    const ipt = worldToInterior(wpt);
+    mouseMM = ipt;
+    status();
+
+    if (tool === 'dim') { snapMark = snapPoint(ipt); draw(); }
+
+    if (!drag) return;
+    if (drag.kind === 'pan') {
+      cam.ox = drag.ox + (sx - drag.sx);
+      cam.oy = drag.oy + (sy - drag.sy);
+      draw();
+      return;
+    }
+    if (drag.kind === 'item') {
+      const it = store.project.items.find((i) => i.id === drag.id);
+      if (!it) return;
+      const pos = applySnap(it, ipt.x - drag.offX, ipt.y - drag.offY, e.shiftKey);
+      if (pos.x !== it.x || pos.y !== it.y) {
+        it.x = Math.round(pos.x * 10) / 10;
+        it.y = Math.round(pos.y * 10) / 10;
+        drag.moved = true;
+        refreshProps();
+        rebuild();
+      }
+      return;
+    }
+    if (drag.kind === 'feature') {
+      const f = (store.project.features || []).find((x) => x.id === drag.id);
+      if (!f) return;
+      const axisPos = f.wall === 'left' || f.wall === 'right' ? wpt.y : wpt.x;
+      const max = featureWallLength(f) - f.width;
+      const off = U.clamp(e.shiftKey ? Math.round(axisPos - drag.grab) : U.snap(axisPos - drag.grab, 10), 0, Math.max(0, max));
+      if (off !== f.offset) {
+        f.offset = off;
+        drag.moved = true;
+        rebuild();
+      }
+    }
+  }
+
+  function onPointerUp(e) {
+    touches.delete(e.pointerId);
+    if (touches.size < 2) pinch = null;
+    if (drag && (drag.kind === 'item' || drag.kind === 'feature')) {
+      if (!drag.moved) store.undoStack.pop(); // no-op click, drop checkpoint
+      else {
+        commit(true);
+        if (drag.kind === 'feature') refreshFeaturesPanel();
+      }
+    }
+    drag = null;
+  }
+
+  function onWheel(e) {
+    e.preventDefault();
+    const f = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+    const sx = e.offsetX, sy = e.offsetY;
+    const w = screenToWorld(sx, sy);
+    cam.z = U.clamp(cam.z * f, 0.01, 6);
+    cam.ox = sx - w.x * cam.z;
+    cam.oy = sy + w.y * cam.z;
+    draw();
+  }
+
+  // ------------------------------------------------------------------
+  // commands
+  // ------------------------------------------------------------------
+  function commit(noCheckpoint) {
+    store.save();
+    rebuild();
+    refreshProps();
+    refreshBalancePanel();
+  }
+
+  function addItem(catId) {
+    store.checkpoint();
+    const { iL, iW } = store.interior();
+    const it = BFT.itemFromCatalog(catId);
+    it.x = Math.round((iL - it.w) / 2 / 10) * 10;
+    it.y = Math.round((iW - it.d) / 2 / 10) * 10;
+    store.project.items.push(it);
+    selection = { type: 'item', id: it.id };
+    setMode('plan');
+    commit();
+  }
+
+  function selectedItem() {
+    if (!selection || selection.type !== 'item') return null;
+    return store.project.items.find((i) => i.id === selection.id) || null;
+  }
+
+  function rotateSelected() {
+    const it = selectedItem();
+    if (!it) return;
+    store.checkpoint();
+    it.rot = ((it.rot || 0) + 90) % 360;
+    commit();
+  }
+
+  function deleteSelected() {
+    if (!selection) return;
+    store.checkpoint();
+    if (selection.type === 'item') {
+      store.project.items = store.project.items.filter((i) => i.id !== selection.id);
+    } else if (selection.type === 'feature') {
+      store.project.features = store.project.features.filter((f) => f.id !== selection.id);
+      refreshFeaturesPanel();
+    }
+    selection = null;
+    commit();
+  }
+
+  function duplicateSelected() {
+    const it = selectedItem();
+    if (!it) return;
+    store.checkpoint();
+    const c = U.deepCopy(it);
+    c.id = U.uid();
+    c.x += 100; c.y -= 100;
+    store.project.items.push(c);
+    selection = { type: 'item', id: c.id };
+    commit();
+  }
+
+  function clearAnnotations() {
+    store.checkpoint();
+    store.project.dims = [];
+    store.project.notes = [];
+    commit();
+  }
+
+  // ------------------------------------------------------------------
+  // UI: mode & tools
+  // ------------------------------------------------------------------
+  function setMode(m) {
+    mode = m;
+    $('btn-mode-plan').classList.toggle('active', m === 'plan');
+    $('btn-mode-sheet').classList.toggle('active', m === 'sheet');
+    $('btn-mode-sales').classList.toggle('active', m === 'sales');
+    $('btn-mode-heights').classList.toggle('active', m === 'heights');
+    $('tools-group').classList.toggle('disabled', m !== 'plan'); // tools only apply while designing
+    if (m !== 'plan') setTool('select');
+    rebuild();
+    fit();
+  }
+
+  function setTool(t) {
+    tool = t;
+    dimPick = [];
+    snapMark = null;
+    for (const id of ['select', 'dim', 'note']) {
+      $('btn-tool-' + id).classList.toggle('active', t === id);
+    }
+    cv.style.cursor = t === 'select' ? 'default' : 'crosshair';
+    draw();
+  }
+
+  function status() {
+    const it = selectedItem();
+    let s = `${U.fmt(Math.round(mouseMM.x))}, ${U.fmt(Math.round(mouseMM.y))} mm`;
+    if (it) s += `   ·   ${it.en}: ${U.fmt(it.w)} × ${U.fmt(it.d)} mm, ${U.fmt(it.x)} from drawbar end, ${U.fmt(it.y)} from serving side`;
+    else s += '   ·   click an item to see and type its exact position';
+    statusEl.textContent = s;
+  }
+
+  // ------------------------------------------------------------------
+  // UI: panels
+  // ------------------------------------------------------------------
+  function buildCatalogPanel() {
+    const el = $('catalog');
+    el.innerHTML = '';
+    const cats = [...new Set(BFT.catalog.map((c) => c.cat))];
+    for (const cat of cats) {
+      const h = document.createElement('div');
+      h.className = 'cat-head';
+      h.textContent = cat;
+      el.appendChild(h);
+      for (const c of BFT.catalog.filter((x) => x.cat === cat)) {
+        const b = document.createElement('button');
+        b.className = 'cat-item';
+        b.title = c.desc || '';
+        b.dataset.search = (c.en + ' ' + (c.zh || '') + ' ' + cat).toLowerCase();
+        b.innerHTML = `<span>${c.en}</span>` + (c.zh ? `<span class="zh">${c.zh}</span>` : '') + `<span class="sz">${c.w}×${c.d}</span>`;
+        b.onclick = () => addItem(c.id);
+        el.appendChild(b);
+      }
+    }
+    filterCatalog();
+  }
+
+  function filterCatalog() {
+    const q = ($('catalog-search').value || '').trim().toLowerCase();
+    const el = $('catalog');
+    let head = null, headVisible = false;
+    for (const node of el.children) {
+      if (node.classList.contains('cat-head')) {
+        if (head) head.style.display = headVisible ? '' : 'none';
+        head = node; headVisible = false;
+      } else {
+        const show = !q || node.dataset.search.includes(q);
+        node.style.display = show ? '' : 'none';
+        if (show) headVisible = true;
+      }
+    }
+    if (head) head.style.display = headVisible ? '' : 'none';
+  }
+
+  function numInput(parent, label, value, onchange, step) {
+    const row = document.createElement('label');
+    row.className = 'field';
+    row.innerHTML = `<span>${label}</span>`;
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.step = step || 1;
+    inp.value = value;
+    inp.onchange = () => onchange(U.num(inp.value, value));
+    row.appendChild(inp);
+    parent.appendChild(row);
+    return inp;
+  }
+
+  function textInput(parent, label, value, onchange) {
+    const row = document.createElement('label');
+    row.className = 'field';
+    row.innerHTML = `<span>${label}</span>`;
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = value || '';
+    inp.onchange = () => onchange(inp.value);
+    row.appendChild(inp);
+    parent.appendChild(row);
+    return inp;
+  }
+
+  function refreshProps() {
+    const el = $('props');
+    el.innerHTML = '';
+    const sf = selectedFeature();
+    if (sf) {
+      const upd = (fn) => (v) => { store.checkpoint(); fn(v); commit(); refreshFeaturesPanel(); };
+      const h = document.createElement('div');
+      h.className = 'props-title';
+      h.textContent = (sf.type === 'door' ? 'Door' : 'Servery window') + ' — drag it along the wall';
+      el.appendChild(h);
+      numInput(el, 'Position along wall (mm)', sf.offset, upd((v) => (sf.offset = U.clamp(v, 0, featureWallLength(sf) - sf.width))));
+      numInput(el, 'Width (mm)', sf.width, upd((v) => (sf.width = Math.max(100, v))));
+      numInput(el, 'Height off floor (mm)', sf.sill != null ? sf.sill : 0, upd((v) => (sf.sill = v)));
+      numInput(el, 'Height (mm)', sf.height != null ? sf.height : 900, upd((v) => (sf.height = v)));
+      const btns = document.createElement('div');
+      btns.className = 'btn-row';
+      const del = document.createElement('button');
+      del.textContent = 'Delete (Del)';
+      del.onclick = deleteSelected;
+      btns.appendChild(del);
+      el.appendChild(btns);
+      return;
+    }
+    const it = selectedItem();
+    if (!it) {
+      el.innerHTML = '<div class="hint">Click an item on the plan to move it precisely or change its size. Drag items to arrange them — they snap to the walls and to each other.</div>';
+      return;
+    }
+    const upd = (fn) => (v) => { store.checkpoint(); fn(v); commit(); };
+    const h = document.createElement('div');
+    h.className = 'props-title';
+    h.textContent = it.en + (it.zh ? ' · ' + it.zh : '');
+    el.appendChild(h);
+    textInput(el, 'Name', it.en, upd((v) => (it.en = v)));
+    textInput(el, 'Chinese name (for factory)', it.zh, upd((v) => (it.zh = v)));
+    numInput(el, 'From drawbar end (mm)', it.x, upd((v) => (it.x = v)));
+    numInput(el, 'From serving side (mm)', it.y, upd((v) => (it.y = v)));
+    numInput(el, 'Width (mm)', it.w, upd((v) => (it.w = Math.max(10, v))));
+    numInput(el, 'Depth (mm)', it.d, upd((v) => (it.d = Math.max(10, v))));
+    numInput(el, 'Height (mm)', it.h, upd((v) => (it.h = Math.max(10, v))));
+    numInput(el, 'Weight (kg)', it.kg || 0, upd((v) => (it.kg = Math.max(0, v))));
+    // where it sits, for the Heights view: auto guesses small units onto the bench
+    const mountRow = document.createElement('label');
+    mountRow.className = 'field';
+    mountRow.innerHTML = '<span>Sits on</span>';
+    const mountSel = document.createElement('select');
+    mountSel.style.width = '110px';
+    mountSel.innerHTML = ['auto|Auto', 'bench|Bench top', 'floor|Floor']
+      .map((o) => { const [v, n] = o.split('|'); return `<option value="${v}"${(it.mount || 'auto') === v ? ' selected' : ''}>${n}</option>`; }).join('');
+    mountSel.onchange = () => { store.checkpoint(); it.mount = mountSel.value === 'auto' ? undefined : mountSel.value; commit(); };
+    mountRow.appendChild(mountSel);
+    el.appendChild(mountRow);
+
+    const btns = document.createElement('div');
+    btns.className = 'btn-row';
+    btns.innerHTML = '';
+    const mk = (label, fn) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.onclick = fn;
+      btns.appendChild(b);
+    };
+    mk('Rotate 90° (R)', rotateSelected);
+    mk('Duplicate (Ctrl+D)', duplicateSelected);
+    mk('Delete (Del)', deleteSelected);
+    el.appendChild(btns);
+  }
+
+  // Standard benches track the inside length: when the shell length changes,
+  // any bench that spanned the full interior is stretched to the new one.
+  function resizeFullLengthBenches(oldIL, newIL) {
+    if (oldIL === newIL) return;
+    for (const it of store.project.items) {
+      // any bench running to the rear wall keeps meeting it (covers both
+      // full-length and U-shape side benches; the 600 end bench is untouched)
+      if (it.catId === 'bench' && it.w > oldIL * 0.5 && Math.abs(it.x + it.w - oldIL) < 1) {
+        it.w = newIL - it.x;
+        it.kg = Math.max(15, Math.round(it.w * 0.022));
+      }
+    }
+  }
+
+  // When the shell length changes, long-wall openings keep their relative
+  // position (a centred servery stays centred) and always stay on the wall.
+  function repositionFeatures(oldL, newL) {
+    if (oldL === newL) return;
+    for (const f of store.project.features || []) {
+      if (f.wall !== 'bottom' && f.wall !== 'top') continue;
+      const centreFrac = (f.offset + f.width / 2) / oldL;
+      f.offset = U.clamp(Math.round((centreFrac * newL - f.width / 2) / 10) * 10, 0, Math.max(0, newL - f.width));
+    }
+    refreshFeaturesPanel();
+  }
+
+  let trailerAdvancedOpen = false;
+  function refreshTrailerPanel() {
+    const el = $('trailer-form');
+    el.innerHTML = '';
+    const t = store.project.trailer;
+    const upd = (fn) => (v) => { store.checkpoint(); fn(v); commit(); refreshTrailerPanel(); };
+
+    const sel = document.createElement('select');
+    sel.innerHTML = '<option value="">— size presets —</option>' +
+      BFT.trailerPresets.map((p) => `<option value="${p.id}">${p.name}</option>`).join('');
+    sel.onchange = () => {
+      const p = BFT.trailerPresets.find((x) => x.id === sel.value);
+      if (!p) return;
+      store.checkpoint();
+      const oldT = store.project.trailer;
+      const oldIL = oldT.boxLength - 2 * oldT.wall;
+      const oldL = oldT.boxLength;
+      store.project.trailer = U.deepCopy(p.trailer);
+      resizeFullLengthBenches(oldIL, p.trailer.boxLength - 2 * p.trailer.wall);
+      repositionFeatures(oldL, p.trailer.boxLength);
+      commit();
+      refreshTrailerPanel();
+    };
+    el.appendChild(sel);
+
+    // everyday fields — the BFT standards live under Advanced
+    numInput(el, 'Shell length (mm)', t.boxLength, upd((v) => {
+      const oldIL = t.boxLength - 2 * t.wall;
+      const oldL = t.boxLength;
+      t.boxLength = v;
+      resizeFullLengthBenches(oldIL, v - 2 * t.wall);
+      t.axlePos = Math.round(v * 0.55 / 10) * 10;
+      repositionFeatures(oldL, v);
+    }));
+    numInput(el, 'Bench height (mm)', t.worktopHeight, upd((v) => (t.worktopHeight = v)));
+    numInput(el, 'Axles (1 or 2)', t.axles, upd((v) => (t.axles = U.clamp(Math.round(v), 1, 2))));
+
+    const advBtn = document.createElement('button');
+    advBtn.textContent = trailerAdvancedOpen ? 'Hide advanced ▴' : 'Advanced (standard sizes) ▾';
+    advBtn.style.width = '100%';
+    advBtn.style.marginTop = '4px';
+    advBtn.onclick = () => { trailerAdvancedOpen = !trailerAdvancedOpen; refreshTrailerPanel(); };
+    el.appendChild(advBtn);
+    if (trailerAdvancedOpen) {
+      const adv = document.createElement('div');
+      adv.className = 'adv-box';
+      el.appendChild(adv);
+      numInput(adv, 'Shell width (std 2100)', t.boxWidth, upd((v) => (t.boxWidth = v)));
+      numInput(adv, 'Shell height (std 2450)', t.boxHeight, upd((v) => (t.boxHeight = v)));
+      numInput(adv, 'Drawbar length (std 1500)', t.hitchLength, upd((v) => (t.hitchLength = v)));
+      numInput(adv, 'Shell tare weight (kg)', t.tareKg != null ? t.tareKg : Math.round(t.boxLength * 0.22), upd((v) => (t.tareKg = Math.max(0, v))));
+      numInput(adv, 'Wall thickness (mm)', t.wall, upd((v) => (t.wall = v)));
+      numInput(adv, 'Interior height (mm)', t.interiorHeight, upd((v) => (t.interiorHeight = v)));
+      numInput(adv, 'Floor height (mm)', t.chassisHeight, upd((v) => (t.chassisHeight = v)));
+      numInput(adv, 'Wheel diameter (mm)', t.wheelDia, upd((v) => (t.wheelDia = v)));
+      numInput(adv, 'Axle position (mm)', t.axlePos, upd((v) => (t.axlePos = v)));
+    }
+  }
+
+  function refreshFeaturesPanel() {
+    const el = $('features');
+    el.innerHTML = '';
+    const feats = store.project.features;
+    feats.forEach((f, idx) => {
+      const box = document.createElement('div');
+      box.className = 'feat';
+      const head = document.createElement('div');
+      head.className = 'feat-head';
+      head.textContent = (f.type === 'door' ? 'Door ' : 'Servery window ') + (idx + 1);
+      const del = document.createElement('button');
+      del.textContent = '✕';
+      del.onclick = () => { store.checkpoint(); feats.splice(idx, 1); commit(); refreshFeaturesPanel(); };
+      head.appendChild(del);
+      box.appendChild(head);
+
+      const upd = (fn) => (v) => { store.checkpoint(); fn(v); commit(); };
+      const wallSel = document.createElement('select');
+      wallSel.innerHTML = ['bottom|Serving side', 'top|Road side', 'left|Drawbar end', 'right|Rear end']
+        .map((o) => { const [v, n] = o.split('|'); return `<option value="${v}"${f.wall === v ? ' selected' : ''}>${n}</option>`; }).join('');
+      wallSel.onchange = () => { store.checkpoint(); f.wall = wallSel.value; commit(); };
+      box.appendChild(wallSel);
+      numInput(box, 'Position along wall (mm)', f.offset, upd((v) => (f.offset = v)));
+      numInput(box, 'Width (mm)', f.width, upd((v) => (f.width = v)));
+      numInput(box, 'Height off floor (mm)', f.sill != null ? f.sill : 0, upd((v) => (f.sill = v)));
+      numInput(box, 'Height (mm)', f.height != null ? f.height : 900, upd((v) => (f.height = v)));
+      el.appendChild(box);
+    });
+    const row = document.createElement('div');
+    row.className = 'btn-row';
+    const addBtn = (label, type, width, sill, height) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.onclick = () => {
+        store.checkpoint();
+        feats.push({ id: U.uid(), wall: 'bottom', type, offset: 500, width, sill, height });
+        commit();
+        refreshFeaturesPanel();
+      };
+      row.appendChild(b);
+    };
+    addBtn('+ Servery window', 'window', 1800, 900, 900);
+    addBtn('+ Door', 'door', 740, 0, 2000);
+    el.appendChild(row);
+  }
+
+  function refreshBalancePanel() {
+    const el = $('balance');
+    const b = BFT.balance(store.project);
+    const ok = b.ballPct >= 5 && b.ballPct <= 15;
+    const t = store.project.trailer;
+    el.innerHTML =
+      `<div class="bal-row"><span>Total (est.)</span><b>${b.total} kg</b></div>` +
+      `<div class="bal-row"><span>Shell / equipment</span><b>${b.tare} / ${b.equipment} kg</b></div>` +
+      `<div class="bal-row"><span>Ball load</span><b style="color:${ok ? '#1f7a35' : '#b45309'}">${b.ball} kg (${b.ballPct}%)</b></div>` +
+      `<div class="bal-row"><span>On axles</span><b>${b.axleLoad} kg</b></div>` +
+      `<div class="bal-row"><span>Balance point</span><b>${b.cogX} mm from drawbar end (axles at ${U.fmt(t.axlePos)})</b></div>` +
+      `<div class="bal-row"><span>Side split</span><b>${b.servingKg} kg serving / ${b.roadKg} kg cook</b></div>` +
+      `<div class="hint">Aim for a ball load of 5–15% of the total. Edit each item's weight in its panel; shell tare is under Advanced.</div>`;
+  }
+
+  function refreshMetaPanel() {
+    const el = $('meta-form');
+    el.innerHTML = '';
+    const m = store.project.meta;
+    const upd = (fn) => (v) => { store.checkpoint(); fn(v); commit(); };
+    textInput(el, 'Company', m.company, upd((v) => (m.company = v)));
+    textInput(el, 'Contact', m.contact, upd((v) => (m.contact = v)));
+    textInput(el, 'Project', m.project, upd((v) => (m.project = v)));
+    textInput(el, 'Customer', m.client, upd((v) => (m.client = v)));
+    textInput(el, 'Drawing No', m.drawingNo, upd((v) => (m.drawingNo = v)));
+    textInput(el, 'Revision', m.revision, upd((v) => (m.revision = v)));
+    textInput(el, 'Date', m.date, upd((v) => (m.date = v)));
+    const sel = document.createElement('select');
+    sel.innerHTML = ['both|Factory labels: EN + 中文', 'en|Factory labels: English', 'zh|Factory labels: 中文']
+      .map((o) => { const [v, n] = o.split('|'); return `<option value="${v}"${m.lang === v ? ' selected' : ''}>${n}</option>`; }).join('');
+    sel.onchange = () => { store.checkpoint(); m.lang = sel.value; commit(); };
+    el.appendChild(sel);
+  }
+
+  // ------------------------------------------------------------------
+  // exports
+  // ------------------------------------------------------------------
+  function fileBase() {
+    const m = store.project.meta;
+    return ((m.drawingNo || 'BFT') + '-' + (m.project || 'trailer')).replace(/[^\w一-鿿.-]+/g, '_');
+  }
+
+  function exportDXF(sheetMode) {
+    const p = store.project;
+    const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
+    const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
+    BFT.exporters.download(fileBase() + (sheetMode ? '-sheet' : '-plan') + '.dxf', dxf, 'application/dxf');
+  }
+
+  function exportSVG() {
+    const suffix = mode === 'sales' ? '-sales' : mode === 'sheet' ? '-sheet' : '-plan';
+    BFT.exporters.download(fileBase() + suffix + '.svg',
+      BFT.exporters.svgFromScene(exportScene(), BFT.layers, { dark: false }), 'image/svg+xml');
+  }
+
+  function exportPNG() {
+    const suffix = mode === 'sales' ? '-sales' : mode === 'sheet' ? '-sheet' : '-plan';
+    BFT.exporters.pngFromScene(exportScene(), BFT.layers, 3200, (blob) => {
+      BFT.exporters.download(fileBase() + suffix + '.png', blob, 'image/png');
+    }, { light: true });
+  }
+
+  function exportJSON() {
+    BFT.exporters.download(fileBase() + '.bft.json', JSON.stringify(store.project, null, 2), 'application/json');
+  }
+
+  function importJSON(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const p = JSON.parse(reader.result);
+        if (!p.trailer || !p.items) throw new Error('not a BFT project');
+        store.checkpoint();
+        store.project = p;
+        selection = null;
+        commit();
+        refreshAllPanels();
+        fit();
+      } catch (err) {
+        alert('Could not load file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function printSheet() {
+    // prints whatever mode is active (sales mode -> the customer drawing)
+    const sc = mode === 'plan' ? BFT.views.buildSheet(store.project) : exportScene();
+    BFT.exporters.printScene(sc, BFT.layers, fileBase());
+  }
+
+  function customerPDF() {
+    setMode('sales'); // show what's being sent
+    BFT.exporters.printScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, fileBase() + '-customer');
+  }
+
+  // ------------------------------------------------------------------
+  // My Trailers library: saved customer builds in localStorage
+  // ------------------------------------------------------------------
+  function libGet() {
+    try { return JSON.parse(localStorage.getItem('bft-library') || '[]'); } catch (e) { return []; }
+  }
+  function libSet(list) {
+    try { localStorage.setItem('bft-library', JSON.stringify(list)); }
+    catch (e) { alert('Could not save — browser storage is full. Export projects with More > Save instead.'); }
+  }
+
+  function libSaveCurrent() {
+    const m = store.project.meta;
+    const suggested = [m.project, m.client].filter(Boolean).join(' — ') || 'Untitled trailer';
+    const name = prompt('Name this trailer:', suggested);
+    if (!name) return;
+    const list = libGet();
+    list.unshift({ id: U.uid(), name, savedAt: U.todayISO(), project: U.deepCopy(store.project) });
+    libSet(list);
+    refreshLibraryPanel();
+  }
+
+  // Backup file: the whole library + the design on screen. Survives app
+  // updates, browser resets and moves between computers.
+  function libExport() {
+    const payload = {
+      kind: 'bft-library-backup',
+      version: 1,
+      exportedAt: U.todayISO(),
+      library: libGet(),
+      current: U.deepCopy(store.project),
+    };
+    BFT.exporters.download('bondi-trailers-backup-' + U.todayISO() + '.json', JSON.stringify(payload, null, 1), 'application/json');
+  }
+
+  function libImport(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        const list = libGet();
+        const have = new Set(list.map((e) => e.id));
+        let added = 0;
+        if (data && data.kind === 'bft-library-backup' && Array.isArray(data.library)) {
+          for (const entry of data.library) {
+            if (!entry || !entry.project || !entry.project.trailer) continue;
+            if (have.has(entry.id)) continue;
+            list.push(entry);
+            have.add(entry.id);
+            added++;
+          }
+          if (data.current && data.current.trailer) {
+            list.unshift({ id: U.uid(), name: 'Backup of current design (' + (data.exportedAt || '') + ')', savedAt: U.todayISO(), project: data.current });
+            added++;
+          }
+        } else if (data && data.trailer && data.items) {
+          // a single .bft.json project file
+          const name = [data.meta && data.meta.project, data.meta && data.meta.client].filter(Boolean).join(' — ') || file.name;
+          list.unshift({ id: U.uid(), name, savedAt: U.todayISO(), project: data });
+          added = 1;
+        } else {
+          throw new Error('not a Bondi backup or project file');
+        }
+        libSet(list);
+        refreshLibraryPanel();
+        alert(added ? 'Imported ' + added + ' trailer' + (added === 1 ? '' : 's') + '.' : 'Nothing new to import — all builds were already here.');
+      } catch (err) {
+        alert('Could not import: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function refreshLibraryPanel() {
+    const el = $('library-list');
+    const list = libGet();
+    el.innerHTML = list.length ? '' : '<div class="hint">Nothing saved yet. "Save current" keeps a copy of the design on screen — one entry per customer build.</div>';
+    for (const entry of list) {
+      const row = document.createElement('div');
+      row.className = 'lib-row';
+      const info = document.createElement('div');
+      info.className = 'lib-info';
+      const shell = entry.project && entry.project.trailer ? (entry.project.trailer.boxLength / 1000).toFixed(1) + 'm · ' : '';
+      info.innerHTML = `<b>${entry.name.replace(/</g, '&lt;')}</b><span>${shell}${entry.savedAt}</span>`;
+      row.appendChild(info);
+      const btns = document.createElement('div');
+      btns.className = 'lib-btns';
+      const mk = (label, fn, title) => {
+        const b = document.createElement('button');
+        b.textContent = label;
+        b.title = title || '';
+        b.onclick = fn;
+        btns.appendChild(b);
+      };
+      mk('Open', () => {
+        store.checkpoint();
+        store.project = U.deepCopy(entry.project);
+        store.migrate();
+        selection = null;
+        $('library').classList.add('hidden');
+        setMode('plan');
+        commit();
+        refreshAllPanels();
+        fit();
+      });
+      mk('Duplicate', () => {
+        const list2 = libGet();
+        const copy = { id: U.uid(), name: entry.name + ' (copy)', savedAt: U.todayISO(), project: U.deepCopy(entry.project) };
+        const idx = list2.findIndex((x) => x.id === entry.id);
+        list2.splice(idx + 1, 0, copy);
+        libSet(list2);
+        refreshLibraryPanel();
+      }, 'Copy this build as a starting point for a new customer');
+      mk('✕', () => {
+        if (!confirm('Delete "' + entry.name + '" from My Trailers?')) return;
+        libSet(libGet().filter((x) => x.id !== entry.id));
+        refreshLibraryPanel();
+      }, 'Delete');
+      row.appendChild(btns);
+      el.appendChild(row);
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // new-trailer wizard: asks trailer dimensions step by step, then builds
+  // an empty shell ready for equipment
+  // ------------------------------------------------------------------
+  let wizStep = 1;
+  const gv = (id, fb) => U.num($(id).value, fb);
+
+  function wizShow(n) {
+    wizStep = n;
+    for (let i = 1; i <= 3; i++) $('wiz-step-' + i).classList.toggle('active', i === n);
+    document.querySelectorAll('.wiz-dots .dot').forEach((d, i) => d.classList.toggle('active', i + 1 <= n));
+    $('wiz-back').style.visibility = n === 1 ? 'hidden' : 'visible';
+    $('wiz-next').textContent = n === 3 ? 'Create trailer 创建 ✓' : 'Next ›';
+    wizSummary();
+  }
+
+  function wizSummary() {
+    const L = gv('wiz-len', 0), W = BFT.STANDARD.boxWidth, wall = BFT.STANDARD.wall;
+    if (L > 0) {
+      $('wiz-summary').textContent =
+        'Interior 内部: ' + U.fmt(L - 2 * wall) + ' × ' + U.fmt(W - 2 * wall) + ' mm' +
+        '   ·   Overall with drawbar 总长: ' + U.fmt(L + BFT.STANDARD.drawbar) + ' mm';
+    } else {
+      $('wiz-summary').textContent = 'Enter the shell length in millimetres.';
+    }
+    // keep the servery at ~75% of the shell length until it's changed by hand
+    if (L > 0 && !serveryTouched) $('wiz-servery-w').value = stdServeryWidth(L);
+  }
+  let serveryTouched = false;
+
+  function stdServeryWidth(L) {
+    const table = BFT.STANDARD.windowBySize[L];
+    const w = table != null ? table : Math.round(L * BFT.STANDARD.serveryFrac / 10) * 10;
+    return U.clamp(w, 300, L - 600);
+  }
+
+  function wizFillPreset(id) {
+    const p = BFT.trailerPresets.find((x) => x.id === id);
+    if (!p) return;
+    $('wiz-len').value = p.trailer.boxLength;
+    $('wiz-bench').value = p.trailer.worktopHeight;
+    $('wiz-axles').value = p.trailer.axles;
+    document.querySelectorAll('.chip-row button').forEach((b) => b.classList.toggle('active', b.dataset.preset === id));
+    wizSummary();
+  }
+
+  function openWizard() {
+    serveryTouched = false;
+    $('wiz-win2').checked = true;      // two serving windows is the standard
+    $('wiz-dbwindow').checked = true;  // drawbar window is standard too
+    $('wiz-dbwindow').disabled = false;
+    $('wiz-dbwindow-w').disabled = false;
+    $('wiz-cashdrawer').checked = true;
+    $('wiz-endbench').checked = false;
+    $('wiz-bigsink').checked = false;
+    wizFillPreset('bft45');
+    $('wiz-project').value = '';
+    $('wiz-client').value = '';
+    $('wiz-dwg').value = '';
+    wizShow(1);
+    $('wizard').classList.remove('hidden');
+  }
+
+  function wizValidate() {
+    if (wizStep !== 1) return true;
+    const L = gv('wiz-len', 0);
+    if (L < 1500 || L > 15000) { alert('Shell length should be between 1500 and 15000 mm.'); return false; }
+    return true;
+  }
+
+  function wizCreate() {
+    const S = BFT.STANDARD;
+    const L = gv('wiz-len', 5450), W = S.boxWidth, wall = S.wall;
+    const iL = L - 2 * wall, iW = W - 2 * wall;
+    store.checkpoint();
+    const p = BFT.defaultProject();
+    p.items = [];
+    p.dims = [];
+    p.notes = [];
+    Object.assign(p.trailer, {
+      boxLength: L, boxWidth: W, boxHeight: S.boxHeight,
+      wall, hitchLength: S.drawbar,
+      worktopHeight: gv('wiz-bench', 850),
+      axles: U.clamp(Math.round(gv('wiz-axles', 2)), 1, 2),
+      axlePos: Math.round(L * 0.55 / 10) * 10,
+    });
+    p.features = [
+      // BFT standard: entry door on the rear end, opposite the drawbar
+      { id: U.uid(), wall: 'right', type: 'door', offset: Math.round((W - S.doorWidth) / 2), width: S.doorWidth, sill: 0, height: 2000 },
+    ];
+    const endBench = $('wiz-endbench').checked;
+    // serving side: standard is TWO serving windows splitting the standard
+    // opening, with a 200mm post between them; option for one full-width
+    const total = U.clamp(gv('wiz-servery-w', stdServeryWidth(L)), 300, L - 600);
+    const groupStart = Math.round((L - total) / 2 / 10) * 10;
+    if ($('wiz-win2').checked && total >= 1200) {
+      const post = 200;
+      const each = Math.round((total - post) / 2 / 10) * 10;
+      p.features.push({ id: U.uid(), wall: 'bottom', type: 'window', offset: groupStart, width: each, sill: 900, height: 900 });
+      p.features.push({ id: U.uid(), wall: 'bottom', type: 'window', offset: groupStart + each + post, width: each, sill: 900, height: 900 });
+    } else {
+      p.features.push({ id: U.uid(), wall: 'bottom', type: 'window', offset: groupStart, width: total, sill: 900, height: 900 });
+    }
+    if ($('wiz-dbwindow').checked) {
+      // standard drawbar-end window — sits above the end bench on U-shape
+      // builds, so it stays either way
+      const w = U.clamp(gv('wiz-dbwindow-w', 1200), 300, W - 400);
+      p.features.push({ id: U.uid(), wall: 'left', type: 'window', offset: Math.round((W - w) / 2 / 10) * 10, width: w, sill: 900, height: 900 });
+    }
+    // BFT standard: two benches the full inside length, 600mm wide, one
+    // along each side (starting after the end bench in U-shape builds)
+    const benchX = endBench ? S.endBenchDepth : 0;
+    for (const y of [0, iW - S.benchDepth]) {
+      const bench = BFT.itemFromCatalog('bench', benchX, y, 0);
+      bench.w = iL - benchX;
+      bench.d = S.benchDepth;
+      bench.h = gv('wiz-bench', 850);
+      bench.kg = Math.max(15, Math.round(bench.w * 0.022));
+      p.items.push(bench);
+    }
+    if (endBench) {
+      // U-shape: bench across the drawbar end joining both side benches
+      const eb = BFT.itemFromCatalog('bench', 0, 0, 0);
+      eb.w = S.endBenchDepth;
+      eb.d = iW;
+      eb.h = gv('wiz-bench', 850);
+      eb.kg = Math.max(15, Math.round(iW * 0.022));
+      p.items.push(eb);
+    }
+    // BFT standard: 2m range hood over the non-serving (road) side, centred
+    const hood = BFT.itemFromCatalog('hood', Math.round((iL - S.hoodWidth) / 2 / 10) * 10, iW - S.hoodDepth, 0);
+    hood.w = S.hoodWidth;
+    hood.d = S.hoodDepth;
+    p.items.push(hood);
+    // BFT standard: sink at the rear end of the cook bench (960 or 1200)
+    const sinkW = $('wiz-bigsink').checked ? S.sinkWidthBig : S.sinkWidth;
+    const sink = BFT.itemFromCatalog('sink3', iL - sinkW, iW - S.benchDepth, 0);
+    sink.w = sinkW;
+    sink.d = S.benchDepth;
+    p.items.push(sink);
+    // BFT standard: cash drawer on the serving bench by the servery
+    if ($('wiz-cashdrawer').checked) {
+      const cd = BFT.itemFromCatalog('cashdrawer', 0, 0, 0);
+      cd.x = U.clamp(groupStart + total - S.cashDrawerWidth - 2 * wall, benchX, iL - S.cashDrawerWidth);
+      cd.y = 0;
+      p.items.push(cd);
+    }
+    p.meta.project = $('wiz-project').value || (U.fmt(L / 1000) + 'm Food Trailer');
+    p.meta.client = $('wiz-client').value;
+    p.meta.drawingNo = $('wiz-dwg').value || 'BFT-' + String(Math.floor(Math.random() * 900) + 100);
+    p.meta.revision = $('wiz-rev').value || 'A';
+    store.project = p;
+    selection = null;
+    $('wizard').classList.add('hidden');
+    setMode('plan');
+    setTool('select');
+    commit();
+    refreshAllPanels();
+    fit();
+  }
+
+  function wireWizard() {
+    document.querySelectorAll('.chip-row button').forEach((b) => (b.onclick = () => wizFillPreset(b.dataset.preset)));
+    $('wiz-len').addEventListener('input', wizSummary);
+    $('wiz-servery-w').addEventListener('input', () => { serveryTouched = true; });
+    $('wiz-back').onclick = () => wizShow(Math.max(1, wizStep - 1));
+    $('wiz-next').onclick = () => {
+      if (!wizValidate()) return;
+      if (wizStep < 3) wizShow(wizStep + 1);
+      else wizCreate();
+    };
+    $('wiz-cancel').onclick = () => $('wizard').classList.add('hidden');
+    $('wiz-cancel').textContent = 'Keep last design';
+  }
+
+  // ------------------------------------------------------------------
+  // wiring
+  // ------------------------------------------------------------------
+  function refreshAllPanels() {
+    buildCatalogPanel();
+    refreshProps();
+    refreshTrailerPanel();
+    refreshBalancePanel();
+    refreshFeaturesPanel();
+    refreshMetaPanel();
+  }
+
+  function resize() {
+    const wrap = $('canvas-wrap');
+    cv.width = wrap.clientWidth;
+    cv.height = wrap.clientHeight;
+    draw();
+  }
+
+  function init() {
+    cv = $('cv');
+    ctx = cv.getContext('2d');
+    statusEl = $('status');
+
+    store.load();
+    store.onChange(() => { rebuild(); refreshAllPanels(); });
+
+    $('btn-mode-plan').onclick = () => setMode('plan');
+    $('btn-mode-sheet').onclick = () => setMode('sheet');
+    $('btn-mode-sales').onclick = () => setMode('sales');
+    $('btn-mode-heights').onclick = () => setMode('heights');
+    $('btn-tool-select').onclick = () => setTool('select');
+    $('btn-tool-dim').onclick = () => setTool('dim');
+    $('btn-tool-note').onclick = () => setTool('note');
+    try { showDims = localStorage.getItem('bft-showdims') === 'yes'; } catch (e) {}
+    $('btn-dims').classList.toggle('active', showDims);
+    $('btn-dims').onclick = () => {
+      showDims = !showDims;
+      $('btn-dims').classList.toggle('active', showDims);
+      try { localStorage.setItem('bft-showdims', showDims ? 'yes' : 'no'); } catch (e) {}
+      rebuild();
+    };
+    $('btn-fit').onclick = fit;
+    $('btn-undo').onclick = () => store.undo();
+    $('btn-redo').onclick = () => store.redo();
+    $('btn-clear-ann').onclick = clearAnnotations;
+    $('btn-new').onclick = openWizard; // step-by-step: dimensions first, then details
+    $('catalog-search').addEventListener('input', filterCatalog);
+
+    // My Trailers library
+    $('btn-library').onclick = () => { refreshLibraryPanel(); $('library').classList.remove('hidden'); };
+    $('btn-lib-save').onclick = libSaveCurrent;
+    $('btn-lib-close').onclick = () => $('library').classList.add('hidden');
+    $('btn-lib-export').onclick = libExport;
+    $('btn-lib-import').onclick = () => $('lib-import-file').click();
+    $('lib-import-file').onchange = (e) => { if (e.target.files[0]) libImport(e.target.files[0]); e.target.value = ''; };
+
+    // slide-in panels on small screens
+    const closeDrawers = () => { $('leftpanel').classList.remove('open'); $('rightpanel').classList.remove('open'); };
+    $('btn-drawer-left').onclick = (e) => { e.stopPropagation(); $('rightpanel').classList.remove('open'); $('leftpanel').classList.toggle('open'); };
+    $('btn-drawer-right').onclick = (e) => { e.stopPropagation(); $('leftpanel').classList.remove('open'); $('rightpanel').classList.toggle('open'); };
+    cv.addEventListener('pointerdown', closeDrawers);
+
+    $('btn-dxf-sheet').onclick = () => exportDXF(true);
+    $('btn-pdf-customer').onclick = customerPDF;
+    $('btn-dxf-plan').onclick = () => exportDXF(false);
+    $('btn-svg').onclick = exportSVG;
+    $('btn-png').onclick = exportPNG;
+    $('btn-print').onclick = printSheet;
+    $('btn-save').onclick = exportJSON;
+    $('btn-open').onclick = () => $('file-open').click();
+    $('file-open').onchange = (e) => { if (e.target.files[0]) importJSON(e.target.files[0]); e.target.value = ''; };
+
+    // "More" dropdown
+    const moreMenu = $('more-menu');
+    $('btn-more').onclick = (e) => { e.stopPropagation(); moreMenu.classList.toggle('hidden'); };
+    moreMenu.addEventListener('click', () => moreMenu.classList.add('hidden'));
+    document.addEventListener('click', (e) => {
+      if (!moreMenu.classList.contains('hidden') && !moreMenu.contains(e.target) && e.target.id !== 'btn-more') {
+        moreMenu.classList.add('hidden');
+      }
+    });
+
+    // welcome / quick guide (via Help); the wizard itself opens on startup
+    const welcome = $('welcome');
+    const showWelcome = () => welcome.classList.remove('hidden');
+    const hideWelcome = () => {
+      welcome.classList.add('hidden');
+      try { if ($('welcome-hide').checked) localStorage.setItem('bft-welcome', 'no'); } catch (e) {}
+    };
+    $('btn-help').onclick = showWelcome;
+    $('btn-welcome-example').onclick = hideWelcome;
+    $('btn-welcome-new').onclick = () => { hideWelcome(); openWizard(); };
+    wireWizard();
+    // every session starts with the new-trailer prompt; "Keep last design"
+    // (Cancel) drops you back into whatever you were working on
+    let firstRun = true;
+    try { firstRun = localStorage.getItem('bft-welcome') !== 'no'; } catch (e) {}
+    if (firstRun) { showWelcome(); try { localStorage.setItem('bft-welcome', 'no'); } catch (e) {} }
+    else openWizard();
+
+    cv.addEventListener('pointerdown', onPointerDown);
+    cv.addEventListener('pointermove', onPointerMove);
+    cv.addEventListener('pointerup', onPointerUp);
+    cv.addEventListener('wheel', onWheel, { passive: false });
+    cv.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space') { spaceDown = true; e.preventDefault(); }
+      if (e.key === 'r' || e.key === 'R') rotateSelected();
+      if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected();
+      if (e.key === 'Escape') { dimPick = []; setTool('select'); selection = null; rebuild(); refreshProps(); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); store.undo(); }
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'Z'))) { e.preventDefault(); store.redo(); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); duplicateSelected(); }
+      const it = selectedItem();
+      if (it && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        e.preventDefault();
+        const step = e.shiftKey ? 1 : 10;
+        store.checkpoint();
+        if (e.key === 'ArrowLeft') it.x -= step;
+        if (e.key === 'ArrowRight') it.x += step;
+        if (e.key === 'ArrowUp') it.y += step;
+        if (e.key === 'ArrowDown') it.y -= step;
+        commit();
+      }
+    });
+    window.addEventListener('keyup', (e) => { if (e.code === 'Space') spaceDown = false; });
+    window.addEventListener('resize', resize);
+
+    refreshAllPanels();
+    resize();
+    rebuild();
+    fit();
+    status();
+  }
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', init);
+  }
+
+  BFT.app = {
+    store,
+    // world-mm (plan coords) -> canvas pixel, handy for tests and debugging
+    screenOf(x, y) { return { x: cam.ox + x * cam.z, y: cam.oy - y * cam.z }; },
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
