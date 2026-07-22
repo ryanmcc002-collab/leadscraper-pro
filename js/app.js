@@ -1230,7 +1230,7 @@
     $('wiz-len').value = p.trailer.boxLength;
     $('wiz-bench').value = p.trailer.worktopHeight;
     $('wiz-axles').value = p.trailer.axles;
-    document.querySelectorAll('.chip-row button').forEach((b) => b.classList.toggle('active', b.dataset.preset === id));
+    document.querySelectorAll('.chip-row button[data-preset]').forEach((b) => b.classList.toggle('active', b.dataset.preset === id));
     wizSummary();
   }
 
@@ -1244,11 +1244,62 @@
     $('wiz-endbench').checked = false;
     $('wiz-bigsink').checked = false;
     wizFillPreset('bft45');
+    wizMenu = 'none';
+    document.querySelectorAll('#wiz-menu-row button').forEach((x) => x.classList.toggle('active', x.dataset.menu === 'none'));
     $('wiz-project').value = '';
     $('wiz-client').value = '';
     $('wiz-dwg').value = nextDrawingNo();
     wizShow(1);
     $('wizard').classList.remove('hidden');
+  }
+
+  // Menu-type templates: the typical equipment for a menu, added on top of
+  // the standard shell the wizard already builds. 'back' runs along the cook
+  // bench (road side, under the hood, stopping clear of the sink); 'front'
+  // runs along the serving bench, stopping clear of the cash drawer.
+  let wizMenu = 'none';
+  const MENU_TEMPLATES = {
+    burger: {
+      back: ['griddle', 'chargrill', 'fryer2', 'fridgeub'],
+      front: ['qt_salad_cooler_1200'],
+    },
+    coffee: {
+      back: ['qt_ice_maker_60', 'fridgeub'],
+      front: ['qt_coffee_machine_semi', 'qt_coffee_grinder', 'qt_drinks_fridge'],
+    },
+    kebab: {
+      back: ['qt_kebab_gas_4', 'griddle', 'fryer2', 'bainmarie'],
+      front: ['qt_salad_cooler_1200'],
+    },
+    dessert: {
+      back: ['qt_waffle_double', 'qt_crepe_double', 'fridgeub'],
+      front: ['qt_slush_machine_2', 'qt_food_warmer_660'],
+    },
+  };
+
+  function wizPlaceMenu(p, c) {
+    const t = MENU_TEMPLATES[wizMenu];
+    if (!t) return;
+    const gap = 50;
+    let x = c.benchX;
+    for (const id of t.back) {
+      const it = BFT.itemFromCatalog(id, 0, 0, 0);
+      if (x + it.w > c.iL - c.sinkW - gap) continue; // won't fit before the sink
+      it.x = x;
+      it.y = c.iW - it.d; // against the road-side wall on the cook bench
+      p.items.push(it);
+      x += it.w + gap;
+    }
+    let fx = c.benchX;
+    const fMax = (c.cdX != null ? c.cdX : c.iL) - gap;
+    for (const id of t.front) {
+      const it = BFT.itemFromCatalog(id, 0, 0, 0);
+      if (fx + it.w > fMax) continue;
+      it.x = fx;
+      it.y = 0; // against the serving-side wall on the serving bench
+      p.items.push(it);
+      fx += it.w + gap;
+    }
   }
 
   function wizValidate() {
@@ -1329,12 +1380,15 @@
     sink.d = S.benchDepth;
     p.items.push(sink);
     // BFT standard: cash drawer on the serving bench by the servery
+    let cdX = null;
     if ($('wiz-cashdrawer').checked) {
       const cd = BFT.itemFromCatalog('cashdrawer', 0, 0, 0);
       cd.x = U.clamp(groupStart + total - S.cashDrawerWidth - 2 * wall, benchX, iL - S.cashDrawerWidth);
       cd.y = 0;
       p.items.push(cd);
+      cdX = cd.x;
     }
+    wizPlaceMenu(p, { iL, iW, benchX, sinkW, cdX });
     p.meta.project = $('wiz-project').value || (U.fmt(L / 1000) + 'm Food Trailer');
     p.meta.client = $('wiz-client').value;
     p.meta.drawingNo = $('wiz-dwg').value || nextDrawingNo();
@@ -1351,7 +1405,11 @@
   }
 
   function wireWizard() {
-    document.querySelectorAll('.chip-row button').forEach((b) => (b.onclick = () => wizFillPreset(b.dataset.preset)));
+    document.querySelectorAll('.chip-row button[data-preset]').forEach((b) => (b.onclick = () => wizFillPreset(b.dataset.preset)));
+    document.querySelectorAll('#wiz-menu-row button').forEach((b) => (b.onclick = () => {
+      wizMenu = b.dataset.menu;
+      document.querySelectorAll('#wiz-menu-row button').forEach((x) => x.classList.toggle('active', x === b));
+    }));
     $('wiz-len').addEventListener('input', wizSummary);
     $('wiz-servery-w').addEventListener('input', () => { serveryTouched = true; });
     $('wiz-back').onclick = () => wizShow(Math.max(1, wizStep - 1));

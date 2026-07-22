@@ -361,6 +361,14 @@ kbd {
 
       <div class="step" id="wiz-step-2">
         <h2>Step 2 of 3 — Build details</h2>
+        <p class="hint" style="margin:0 0 6px">Menu type — one tap adds the typical equipment for that menu (move, resize or delete anything afterwards):</p>
+        <div class="chip-row" id="wiz-menu-row">
+          <button data-menu="none" class="active">None</button>
+          <button data-menu="burger">Burger</button>
+          <button data-menu="coffee">Coffee</button>
+          <button data-menu="kebab">Kebab</button>
+          <button data-menu="dessert">Dessert</button>
+        </div>
         <label class="field"><span>Bench height (mm)</span><input type="number" id="wiz-bench" value="850"></label>
         <label class="field"><span>Axles</span>
           <select id="wiz-axles" style="width:92px"><option value="1">1</option><option value="2" selected>2</option></select></label>
