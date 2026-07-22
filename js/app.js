@@ -1055,6 +1055,27 @@
     catch (e) { alert('Could not save — browser storage is full. Export projects with More > Save instead.'); }
   }
 
+  // Sequential drawing numbers (BFT-001, BFT-002, …). The counter lives in
+  // localStorage; the saved library is also scanned so an imported backup
+  // can never make us hand out a number that is already on a drawing.
+  function nextDrawingNo() {
+    let n = 0;
+    try { n = parseInt(localStorage.getItem('bft-dwg-seq'), 10) || 0; } catch (e) {}
+    for (const t of libGet()) {
+      const m = /^BFT-0*(\d+)$/.exec((t.project && t.project.meta && t.project.meta.drawingNo) || '');
+      if (m) n = Math.max(n, parseInt(m[1], 10));
+    }
+    return 'BFT-' + String(n + 1).padStart(3, '0');
+  }
+  function claimDrawingNo(no) {
+    const m = /^BFT-0*(\d+)$/.exec(no || '');
+    if (!m) return;
+    try {
+      const cur = parseInt(localStorage.getItem('bft-dwg-seq'), 10) || 0;
+      localStorage.setItem('bft-dwg-seq', String(Math.max(cur, parseInt(m[1], 10))));
+    } catch (e) {}
+  }
+
   function libSaveCurrent() {
     const m = store.project.meta;
     const suggested = [m.project, m.client].filter(Boolean).join(' — ') || 'Untitled trailer';
@@ -1225,7 +1246,7 @@
     wizFillPreset('bft45');
     $('wiz-project').value = '';
     $('wiz-client').value = '';
-    $('wiz-dwg').value = '';
+    $('wiz-dwg').value = nextDrawingNo();
     wizShow(1);
     $('wizard').classList.remove('hidden');
   }
@@ -1316,7 +1337,8 @@
     }
     p.meta.project = $('wiz-project').value || (U.fmt(L / 1000) + 'm Food Trailer');
     p.meta.client = $('wiz-client').value;
-    p.meta.drawingNo = $('wiz-dwg').value || 'BFT-' + String(Math.floor(Math.random() * 900) + 100);
+    p.meta.drawingNo = $('wiz-dwg').value || nextDrawingNo();
+    claimDrawingNo(p.meta.drawingNo);
     p.meta.revision = $('wiz-rev').value || 'A';
     store.project = p;
     selection = null;
@@ -1365,6 +1387,9 @@
     cv = $('cv');
     ctx = cv.getContext('2d');
     statusEl = $('status');
+
+    $('app-version').textContent = BFT.VERSION;
+    $('menu-version').textContent = 'Bondi Trailer CAD ' + BFT.VERSION;
 
     store.load();
     store.onChange(() => { rebuild(); refreshAllPanels(); });

@@ -37,6 +37,8 @@ html, body {
 }
 #topbar .brand { font-weight: 700; letter-spacing: .4px; margin-right: 10px; white-space: nowrap; }
 #topbar .brand span { color: var(--accent); }
+#topbar .brand .ver { color: var(--dim); font-style: normal; font-weight: 400; font-size: 11px; margin-left: 4px; }
+.menu-ver { color: var(--dim); font-size: 11px; padding: 4px 8px; text-align: right; }
 #topbar .sep { width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
 button {
   background: var(--panel2); color: var(--text);
@@ -239,7 +241,7 @@ kbd {
 
   <div id="topbar">
     <button id="btn-drawer-left" class="drawer-btn" title="Equipment">☰</button>
-    <div class="brand">BONDI <span>TRAILER CAD</span></div>
+    <div class="brand">BONDI <span>TRAILER CAD</span> <em id="app-version" class="ver"></em></div>
     <div class="seg">
       <button id="btn-mode-plan" class="active" title="Design your layout here">1. Design</button>
       <button id="btn-mode-sheet" title="Preview the full factory drawing (5 views)">2. Factory drawing</button>
@@ -275,6 +277,8 @@ kbd {
         <div class="menu-sep"></div>
         <button id="btn-clear-ann">Clear my measurements/notes</button>
         <button id="btn-help">Help / quick guide</button>
+        <div class="menu-sep"></div>
+        <div id="menu-version" class="menu-ver"></div>
       </div>
     </div>
     <input type="file" id="file-open" accept=".json,.bft.json,application/json" style="display:none">
@@ -430,6 +434,10 @@ kbd {
 (function (root) {
   'use strict';
   const BFT = (root.BFT = root.BFT || {});
+
+  // Bump on every release — shown in the toolbar so a cached old build is
+  // obvious at a glance.
+  BFT.VERSION = 'v31';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -3621,6 +3629,27 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     catch (e) { alert('Could not save — browser storage is full. Export projects with More > Save instead.'); }
   }
 
+  // Sequential drawing numbers (BFT-001, BFT-002, …). The counter lives in
+  // localStorage; the saved library is also scanned so an imported backup
+  // can never make us hand out a number that is already on a drawing.
+  function nextDrawingNo() {
+    let n = 0;
+    try { n = parseInt(localStorage.getItem('bft-dwg-seq'), 10) || 0; } catch (e) {}
+    for (const t of libGet()) {
+      const m = /^BFT-0*(\d+)$/.exec((t.project && t.project.meta && t.project.meta.drawingNo) || '');
+      if (m) n = Math.max(n, parseInt(m[1], 10));
+    }
+    return 'BFT-' + String(n + 1).padStart(3, '0');
+  }
+  function claimDrawingNo(no) {
+    const m = /^BFT-0*(\d+)$/.exec(no || '');
+    if (!m) return;
+    try {
+      const cur = parseInt(localStorage.getItem('bft-dwg-seq'), 10) || 0;
+      localStorage.setItem('bft-dwg-seq', String(Math.max(cur, parseInt(m[1], 10))));
+    } catch (e) {}
+  }
+
   function libSaveCurrent() {
     const m = store.project.meta;
     const suggested = [m.project, m.client].filter(Boolean).join(' — ') || 'Untitled trailer';
@@ -3791,7 +3820,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     wizFillPreset('bft45');
     $('wiz-project').value = '';
     $('wiz-client').value = '';
-    $('wiz-dwg').value = '';
+    $('wiz-dwg').value = nextDrawingNo();
     wizShow(1);
     $('wizard').classList.remove('hidden');
   }
@@ -3882,7 +3911,8 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     }
     p.meta.project = $('wiz-project').value || (U.fmt(L / 1000) + 'm Food Trailer');
     p.meta.client = $('wiz-client').value;
-    p.meta.drawingNo = $('wiz-dwg').value || 'BFT-' + String(Math.floor(Math.random() * 900) + 100);
+    p.meta.drawingNo = $('wiz-dwg').value || nextDrawingNo();
+    claimDrawingNo(p.meta.drawingNo);
     p.meta.revision = $('wiz-rev').value || 'A';
     store.project = p;
     selection = null;
@@ -3931,6 +3961,9 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     cv = $('cv');
     ctx = cv.getContext('2d');
     statusEl = $('status');
+
+    $('app-version').textContent = BFT.VERSION;
+    $('menu-version').textContent = 'Bondi Trailer CAD ' + BFT.VERSION;
 
     store.load();
     store.onChange(() => { rebuild(); refreshAllPanels(); });

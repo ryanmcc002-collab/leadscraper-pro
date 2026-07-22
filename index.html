@@ -43,6 +43,8 @@ html, body {
 }
 #topbar .brand { font-weight: 700; letter-spacing: .4px; margin-right: 10px; white-space: nowrap; }
 #topbar .brand span { color: var(--accent); }
+#topbar .brand .ver { color: var(--dim); font-style: normal; font-weight: 400; font-size: 11px; margin-left: 4px; }
+.menu-ver { color: var(--dim); font-size: 11px; padding: 4px 8px; text-align: right; }
 #topbar .sep { width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
 button {
   background: var(--panel2); color: var(--text);
@@ -245,7 +247,7 @@ kbd {
 
   <div id="topbar">
     <button id="btn-drawer-left" class="drawer-btn" title="Equipment">☰</button>
-    <div class="brand">BONDI <span>TRAILER CAD</span></div>
+    <div class="brand">BONDI <span>TRAILER CAD</span> <em id="app-version" class="ver"></em></div>
     <div class="seg">
       <button id="btn-mode-plan" class="active" title="Design your layout here">1. Design</button>
       <button id="btn-mode-sheet" title="Preview the full factory drawing (5 views)">2. Factory drawing</button>
@@ -281,6 +283,8 @@ kbd {
         <div class="menu-sep"></div>
         <button id="btn-clear-ann">Clear my measurements/notes</button>
         <button id="btn-help">Help / quick guide</button>
+        <div class="menu-sep"></div>
+        <div id="menu-version" class="menu-ver"></div>
       </div>
     </div>
     <input type="file" id="file-open" accept=".json,.bft.json,application/json" style="display:none">
