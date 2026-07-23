@@ -426,6 +426,232 @@ function viewProfile() {
   </div>`;
 }
 
+/* ---------------------------------------------------------------- landing */
+const TICKER_ROUTES = [
+  ["SYD", "LAX", 22], ["MEL", "NRT", 20], ["SYD", "SIN", 18], ["BNE", "AKL", 12],
+  ["SYD", "LHR", 26], ["SYD", "DPS", 15], ["MEL", "HKG", 19], ["SYD", "DXB", 24],
+  ["BNE", "SFO", 23], ["MEL", "SIN", 17]
+];
+function tickerChips() {
+  const chips = TICKER_ROUTES.map(([f, t, p]) =>
+    `<span class="tick-chip">${f} ${icon("plane")} ${t} <b>$${p}/kg</b></span>`).join("");
+  return chips + chips;
+}
+function flightMap() {
+  return `<svg viewBox="0 0 520 250" role="img" aria-label="Flight route from Sydney to Los Angeles">
+    <defs><pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="var(--line)"/></pattern></defs>
+    <rect width="520" height="250" fill="url(#dots)" rx="14"/>
+    <path id="fpath" class="path-draw" d="M62 196 C 170 36, 350 30, 458 118"
+      fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" pathLength="100"/>
+    <circle cx="62" cy="196" r="5.5" fill="var(--accent)"/>
+    <circle cx="62" cy="196" r="10" fill="var(--accent)" opacity="0.18"/>
+    <circle cx="458" cy="118" r="5.5" fill="var(--accent)" opacity="0.55"/>
+    <g id="fplane"><path d="M0 -7 L15 0 L0 7 L3.5 0 Z" fill="var(--accent)"/></g>
+    <text x="62" y="224" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">SYD</text>
+    <text x="62" y="240" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Sydney</text>
+    <text x="458" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">LAX</text>
+    <text x="458" y="166" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Los Angeles</text>
+  </svg>`;
+}
+function viewLanding() {
+  return `<div class="lp">
+    <nav class="lp-nav rise">
+      <span class="brand" style="padding:0"><span class="brand-mark">${icon("plane")}</span><span class="brand-name">Stowly</span></span>
+      <span class="links">
+        <a href="#lp-how">How it works</a><a href="#lp-market">Carriers</a><a href="#lp-safety">Safety</a>
+      </span>
+      <span class="cta"><button class="btn btn-primary" data-nav="dashboard">Open the app</button></span>
+    </nav>
+    <header class="lp-hero-wrap">
+      <div class="lp-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="lp-hero">
+        <div>
+          <span class="eyebrow rise d1">Now boarding across Australia</span>
+          <h1 class="rise d2">Send it with someone <span class="grad">already flying.</span></h1>
+          <p class="lede rise d3">Travellers with spare baggage allowance carry your things for a
+            fee — ID-verified, inspected at hand-off, and escrow-protected until the moment it's delivered.</p>
+          <div class="cta-row rise d4">
+            <button class="btn btn-primary btn-lg" data-nav="find">Find a carrier</button>
+            <button class="btn btn-quiet btn-lg" data-nav="trips">Earn from your kilos</button>
+          </div>
+          <div class="proof rise d5">
+            <span class="faces">${avatar("Sofia L", 1, true)}${avatar("Aiko T", 3, true)}${avatar("Daniel K", 5, true)}${avatar("Priya N", 4, true)}</span>
+            Trusted by 12,400+ verified travellers
+          </div>
+        </div>
+        <div class="lp-visual rise d3">
+          <div class="card fmap" data-depth="6">
+            ${flightMap()}
+            <div class="fmap-meta">
+              <span class="tiny muted">QF 11 · departs Aug 14</span>
+              <span class="chip">${icon("weight")} 12 kg spare · $22/kg</span>
+            </div>
+          </div>
+          <div class="float-card fc-pay" data-depth="14">
+            <span class="ic">${icon("wallet")}</span>
+            <span><span class="t">Escrow released — +$70.00</span><br><span class="s">Delivered in Los Angeles · just now</span></span>
+          </div>
+          <div class="float-card fc-req" data-depth="20">
+            <span class="ic">${icon("box")}</span>
+            <span><span class="t">New space request · 3.2 kg</span><br><span class="s">Jess P. · SYD → LAX · pays $70</span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="lp-ticker" aria-hidden="true"><div class="lp-ticker-track">${tickerChips()}</div></div>
+
+    <section class="lp-section" id="lp-how">
+      <div class="reveal"><div class="lp-kicker">How it works</div>
+      <h2>One flight. Two people. Everybody lands better off.</h2>
+      <p class="sub">Airlines sell baggage allowance that half of us never use. Stowly matches that
+        empty space with people who need things moved — at a fraction of courier prices.</p></div>
+      <div class="lp-cols">
+        <div class="card reveal" style="transition-delay:.08s">
+          <span class="lp-role-tag">${icon("box")} Sending something</span>
+          <div class="lp-steps">
+            <div class="lp-step"><span><b>Find a traveller on your route</b><span>Browse verified carriers by route, date and price per kilo.</span></span></div>
+            <div class="lp-step"><span><b>Pay per kilo into escrow</b><span>From $12/kg. Your money is held safely — the carrier sees it's committed, but can't touch it yet.</span></span></div>
+            <div class="lp-step"><span><b>Hand off, track, confirm</b><span>Meet at the airport, track the flight, and release payment with a one-time code on delivery.</span></span></div>
+          </div>
+        </div>
+        <div class="card reveal" style="transition-delay:.16s">
+          <span class="lp-role-tag">${icon("plane")} Carrying</span>
+          <div class="lp-steps">
+            <div class="lp-step"><span><b>List your flight and spare kilos</b><span>Connected frequent-flyer accounts verify your booking automatically.</span></span></div>
+            <div class="lp-step"><span><b>Accept only what you're comfortable with</b><span>You inspect everything at hand-off and can decline anything on the spot.</span></span></div>
+            <div class="lp-step"><span><b>Deliver and get paid</b><span>Escrow releases within 24 hours of confirmed delivery. You keep 90%.</span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section lp-statband">
+      <div class="reveal"><div class="lp-kicker">Why it exists</div>
+      <h2>Every day, thousands of paid-for kilos fly empty.</h2>
+      <div class="lp-statgrid">
+        <div><b data-count="12400" data-suf="+">0</b><span>verified travellers</span></div>
+        <div><b data-count="38" data-suf=" t">0</b><span>carried this year</span></div>
+        <div><b data-count="1.2" data-dec="1" data-pre="$" data-suf="M">0</b><span>paid out to carriers</span></div>
+        <div><b data-count="4.9" data-dec="1">0</b><span>average rating</span></div>
+      </div></div>
+    </section>
+
+    <section class="lp-section" id="lp-market" style="padding-top:0">
+      <div class="reveal"><div class="lp-kicker">Live now</div>
+      <h2>Carriers flying this week.</h2>
+      <p class="sub">Every profile is passport-verified with a public track record. Tap one to see the real booking flow.</p></div>
+      <div class="grid grid-cards mt reveal" style="transition-delay:.1s">${DB.carriers.slice(0, 3).map(carrierCard).join("")}</div>
+      <div class="cta-row reveal" style="margin-top:22px">
+        <button class="btn btn-quiet" data-nav="find">Browse all carriers ${icon("arrow")}</button>
+      </div>
+    </section>
+
+    <div class="lp-band" id="lp-safety">
+      <div class="lp-inner">
+        <div class="reveal"><div class="lp-kicker">Safety</div>
+        <h2>Engineered to be trusted at 38,000 feet.</h2>
+        <p class="sub">Peer-to-peer only works when nobody has to take anyone's word for it. So we removed the need for trust entirely.</p></div>
+        <div class="rules">
+          <div class="rule reveal"><span class="ic">${icon("id")}</span><b>Everyone is passport-verified</b>
+            <p>Government ID, phone and frequent-flyer accounts checked before anyone lists or sends. No anonymous accounts, ever.</p></div>
+          <div class="rule reveal" style="transition-delay:.08s"><span class="ic">${icon("search")}</span><b>Nothing sealed is a mystery</b>
+            <p>Carriers open and inspect every item together with the sender at hand-off. Prohibited items are screened and auto-declined.</p></div>
+          <div class="rule reveal" style="transition-delay:.16s"><span class="ic">${icon("lock")}</span><b>Money moves only on proof</b>
+            <p>Payment sits in escrow the whole flight and releases only when the receiver confirms with a one-time code.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="lp-section">
+      <div class="reveal"><div class="lp-kicker">Word of mouth</div>
+      <h2>People keep telling people.</h2></div>
+      <div class="lp-quotes">
+        <figure class="card lp-quote reveal"><span class="stars">${starFill.repeat(5)}</span>
+          <blockquote>“A courier quoted me $240 to get a lens to LA in a week. Sofia took it for $70 and it landed the next morning.”</blockquote>
+          <figcaption>${avatar("Jess P", 4, true)}<span><b>Jess P.</b>Sender · Sydney</span></figcaption></figure>
+        <figure class="card lp-quote reveal" style="transition-delay:.08s"><span class="stars">${starFill.repeat(5)}</span>
+          <blockquote>“I fly SYD–SIN monthly for work. My checked bag used to fly half empty — now it pays for my airport transfers and then some.”</blockquote>
+          <figcaption>${avatar("Marcus W", 2, true)}<span><b>Marcus W.</b>Carrier · 27 trips</span></figcaption></figure>
+        <figure class="card lp-quote reveal" style="transition-delay:.16s"><span class="stars">${starFill.repeat(5)}</span>
+          <blockquote>“The escrow code thing is genius. My mum in Tokyo confirmed delivery herself — I watched the payment release in real time.”</blockquote>
+          <figcaption>${avatar("Aiko T", 3, true)}<span><b>Aiko T.</b>Carrier · 63 trips</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section class="lp-section lp-final">
+      <div class="reveal">
+        <h2>Your suitcase is worth more full.</h2>
+        <div class="cta-row">
+          <button class="btn btn-primary btn-lg" data-nav="find">Find a carrier</button>
+          <button class="btn btn-quiet btn-lg" data-nav="dashboard">See the dashboard</button>
+        </div>
+        <p class="tiny muted">Free to join · 10% service fee only when something ships</p>
+      </div>
+    </section>
+    <footer class="lp-footer">
+      <span class="brand" style="padding:0;gap:8px"><span class="brand-mark" style="width:24px;height:24px;flex-basis:24px;border-radius:7px">${icon("plane")}</span><b>Stowly</b></span>
+      <span>© 2026 Stowly Pty Ltd · Sydney</span>
+      <span class="spacer"></span>
+      <span>Terms · Privacy · Prohibited items</span>
+    </footer>
+  </div>`;
+}
+const easeIO = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function countUp(el) {
+  const target = +el.dataset.count, dec = +(el.dataset.dec || 0);
+  const pre = el.dataset.pre || "", suf = el.dataset.suf || "";
+  const fmt = (v) => pre + (dec ? v.toFixed(dec) : Math.round(v).toLocaleString("en-AU")) + suf;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = fmt(target); return; }
+  const t0 = performance.now(), dur = 1500;
+  (function tick(t) {
+    const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(target * e);
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+function initLanding() {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const io = new IntersectionObserver((es) => es.forEach((en) => {
+    if (!en.isIntersecting) return;
+    en.target.classList.add("in");
+    en.target.querySelectorAll("[data-count]").forEach(countUp);
+    io.unobserve(en.target);
+  }), { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  const path = $("#fpath"), plane = $("#fplane");
+  if (path && plane) {
+    const L = path.getTotalLength();
+    const place = (l) => {
+      const pt = path.getPointAtLength(l), ahead = path.getPointAtLength(Math.min(L, l + 2));
+      const ang = Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180 / Math.PI;
+      plane.setAttribute("transform", `translate(${pt.x} ${pt.y}) rotate(${ang})`);
+    };
+    if (reduced) place(L * 0.55);
+    else {
+      const t0 = performance.now();
+      (function fly(t) {
+        if (!document.body.contains(path)) return;
+        place(L * easeIO(((t - t0) % 7000) / 7000));
+        requestAnimationFrame(fly);
+      })(t0);
+    }
+  }
+  const hero = $(".lp-hero"), vis = $(".lp-visual");
+  if (hero && vis && !reduced && matchMedia("(pointer:fine)").matches) {
+    const layers = vis.querySelectorAll("[data-depth]");
+    hero.addEventListener("mousemove", (e) => {
+      const r = vis.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+      layers.forEach((l) => {
+        const d = +l.dataset.depth;
+        l.style.transform = `translate(${(-dx * d).toFixed(1)}px, ${(-dy * d).toFixed(1)}px)`;
+      });
+    });
+  }
+}
+
 /* ---------------------------------------------------------------- modals */
 function modalNewTrip() {
   openModal(`
@@ -492,14 +718,19 @@ const VIEWS = {
   messages: { label: "Messages", ic: "chat", render: viewMessages, badge: 2 },
   profile: { label: "Profile", ic: "person", render: viewProfile }
 };
-const state = { view: "dashboard", tab: "all", convo: "m1" };
+const state = { view: "landing", tab: "all", convo: "m1" };
 
 function render() {
   const app = $("#app");
+  if (state.view === "landing") {
+    app.innerHTML = viewLanding();
+    initLanding();
+    return;
+  }
   app.innerHTML = `
   <div class="shell">
     <aside class="sidebar">
-      <div class="brand"><span class="brand-mark">${icon("plane")}</span><span class="brand-name">Stowly</span></div>
+      <button class="brand" data-nav="landing" title="Back to stowly.com" style="cursor:pointer"><span class="brand-mark">${icon("plane")}</span><span class="brand-name">Stowly</span></button>
       ${Object.entries(VIEWS).map(([k, v]) => `
         <button class="nav-item ${state.view === k ? "active" : ""}" data-nav="${k}">
           ${icon(v.ic)}<span class="nav-label">${v.label}</span>${v.badge ? `<span class="badge">${v.badge}</span>` : ""}
