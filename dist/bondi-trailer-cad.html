@@ -451,7 +451,7 @@ kbd {
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v33';
+  BFT.VERSION = 'v34';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -2314,6 +2314,37 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
   async function download(filename, content, mime) {
     const type = mime || 'application/octet-stream';
     const blob = content instanceof Blob ? content : new Blob([content], { type });
+    // Inside a claude.ai artifact the sandbox blocks every normal download
+    // path; files must go through the viewer's download prompt instead.
+    if (window.claude && window.claude.downloads) {
+      const data = typeof content === 'string' ? content : blob;
+      try {
+        await window.claude.downloads.save({ filename, data });
+        noteToast('✓ ' + filename);
+        return;
+      } catch (e) {
+        const code = e && e.code;
+        if (code === 'declined') return; // viewer said no — their call
+        if (code === 'rejected_extension' || code === 'extension_not_enabled') {
+          // .pdf/.dxf aren't on claude.ai's save allowlist; both are plain
+          // text inside, so save with a .txt ending and tell the user to
+          // rename — the contents are byte-identical.
+          try {
+            await window.claude.downloads.save({ filename: filename + '.txt', data });
+            noteToast('✓ Saved as "' + filename + '.txt" — claude.ai only allows a .txt ending here. ' +
+              'Rename the file to "' + filename + '" (just remove .txt) and it works as normal.');
+            return;
+          } catch (e2) {
+            if (e2 && e2.code === 'declined') return;
+          }
+        }
+        if (code === 'rate_limited') {
+          noteToast('A download prompt is already open — answer it, then try again.');
+          return;
+        }
+        // anything else: fall through and try the normal browser paths
+      }
+    }
     if (window.showSaveFilePicker) {
       try {
         const handle = await window.showSaveFilePicker({ suggestedName: filename });
@@ -2336,6 +2367,27 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     a.remove();
     setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 60000);
     downloadToast(filename, blob, content, false);
+  }
+
+  // plain-text toast (no links) for messages from the artifact download path
+  function noteToast(msg) {
+    let t = document.getElementById('dl-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'dl-toast';
+      document.body.appendChild(t);
+    }
+    t.innerHTML = '';
+    const label = document.createElement('span');
+    label.textContent = msg;
+    t.appendChild(label);
+    const close = document.createElement('button');
+    close.textContent = '×';
+    close.onclick = () => { t.style.display = 'none'; };
+    t.appendChild(close);
+    t.style.display = 'flex';
+    clearTimeout(noteToast._t);
+    noteToast._t = setTimeout(() => { t.style.display = 'none'; }, 12000);
   }
 
   function downloadToast(filename, blob, content, saved) {
