@@ -110,7 +110,7 @@ export function sceneSvg({ palette = "dusk", homeWidth = 620, label }) {
 }
 
 /** Clean architectural floorplan diagram. */
-export function floorplanSvg({ rooms, closed, expanded, area, label }) {
+export function floorplanSvg({ rooms, subtitle, label }) {
   const W = 1000, H = 560;
   const M = 90;
   const planW = W - M * 2, planH = 320, planY = 120;
@@ -132,7 +132,7 @@ export function floorplanSvg({ rooms, closed, expanded, area, label }) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" font-family="Manrope, Arial, sans-serif">
   <rect width="${W}" height="${H}" fill="#FFFFFF"/>
   <text x="${M}" y="60" font-size="26" font-weight="800" fill="#0D233F">Floor Plan</text>
-  <text x="${M}" y="88" font-size="17" fill="#5B6B7E">Expanded ${expanded} &#183; ${area}m&#178; internal &#183; transports at ${closed}</text>
+  <text x="${M}" y="88" font-size="17" fill="#5B6B7E">${subtitle}</text>
   <rect x="${M - 10}" y="${planY - 10}" width="${planW + 20}" height="${planH + 20}" rx="12" fill="#0D233F"/>
   ${roomRects}
   <g stroke="#D6AF5E" stroke-width="2.5" stroke-dasharray="8 6" fill="none">

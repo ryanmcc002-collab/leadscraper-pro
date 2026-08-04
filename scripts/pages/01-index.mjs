@@ -1,12 +1,10 @@
 import { SITE, icons, layout, faqItem, faqSchema, ctaBanner } from "../lib/layout.mjs";
 import { products } from "../lib/products-data.mjs";
 
-const fmt = (n) => "$" + n.toLocaleString("en-AU");
-
 const HOME_FAQS = [
-  ["How much does an expandable tiny home cost in Australia?", `Our expandable tiny homes range from $18,900 for the Office Pod to $79,900 for the flagship Luxury Series, including GST. Every quote we issue is a delivered price to your postcode — transport, customs and quality inspection included. See our <a href="blog-how-much-does-a-tiny-home-cost.html">full pricing guide</a>.`],
+  ["How much does an expandable tiny home cost in Australia?", `Every quote we issue is a fixed delivered price to your exact postcode — home, transport, customs and quality inspection included — so we price per order rather than publishing a one-size-fits-all number. For market context, see our <a href="blog-how-much-does-a-tiny-home-cost.html">full pricing guide</a>, then <a href="quote.html">request your delivered quote</a> — it's free and takes one business day.`],
   ["Do tiny homes need council approval?", `It depends on how the home is used and where it's located. A home used as a permanent dwelling generally needs approval as a secondary dwelling or primary residence; some small structures and temporary uses have exemptions. We provide engineering documentation with every home and a state-by-state guide — read <a href="blog-do-tiny-homes-need-council-approval.html">our council approval guide</a>.`],
-  ["How long does delivery take?", `Current lead times are 6–18 weeks depending on the model, plus transport. Installation and expansion is typically completed in a single day. The <a href="delivery.html">delivery page</a> walks through every step from factory to handover.`],
+  ["How long does delivery take?", `Lead times depend on the production schedule and shipping — your quote includes the current timeline. Installation and expansion is typically completed in a single day. The <a href="delivery.html">delivery page</a> walks through every step from factory to handover.`],
   ["What does 'expandable' actually mean?", `The home transports as a standard shipping-width load, then hinged wing sections fold out on site to double or triple the floor area. You get real rooms and real ceilings — not a trailer, not a caravan. <a href="why-expandable-homes.html">Learn how expandable homes work</a>.`],
   ["Is finance available?", `Yes — through Australian lenders offering personal, secured and business loans for tiny homes, with terms from 3 to 7 years. Use the <a href="finance.html">repayment calculator</a> to estimate weekly repayments.`],
   ["What warranty do you offer?", `Every home carries a 10-year structural warranty and a minimum 2-year warranty on fixtures and fittings, backed by our Australian support team — not an overseas factory.`],
@@ -19,8 +17,9 @@ const productCards = products
             <div class="media"><span class="badge">${p.badge}</span><img src="assets/img/scene-${p.slug}.svg" alt="${p.name} exterior illustration" loading="lazy" width="1200" height="800"></div>
             <div class="body">
               <h3>${p.name}</h3>
-              <p class="meta">${p.area}m² &middot; ${p.bedrooms ? `${p.bedrooms} bed &middot; ${p.bathrooms} bath` : "studio / workspace"} &middot; ${p.leadTime}</p>
-              <div class="price-row"><span class="price">From ${fmt(p.price)}<small> incl. GST</small></span>${icons.arrow}</div>
+              <p class="meta">${p.tagline}</p>
+              <p class="meta">${p.bedrooms} bed &middot; ${p.bathrooms} bath &middot; sleeps ${p.sleeps}</p>
+              <div class="price-row"><span class="price" style="font-size:var(--fs-400)">Delivered quote on request</span>${icons.arrow}</div>
             </div>
           </a>`
   )
@@ -64,12 +63,12 @@ const body = `
           <article class="card reveal reveal-d1">
             <div class="icon">${icons.expand}</div>
             <h3>Expandable Design</h3>
-            <p>Transports at 2.5m wide, unfolds to up to 6.6m of genuine living space. Real bedrooms, real ceilings, real doors — engineered hinged construction, not a caravan.</p>
+            <p>Transports at standard road width, then unfolds on site into a complete two-bedroom home. Real bedrooms, real walls, real doors — engineered hinged construction, not a caravan.</p>
           </article>
           <article class="card reveal reveal-d2">
             <div class="icon">${icons.home}</div>
             <h3>Modern Living</h3>
-            <p>Double glazing, stone-look kitchens, hotel-grade bathrooms and reverse-cycle climate control come standard on every model. Nothing about it feels like a compromise.</p>
+            <p>Fitted kitchens, full bathrooms with shower, toilet and basin, double-glazed openings and clean modern finishes — complete and liveable as delivered.</p>
           </article>
           <article class="card reveal">
             <div class="icon">${icons.truck}</div>
@@ -84,7 +83,7 @@ const body = `
           <article class="card reveal reveal-d2">
             <div class="icon">${icons.gem}</div>
             <h3>Premium Quality</h3>
-            <p>Galvanised steel frames, 100mm insulated panels and staged factory inspections photographed and shared with you before your home ever ships.</p>
+            <p>Welded steel frames, fire-resistant EPS insulated wall panels, double-glazed openings — and staged factory inspections photographed and shared with you before your home ships.</p>
           </article>
         </div>
       </div>
@@ -105,8 +104,8 @@ const body = `
       <div class="wrap" style="padding-inline:0">
         <div class="wrap center reveal">
           <span class="eyebrow eyebrow-center">The range</span>
-          <h2 id="range-h">Seven homes. One standard: premium.</h2>
-          <p class="lead center" style="margin-inline:auto">From a backyard office to a three-bedroom family home — every model shares the same steel structure, insulation and finish quality.</p>
+          <h2 id="range-h">One home. Two editions. Zero compromises.</h2>
+          <p class="lead center" style="margin-inline:auto">The Model 0206 two-bedroom expandable, in Classic White or the feature-clad Black Edition — same complete layout, two distinct characters.</p>
         </div>
         <div class="carousel" style="margin-top:2.5rem">
           <div class="carousel-nav">
@@ -180,7 +179,7 @@ const body = `
               <tr><th scope="col">Factor</th><th scope="col">Bondi Expandable</th><th scope="col">Traditional Build</th><th scope="col">Kit Granny Flat</th><th scope="col">Caravan / Trailer</th></tr>
             </thead>
             <tbody>
-              <tr><th scope="row">Typical cost</th><td>$18,900–$79,900</td><td>$180,000+</td><td>$120,000+</td><td>$60,000–$150,000</td></tr>
+              <tr><th scope="row">Typical cost</th><td>One fixed delivered quote</td><td>$180,000+</td><td>$120,000+</td><td>$60,000–$150,000</td></tr>
               <tr><th scope="row">Time to move in</th><td>10–18 weeks</td><td>12–24 months</td><td>4–8 months</td><td>Immediate</td></tr>
               <tr><th scope="row">Real bedrooms &amp; 2.6m+ ceilings</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">Rarely</td></tr>
               <tr><th scope="row">Site trades required</th><td>Connections only</td><td class="no">Every trade</td><td class="no">Most trades</td><td>Connections only</td></tr>
@@ -244,7 +243,7 @@ export const page = {
     path: "index.html",
     title: "Expandable Tiny Homes Australia | Bondi Tiny Homes",
     description:
-      "Premium expandable tiny homes from $18,900 delivered. Factory-direct pricing, 10-year warranty, Australian support, delivery to every state. Free quotes.",
+      "Premium two-bedroom expandable tiny homes, imported factory-direct and delivered Australia-wide. Fixed delivered quotes, Australian support. Free quotes in 1 business day.",
     body,
     active: null,
     schema: [

@@ -23,7 +23,7 @@ async function out(rel, content) {
 /* ------------------------- Product imagery (SVG) ------------------------- */
 
 const ALT_PALETTE = { dusk: "day", day: "forest", forest: "dusk" };
-const widthFor = (p) => Math.max(300, Math.min(760, 300 + p.area * 5.5));
+const widthFor = (p) => p.sceneWidth || 560;
 
 for (const p of products) {
   await out(
@@ -36,7 +36,11 @@ for (const p of products) {
   );
   await out(
     `assets/img/floorplan-${p.slug}.svg`,
-    floorplanSvg({ rooms: p.floorplan, closed: p.closed, expanded: p.expanded, area: p.area, label: `${p.name} floor plan` })
+    floorplanSvg({
+      rooms: p.floorplan,
+      subtitle: `${p.bedrooms} bedrooms · kitchen · bathroom · transports at standard road width`,
+      label: `${p.name} floor plan`,
+    })
   );
 }
 

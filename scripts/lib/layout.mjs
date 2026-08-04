@@ -86,13 +86,10 @@ function footer() {
         <div>
           <h4>Products</h4>
           <ul>
-            <li><a href="product-20ft-expandable-tiny-home.html">20ft Expandable</a></li>
-            <li><a href="product-40ft-expandable-tiny-home.html">40ft Expandable</a></li>
-            <li><a href="product-luxury-series.html">Luxury Series</a></li>
-            <li><a href="product-family-series.html">Family Series</a></li>
-            <li><a href="product-office-pod.html">Office Pod</a></li>
-            <li><a href="product-studio-pod.html">Studio Pod</a></li>
-            <li><a href="product-airbnb-cabin.html">Airbnb Cabin</a></li>
+            <li><a href="products.html">The Range</a></li>
+            <li><a href="product-model-0206-two-bedroom-white.html">Model 0206 — Classic White</a></li>
+            <li><a href="product-model-0206-two-bedroom-black.html">Model 0206 — Black Edition</a></li>
+            <li><a href="quote.html">Get a Delivered Quote</a></li>
           </ul>
         </div>
         <div>

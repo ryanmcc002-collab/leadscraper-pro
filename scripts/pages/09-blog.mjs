@@ -12,7 +12,7 @@ const ARTICLES = [
       "Real 2026 tiny home prices: what $19k–$150k buys, the site costs nobody quotes, and a complete worked budget from deposit to move-in day.",
     excerpt: "What $19k–$150k actually buys, the site costs nobody quotes you, and a complete worked budget from deposit to move-in.",
     content: `
-      <p class="lead">The honest answer: a complete, quality tiny home in Australia costs between $18,900 and $150,000+, and the home itself is only 75–85% of your total project budget. Here's the full picture — including the numbers most suppliers leave out.</p>
+      <p class="lead">The honest answer: a complete, quality tiny home in Australia costs between roughly $20,000 and $150,000+, and the home itself is only 75–85% of your total project budget. Here's the full picture — including the numbers most suppliers leave out.</p>
       <h2>Tiny home prices by type (2026)</h2>
       <table>
         <thead><tr><th>Type</th><th>Typical price range</th><th>What you get</th></tr></thead>
@@ -36,7 +36,7 @@ const ARTICLES = [
       </ul>
       <blockquote>Rule of thumb: take the delivered home price and add 15–25% for a realistic move-in budget on a normal suburban block.</blockquote>
       <h2>A complete worked example</h2>
-      <p>A Sydney homeowner adding our <a href="product-studio-pod.html">Studio Pod</a> ($27,900 delivered) as a granny flat: site prep on a level backyard $1,800; complying development approval $3,200; plumber and electrician $3,600. <strong>Total project: $36,500</strong> — renting at $380/week, gross payback in under two years.</p>
+      <p>Take a Sydney homeowner adding a two-bedroom expandable as a granny flat, with a delivered home price of (say) $55,000: site prep on a level backyard $1,800; complying development approval $3,200; plumber and electrician $3,600. <strong>Total project: about $63,600</strong> — renting a two-bedroom flat at $450+/week, gross payback in around three years. For your own numbers, <a href="quote.html">get a delivered quote</a> for the <a href="product-model-0206-two-bedroom-white.html">Model 0206</a>.</p>
       <h2>Ways to pay less (without buying worse)</h2>
       <ul>
         <li><strong>Choose expandable over site-built</strong> — you're deleting on-site labour, not quality.</li>
@@ -79,7 +79,7 @@ const ARTICLES = [
       <p><em>Rules change and councils vary — treat this as a starting map, confirm locally before ordering. This is general information, not planning advice.</em></p>
       <h2>The fast lanes most buyers miss</h2>
       <ul>
-        <li><strong>Under 10m², non-habitable:</strong> our <a href="product-office-pod.html">Office Pod</a> was sized at 8.6m² precisely because sub-10m² structures are exempt development in many council areas (setbacks and height still apply).</li>
+        <li><strong>Under 10m², non-habitable:</strong> in many council areas, structures under 10m² that meet setback and height rules are exempt development — the classic pathway for backyard offices and studios.</li>
         <li><strong>Complying development:</strong> where your block qualifies, a private certifier can approve a granny flat in 2–4 weeks — no council queue.</li>
         <li><strong>Rural land:</strong> farm stays, worker accommodation and family dwellings often enjoy specific provisions that suburban blocks don't.</li>
       </ul>
@@ -116,8 +116,8 @@ const ARTICLES = [
       <blockquote>Order of operations matters: check zoning → check easements → confirm the approval pathway → then order the home. Doing it backwards is how projects stall.</blockquote>
       <h2>Delivery into a backyard</h2>
       <p>A standard side access of about 3.5m lets a tilt-tray place the home directly. Tighter access is routinely solved with a Franna crane lifting over a fence or garage — budget roughly $1,200–$4,000. Because expandable homes travel folded at 2.5m wide, they fit where fixed modular buildings simply can't go — which makes backyard installs a natural fit for them.</p>
-      <h2>Which model suits a backyard?</h2>
-      <p>The <a href="product-office-pod.html">Office Pod (8.6m²)</a> for work-from-home, the <a href="product-studio-pod.html">Studio Pod (15m²)</a> as a self-contained granny flat, and the <a href="product-20ft-expandable-tiny-home.html">20ft Expandable (39m²)</a> when you want a genuine one-bedroom home behind the house. All three clear standard height limits and standard side access.</p>
+      <h2>Which home suits a backyard?</h2>
+      <p>The <a href="product-model-0206-two-bedroom-white.html">Model 0206 two-bedroom expandable</a> is a natural backyard secondary dwelling: two real bedrooms, kitchen and full bathroom, transported folded at standard road width so it can be placed where fixed modular buildings can't. Prefer a darker, architectural look? The <a href="product-model-0206-two-bedroom-black.html">Black Edition</a> adds feature cladding and black thermal-break windows.</p>
       <p>Want certainty for your block? <a href="quote.html">Send us your address and a photo of your access</a> — we'll assess deliverability free, before you commit to anything.</p>`,
   },
   {
@@ -147,7 +147,7 @@ const ARTICLES = [
       </table>
       <h2>When the tiny home wins</h2>
       <ul>
-        <li><strong>Cash-flow projects:</strong> at half to a third of the capital cost, rental payback is 2–4× faster. A $36,500 all-in Studio Pod renting at $380/week grosses ~54% annual yield on cost — no site-built flat gets close.</li>
+        <li><strong>Cash-flow projects:</strong> at half to a third of the capital cost, rental payback is 2–4× faster. An expandable granny flat costing ~$60,000 all-in and renting at $450/week grosses ~39% annual yield on cost — no site-built flat gets close.</li>
         <li><strong>Uncertain time horizons:</strong> selling in five years? The home can move to your next property or be sold separately.</li>
         <li><strong>Difficult sites:</strong> steep, tight or remote blocks where site building costs explode.</li>
         <li><strong>Speed:</strong> housing a parent this year, not next year.</li>
@@ -159,7 +159,7 @@ const ARTICLES = [
         <li><strong>Mortgage-rate money:</strong> if you're refinancing anyway, construction debt at home-loan rates is cheap.</li>
       </ul>
       <blockquote>Decision shortcut: optimising for income and flexibility → tiny home. Optimising for maximum long-term property value on a blue-chip block → site-built flat.</blockquote>
-      <p>Halfway between the two: our <a href="product-luxury-series.html">Luxury Series</a> delivers site-built-quality finishes at expandable pricing. Compare the numbers with the <a href="finance.html">repayment calculator</a>, or read the <a href="blog-how-much-does-a-tiny-home-cost.html">full cost guide</a> first.</p>`,
+      <p>Halfway between the two: the feature-clad <a href="product-model-0206-two-bedroom-black.html">Model 0206 Black Edition</a> reads as architectural rather than transportable. Compare the numbers with the <a href="finance.html">repayment calculator</a>, or read the <a href="blog-how-much-does-a-tiny-home-cost.html">full cost guide</a> first.</p>`,
   },
   {
     slug: "best-tiny-homes-for-airbnb",
@@ -178,18 +178,18 @@ const ARTICLES = [
       <table>
         <thead><tr><th>Item</th><th>Amount</th></tr></thead>
         <tbody>
-          <tr><td><a href="product-airbnb-cabin.html">Airbnb Cabin</a> delivered</td><td>$42,900</td></tr>
+          <tr><td>Two-bedroom expandable cabin, delivered (example)</td><td>$55,000</td></tr>
           <tr><td>Site prep, approvals, connections, styling</td><td>$14,000</td></tr>
-          <tr><td><strong>Total invested</strong></td><td><strong>$56,900</strong></td></tr>
+          <tr><td><strong>Total invested</strong></td><td><strong>$69,000</strong></td></tr>
           <tr><td>Income: $220/night × 60% occupancy</td><td>$48,180/yr gross</td></tr>
           <tr><td>Less platform fees, cleaning, running costs (~35%)</td><td>−$16,860</td></tr>
           <tr><td><strong>Net before finance/tax</strong></td><td><strong>≈ $31,300/yr</strong></td></tr>
         </tbody>
       </table>
-      <p>That's payback in under two years. Income is never guaranteed — model your own area on AirDNA or by shadowing comparable listings for a month — but the structural advantage is real: the capital cost is a fraction of a house, while the nightly rate isn't.</p>
+      <p>That's payback in just over two years. Income is never guaranteed — model your own area on AirDNA or by shadowing comparable listings for a month — but the structural advantage is real: the capital cost is a fraction of a house, while the nightly rate isn't.</p>
       <h2>What actually moves the nightly rate</h2>
       <ul>
-        <li><strong>The hero photo.</strong> Guests book views framed in glass. It's why the Airbnb Cabin has a full-height glazed gable — the photo does the marketing.</li>
+        <li><strong>The hero photo.</strong> Guests book on the first image — a striking exterior against your landscape. Feature cladding and black window frames (see the <a href="product-model-0206-two-bedroom-black.html">Black Edition</a>) photograph like an architectural build.</li>
         <li><strong>A genuine bathroom.</strong> Rainfall shower, real toilet. "Compost toilet" in a listing measurably suppresses rate outside the eco niche.</li>
         <li><strong>Climate control.</strong> Reviews mention temperature more than décor. Insulated panel construction plus a split system keeps the 5-star streak alive in February and July.</li>
         <li><strong>One signature outdoor feature.</strong> Fire pit, outdoor tub or deck with a view — the second photo, and the reason guests pay $60/night more.</li>
@@ -199,10 +199,10 @@ const ARTICLES = [
         <li>Skipping council/short-stay registration — some regions cap nights or require permits. Check before you buy land.</li>
         <li>Buying a cheap cabin that photographs cheap. The algorithm punishes mediocre imagery forever.</li>
         <li>Underestimating cleaning logistics on remote blocks — build a local cleaner into the model.</li>
-        <li>No owner storage — a lockable cupboard (standard on our cabin) saves hauling supplies every turnover.</li>
+        <li>No owner storage — set aside a lockable cupboard so you're not hauling supplies every turnover.</li>
         <li>Furnishing as a house instead of a stay: fewer, better pieces; hotel linen; a coffee ritual guests photograph.</li>
       </ol>
-      <p>Serious about the numbers? <a href="quote.html">Request a quote</a> and mention Airbnb — we'll include the host package options and a state compliance checklist. For premium positioning, look at the <a href="product-luxury-series.html">Luxury Series</a>.</p>`,
+      <p>Serious about the numbers? <a href="quote.html">Request a quote</a> and mention Airbnb — we'll include a state short-stay compliance checklist with your delivered pricing. For premium positioning, look at the <a href="product-model-0206-two-bedroom-black.html">Model 0206 Black Edition</a>.</p>`,
   },
   {
     slug: "expandable-homes-explained",
@@ -229,7 +229,7 @@ const ARTICLES = [
       <p>Ask any supplier — including us — these seven questions:</p>
       <ol>
         <li><strong>Steel spec:</strong> is the frame fully welded galvanised steel, or bolted box-section? Ask for the engineering drawings.</li>
-        <li><strong>Panel thickness:</strong> 100mm insulated sandwich panels are the premium standard; 50–75mm is where cheap imports save money and you pay in comfort forever.</li>
+        <li><strong>Panel specification:</strong> ask for the wall panel spec in writing — thickness, core material and fire rating — and compare suppliers like for like. A fire-resistant core matters more than headline thickness.</li>
         <li><strong>Glazing:</strong> double glazed throughout, or only in the brochure photo?</li>
         <li><strong>Hinge and seal engineering:</strong> what's the gasket system at the fold joins, and how many open/close cycles is it rated for?</li>
         <li><strong>Compliance paperwork:</strong> AS/NZS 3000 electrical certification, AS 3740 waterproofing, structural engineering to AS/NZS 1170 — documents, not assurances.</li>

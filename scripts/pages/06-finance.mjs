@@ -4,7 +4,7 @@ const FIN_FAQS = [
   ["Can I get finance for a tiny home in Australia?", "Yes. Because most tiny homes aren't fixed to land, they're typically financed with a secured personal loan, chattel mortgage (for business use) or an equity release against an existing property — rather than a traditional mortgage. Several Australian lenders now offer purpose-built tiny home loans."],
   ["What deposit do I need?", "Secured personal loans often require no deposit, though 10–20% reduces your rate and repayments. Using home equity can also mean no cash deposit. Business purchases through a chattel mortgage may finance the full amount and claim GST credits — ask your accountant."],
   ["What interest rates should I expect?", "As a guide, secured personal loans currently range from roughly 7% to 14% p.a. depending on your credit profile and term. Equity release against property tracks home loan rates. The calculator above lets you model any rate."],
-  ["Can rental income cover the repayments?", "Frequently, yes. A $49,900 Studio Pod financed over 7 years at 9% costs about $185/week — while granny flats in most capital cities rent for $300–$450/week. Airbnb operators often report higher returns again. Income isn't guaranteed; model your own local rents conservatively."],
+  ["Can rental income cover the repayments?", "Frequently, yes. As a worked example, $50,000 financed over 7 years at 9% costs about $186/week — while granny flats in most capital cities rent for $300–$450/week. Short-stay returns can be higher again. Income isn't guaranteed; model your own local rents conservatively."],
   ["Is the deposit to Bondi Tiny Homes protected?", "Your order deposit is held against a signed agreement with staged payments tied to build milestones you can verify through inspection photo reports. The balance is only payable when your home lands in Australia and passes final inspection."],
 ];
 
@@ -14,7 +14,7 @@ const body = `
         ${breadcrumbs([["Home", "index.html"], ["Finance", "finance.html"]])}
         <span class="eyebrow">Make it happen sooner</span>
         <h1>Tiny home finance, minus the mystery</h1>
-        <p class="lead">From $60 a week for an Office Pod to a family home for less than most car repayments. Model your own numbers below, then let us connect you with lenders who understand tiny homes.</p>
+        <p class="lead">A complete two-bedroom home for less than many car repayments. Model your own numbers below, then let us connect you with lenders who understand tiny homes.</p>
       </div>
     </section>
 
@@ -35,8 +35,8 @@ const body = `
           <div class="form-card reveal reveal-d1" data-calc>
             <div class="calc">
               <div class="row">
-                <div class="vals"><span>Home price</span><span id="calc-amount-val">$59,900</span></div>
-                <input type="range" id="calc-amount" min="18900" max="120000" step="500" value="59900" aria-label="Home price">
+                <div class="vals"><span>Home price</span><span id="calc-amount-val">$55,000</span></div>
+                <input type="range" id="calc-amount" min="20000" max="120000" step="500" value="55000" aria-label="Home price">
               </div>
               <div class="row">
                 <div class="vals"><span>Deposit</span><span id="calc-deposit-val">$10,000</span></div>
@@ -66,25 +66,22 @@ const body = `
         <div class="center reveal"><span class="eyebrow eyebrow-center">Worked examples</span><h2 id="ex-h">What owners actually pay</h2></div>
         <div class="grid grid-3" style="margin-top:2.5rem">
           <div class="card reveal">
-            <span class="eyebrow">Office Pod</span>
-            <h3>$18,900 &middot; 5-year loan</h3>
-            <p>$3,000 deposit, 9% p.a. → about <strong>$76/week</strong>. Often less than a co-working desk — and it's yours, in your backyard, forever.</p>
-            <a class="card-link" href="product-office-pod.html">See the Office Pod ${icons.arrow}</a>
+            <span class="eyebrow">Borrowing $30,000</span>
+            <h3>5-year loan example</h3>
+            <p>$30,000 over 5 years at 9% p.a. → about <strong>$144/week</strong>. Shorter terms cost more per week but far less in total interest.</p>
           </div>
           <div class="card reveal reveal-d1">
-            <span class="eyebrow">Studio Pod as granny flat</span>
-            <h3>$27,900 &middot; 7-year loan</h3>
-            <p>No deposit, 9.5% p.a. → about <strong>$105/week</strong>, against typical granny-flat rents of $300+/week in most metro areas. The maths does its own selling.</p>
-            <a class="card-link" href="product-studio-pod.html">See the Studio Pod ${icons.arrow}</a>
+            <span class="eyebrow">Borrowing $50,000</span>
+            <h3>7-year loan example</h3>
+            <p>$50,000 over 7 years at 9% p.a. → about <strong>$186/week</strong> — against typical granny-flat rents of $300–$450/week in most capital cities.</p>
           </div>
           <div class="card reveal reveal-d2">
-            <span class="eyebrow">40ft as first home</span>
-            <h3>$59,900 &middot; 7-year loan</h3>
-            <p>$10,000 deposit, 9% p.a. → about <strong>$185/week</strong>. Compare that with average capital-city rent of $600+/week — and in seven years you own it outright.</p>
-            <a class="card-link" href="product-40ft-expandable-tiny-home.html">See the 40ft ${icons.arrow}</a>
+            <span class="eyebrow">Borrowing $70,000</span>
+            <h3>7-year loan example</h3>
+            <p>$70,000 over 7 years at 9% p.a. → about <strong>$260/week</strong>. Compare that with average capital-city rent of $600+/week — and in seven years you own it outright.</p>
           </div>
         </div>
-        <p class="muted center" style="margin-top:1.5rem;font-size:var(--fs-300)">Examples are illustrative, exclude fees and assume rates available at time of writing. Not financial advice.</p>
+        <p class="muted center" style="margin-top:1.5rem;font-size:var(--fs-300)">Examples are illustrative borrowing amounts only — they aren't our prices. They exclude fees and assume indicative rates. Not financial advice.</p>
       </div>
     </section>
 
@@ -109,7 +106,7 @@ export const page = {
     path: "finance.html",
     title: "Tiny Home Finance & Calculator | Bondi Tiny Homes",
     description:
-      "Finance a tiny home from around $76/week. Repayment calculator, worked examples for granny flats and Airbnb cabins, plus honest finance answers.",
+      "Finance an expandable tiny home: interactive repayment calculator, worked granny-flat and Airbnb examples, plus honest answers to Australia's common questions.",
     body,
     active: "finance.html",
     schema: [

@@ -3,8 +3,8 @@ import { SITE, icons, layout, breadcrumbs, breadcrumbSchema, ctaBanner } from ".
 const REASONS = [
   ["truck", "Transport advantages", "An expandable home ships at standard road width — 2.5m — so it travels on a normal truck with no escort vehicles, no oversize permits and no special routes. That's why we can deliver to a Bondi backyard or a station 400km past Broken Hill for a fraction of the cost of moving a fixed modular home."],
   ["clock", "Quick installation", "The wings fold out on engineered hinges and lock down weather-tight in hours. Where a site build needs 20+ trade visits over a year, an expandable home needs a level pad, a day of installation and a plumber and electrician for connections."],
-  ["shield", "Modern construction", "Galvanised structural steel frames don't warp, rot or feed termites. 100mm insulated sandwich panels deliver wall insulation many project homes can't match, and the whole structure is built indoors — never rained on, never sun-damaged mid-build."],
-  ["tag", "Cost savings", "You skip the two biggest costs of conventional building: on-site labour and time. No months of trades, no builder's margin on every fitting, no rent paid while you wait. Complete homes from $18,900–$79,900, delivered."],
+  ["shield", "Modern construction", "Welded steel frames don't warp, rot or feed termites. Fire-resistant EPS insulated wall panels and double-glazed openings keep the home easy to heat and cool, and the whole structure is built indoors — never rained on, never sun-damaged mid-build."],
+  ["tag", "Cost savings", "You skip the two biggest costs of conventional building: on-site labour and time. No months of trades, no builder's margin on every fitting, no rent paid while you wait. One fixed delivered quote for a complete home."],
   ["leaf", "Energy efficiency", "Insulated panels, double glazing and airtight construction mean small heating and cooling loads — most owners run a single split system even in Tasmania or Far North Queensland. Add solar and a battery and off-grid living is genuinely practical."],
   ["gem", "Durability", "The same panel and steel technology used in commercial cold storage and mining accommodation — environments far harsher than any backyard. Engineered to AS/NZS 1170 wind actions with site-specific tie-down engineering available for cyclonic regions."],
   ["home", "Investment potential", "A granny flat or cabin that costs $50k and rents for $350/week pays itself off in under four years — then keeps earning. Unlike a caravan, an approved secondary dwelling can also add lasting value to your property."],
@@ -26,7 +26,7 @@ const body = `
         <div class="center reveal">
           <span class="eyebrow eyebrow-center">The concept in 20 seconds</span>
           <h2 id="how-h">Ships like a container. Lives like a home.</h2>
-          <p class="lead center" style="margin-inline:auto">Your home is built and finished in a factory, folded to standard transport width, delivered on one truck, then expanded on site. Hinged wall, floor and roof sections lock into place and seal — turning a 2.5m-wide load into up to 6.6m of living space.</p>
+          <p class="lead center" style="margin-inline:auto">Your home is built and finished in a factory, folded to standard transport width, delivered on one truck, then expanded on site. Hinged wall, floor and roof sections lock into place and seal — turning a single road-legal load into a complete two-bedroom home.</p>
         </div>
         <div class="expand-demo reveal" data-expand-demo style="margin-top:2.5rem">
           <div class="stage">
@@ -62,7 +62,7 @@ const body = `
         <ul>
           <li><strong>Approvals are your project's critical path.</strong> The home arrives in weeks; council or certifier approval can take longer depending on your state and intended use. Start the approval conversation before you order — <a href="blog-do-tiny-homes-need-council-approval.html">our guide shows you how</a>.</li>
           <li><strong>Sites need preparation.</strong> A reasonably level, accessible pad with services nearby keeps installation simple. Steep, tight or remote sites are all solvable — but budget for cranes, longer service runs or extra transport, which we'll always quote up front.</li>
-          <li><strong>Not every use suits every model.</strong> A family living permanently needs the approvals, insulation and space of our Grand Series — not a repurposed office pod. We'll steer you to the right model even when it's a cheaper one.</li>
+          <li><strong>Not every use suits every configuration.</strong> Permanent living needs the right approvals and the right specification — we'll tell you plainly what your plans require before you order, not after.</li>
         </ul>
         <p>If, after all that, a conventional build or kit granny flat is genuinely better for your situation — we'll say so. It costs us a sale occasionally. We think it's the only way to earn trust in an industry short on it.</p>
       </div>

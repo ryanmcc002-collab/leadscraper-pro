@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-label="Model 0206 Two-Bedroom — Black Edition floor plan" font-family="Manrope, Arial, sans-serif">
+  <rect width="1000" height="560" fill="#FFFFFF"/>
+  <text x="90" y="60" font-size="26" font-weight="800" fill="#0D233F">Floor Plan</text>
+  <text x="90" y="88" font-size="17" fill="#5B6B7E">2 bedrooms · kitchen · bathroom · transports at standard road width</text>
+  <rect x="80" y="110" width="840" height="340" rx="12" fill="#0D233F"/>
+  <g>
+      <rect x="93" y="123" width="240" height="314" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="213" y="280" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Bedroom 1</text>
+    </g>
+  <g>
+      <rect x="339" y="123" width="322" height="314" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="500" y="280" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Living / Kitchen</text>
+    </g>
+  <g>
+      <rect x="667" y="123" width="240" height="170" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="787" y="208" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Bedroom 2</text>
+    </g>
+  <g>
+      <rect x="667" y="299" width="240" height="138" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
+      <text x="787" y="368" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#0D233F">Bathroom</text>
+    </g>
+  <g stroke="#D6AF5E" stroke-width="2.5" stroke-dasharray="8 6" fill="none">
+    <rect x="237.6" y="94" width="524.8" height="372" rx="10"/>
+  </g>
+  <text x="500" y="502" text-anchor="middle" font-size="16" font-weight="700" fill="#C29A45">— — transport core (wings fold in for delivery) — —</text>
+  <g font-size="15" fill="#5B6B7E">
+    <text x="910" y="60" text-anchor="end" font-weight="700">Indicative layout</text>
+    <text x="910" y="82" text-anchor="end">Final dimensions confirmed on order</text>
+  </g>
+</svg>

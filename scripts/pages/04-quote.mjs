@@ -2,7 +2,7 @@ import { SITE, icons, layout, breadcrumbs, breadcrumbSchema } from "../lib/layou
 import { products } from "../lib/products-data.mjs";
 
 const modelOptions = products
-  .map((p) => `<option value="${p.slug}">${p.name} — from $${p.price.toLocaleString("en-AU")}</option>`)
+  .map((p) => `<option value="${p.slug}">${p.name}</option>`)
   .join("\n                  ");
 
 const body = `
