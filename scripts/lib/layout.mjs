@@ -147,11 +147,6 @@ const ORG_SCHEMA = {
     addressCountry: "AU",
   },
   areaServed: "AU",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "214",
-  },
 };
 
 /**
@@ -245,18 +240,6 @@ export function breadcrumbs(items) {
     )
     .join("");
   return `<ol class="breadcrumbs">${lis}</ol>`;
-}
-
-export function stars() {
-  return `<div class="stars" aria-label="5 out of 5 stars">${icons.star.repeat(5)}</div>`;
-}
-
-export function testimonial(quote, name, where, initials) {
-  return `<div class="card testimonial">
-    ${stars()}
-    <blockquote>&ldquo;${quote}&rdquo;</blockquote>
-    <div class="who"><span class="avatar" aria-hidden="true">${initials}</span><div><strong>${name}</strong><span>${where}</span></div></div>
-  </div>`;
 }
 
 export function ctaBanner(heading, sub) {

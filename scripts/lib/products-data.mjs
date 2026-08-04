@@ -67,7 +67,7 @@ export const products = [
     faqs: [
       ["How long does the 20ft take to set up?", "Most installs are complete in a single day: the home is positioned in the morning, both wings folded out within about three hours, then services connected. Weather-tight the same day."],
       ["Do I need a crane?", "Usually not. On level, accessible sites the home slides off a tilt-tray truck. Sloping or tight-access sites may need a crane or Franna — we confirm this during your free site assessment."],
-      ["Can two people live in it comfortably?", "Yes. With a separate bedroom, full kitchen and 39m² expanded, it lives like a compact one-bedroom apartment — most couples find it far roomier than they expect."],
+      ["Can two people live in it comfortably?", "Yes. With a separate bedroom, full kitchen and 39m² expanded, it lives like a compact one-bedroom apartment — far roomier than the name suggests."],
     ],
   },
   {
@@ -165,7 +165,7 @@ export const products = [
       ["Signature interior palette", "Engineered stone, matte-black or brushed-brass hardware, oak-look joinery and designer pendant lighting as standard."],
       ["Spa-grade bathrooms", "Full-height tiling, rainfall showers, backlit mirrors and wall-hung vanities in both bathrooms."],
       ["Climate perfected", "Upgraded insulation, ducted-style concealed air conditioning and ceiling fans for silent comfort."],
-      ["A ceiling that changes everything", "2.7m ceilings with square-set cornices and concealed LED strip lighting — the single biggest reason guests say it doesn't feel tiny."],
+      ["A ceiling that changes everything", "2.7m ceilings with square-set cornices and concealed LED strip lighting — the single biggest reason the space doesn't feel tiny."],
     ],
     included: [
       "Everything in the Grand Series specification, plus:",
@@ -205,7 +205,7 @@ export const products = [
     ],
     faqs: [
       ["What makes the Luxury Series different from the 40ft?", "The shell is similar — the experience is not. Higher ceilings, stone surfaces, premium appliances, full-height tiling, concealed lighting and upgraded insulation transform how the space looks, sounds and feels."],
-      ["Is it suitable for luxury short-stay accommodation?", "It was designed for exactly that. Operators tell us the Luxury Series photographs like an architectural build and commands nightly rates well above standard cabins."],
+      ["Is it suitable for luxury short-stay accommodation?", "It was designed for exactly that: it's specified to photograph like an architectural build and to support nightly rates well above standard cabins."],
       ["Can I customise the palette?", "Yes. Choose between two curated palettes — Coastal Light and Outback Dusk — or work with our team on custom joinery and finishes during your design consultation."],
     ],
   },
@@ -232,7 +232,7 @@ export const products = [
     palette: "day",
     features: [
       ["Storage everywhere", "Built-in robes in all three bedrooms, overhead kitchen cabinets, linen press and under-bench laundry storage."],
-      ["A real family bathroom", "Full-size bathtub plus shower — rare in this category and the feature parents thank us for most."],
+      ["A real family bathroom", "Full-size bathtub plus shower — genuinely rare in this category, and exactly what bath-time with small kids needs."],
       ["Kid-proof finishes", "Scratch-resistant flooring, wipeable wall panels and rounded joinery edges throughout."],
       ["Zoned for sanity", "Bedrooms grouped away from living space, with the master separated for genuine privacy."],
     ],
@@ -276,7 +276,7 @@ export const products = [
     faqs: [
       ["How does the Family Series differ from the 40ft?", "Same footprint, different priorities: a bathtub, bigger pantry and laundry, built-in robes, tougher finishes and a bunk-ready third bedroom. It trades a little open space for a lot of practicality."],
       ["Can it handle a family long-term?", "Yes — it's engineered and specified as a permanent dwelling. Families use it as their primary residence while building, after downsizing, or simply as their home, full stop."],
-      ["What about heating and cooling bills?", "Insulated panels and double glazing mean the two split systems rarely work hard. Most families report energy bills far below their previous house."],
+      ["What about heating and cooling bills?", "Insulated panels and double glazing mean the two split systems rarely work hard, keeping heating and cooling loads — and bills — low."],
     ],
   },
   {
@@ -342,7 +342,7 @@ export const products = [
     faqs: [
       ["Do I need council approval for an office pod?", "In many Australian council areas, structures under 10m² qualify as exempt development if they meet setback and height rules. Rules differ by state and council — we provide a checklist and help you confirm before you order."],
       ["How is it powered?", "A weatherproof 15A inlet connects to your house via a suitable outdoor circuit (your electrician can install one in about an hour), or go fully off-grid with the solar package."],
-      ["Can it double as a guest room?", "Plenty of customers add a sofa bed. For regular guests, look at the Studio Pod — it adds a bathroom and kitchenette."],
+      ["Can it double as a guest room?", "Add a sofa bed and it doubles as occasional guest space. For regular guests, look at the Studio Pod — it adds a bathroom and kitchenette."],
     ],
   },
   {
@@ -408,7 +408,7 @@ export const products = [
     ],
     faqs: [
       ["Is the Studio Pod approved as a granny flat?", "It can be, depending on your state's secondary dwelling rules. In NSW, for example, secondary dwellings on eligible blocks can be approved quickly through complying development. We supply the documentation your certifier needs."],
-      ["Can I rent it out?", "In most states yes, once approved as a secondary dwelling. Many customers cover their repayments with the rent — see our finance page for worked examples."],
+      ["Can I rent it out?", "In most states yes, once approved as a secondary dwelling. Typical metro granny-flat rents comfortably exceed typical repayments — see our finance page for worked examples."],
       ["How is hot water handled?", "A compact electric hot water system is included; a heat-pump upgrade is available for lower running costs."],
     ],
   },
@@ -475,9 +475,9 @@ export const products = [
       { x: 74, y: 55, w: 26, h: 45, label: "Bathroom" },
     ],
     faqs: [
-      ["What returns do Airbnb cabins achieve?", "Returns depend entirely on location, occupancy and rate — regional NSW and VIC operators commonly report $180–$350 per night for architecturally styled cabins. Read our Best Tiny Homes for Airbnb guide for a full worked example."],
+      ["What returns do Airbnb cabins achieve?", "Returns depend entirely on location, occupancy and rate — architecturally styled cabins in regional NSW and VIC typically list at $180–$350 per night. Read our Best Tiny Homes for Airbnb guide for a full worked example."],
       ["Do I need approval to run it as short-stay accommodation?", "Short-stay rules vary by state and council (registration schemes, night caps, land zoning). We provide a compliance checklist per state and recommend confirming with your council before ordering."],
-      ["How quickly can I be hosting?", "Typical timeline: order to delivery in 10–14 weeks, installation and connections within a week, styling and listing photos the week after. Many hosts take their first booking within four months of ordering."],
+      ["How quickly can I be hosting?", "Typical timeline: order to delivery in 10–14 weeks, installation and connections within a week, styling and listing photos the week after. That's a realistic path to your first booking within about four months of ordering."],
     ],
   },
 ];

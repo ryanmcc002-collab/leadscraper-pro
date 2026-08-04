@@ -1,4 +1,4 @@
-import { SITE, icons, layout, breadcrumbs, breadcrumbSchema, stars } from "../lib/layout.mjs";
+import { SITE, icons, layout, breadcrumbs, breadcrumbSchema } from "../lib/layout.mjs";
 import { products } from "../lib/products-data.mjs";
 
 const modelOptions = products
@@ -92,9 +92,12 @@ const body = `
               </ul>
             </div>
             <div class="card reveal reveal-d3">
-              ${stars()}
-              <blockquote style="margin:0.75rem 0 0;border:0;padding:0;font-size:0.95rem;color:var(--muted)">&ldquo;I filled in the form on a Sunday night expecting the usual sales barrage. Instead I got one thorough email with exact pricing for my postcode and a polite follow-up call. That restraint is why they got the order.&rdquo;</blockquote>
-              <p style="margin-top:0.75rem;font-weight:700;color:var(--navy);font-size:var(--fs-300)">James W. — Margaret River, WA</p>
+              <h3>Our no-hassle promise</h3>
+              <ul class="checklist" style="margin-top:0.75rem">
+                <li>${icons.check}<span>One reply with real delivered pricing — not a sales sequence.</span></li>
+                <li>${icons.check}<span>Your quote stays valid for 60 days. No countdown timers.</span></li>
+                <li>${icons.check}<span>If a cheaper model — or another builder — suits your block better, we'll say so.</span></li>
+              </ul>
             </div>
           </div>
         </div>

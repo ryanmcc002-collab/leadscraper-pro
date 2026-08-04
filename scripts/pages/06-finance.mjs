@@ -99,7 +99,7 @@ const body = `
 
     ${ctaBanner(
       "Want a real repayment figure?",
-      "Request a quote and tick the finance box — we'll include indicative repayments from lenders who finance tiny homes every week."
+      "Request a quote and tick the finance box — we'll include indicative repayments from lenders familiar with tiny home purchases."
     )}
 `;
 

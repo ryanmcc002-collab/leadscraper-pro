@@ -115,7 +115,7 @@ const ARTICLES = [
       </ul>
       <blockquote>Order of operations matters: check zoning → check easements → confirm the approval pathway → then order the home. Doing it backwards is how projects stall.</blockquote>
       <h2>Delivery into a backyard</h2>
-      <p>A standard side access of about 3.5m lets a tilt-tray place the home directly. Tighter access is routinely solved with a Franna crane lifting over a fence or garage — budget roughly $1,200–$4,000. Because expandable homes travel folded at 2.5m wide, they fit where fixed modular buildings simply can't go; it's the reason backyard installs are our most common delivery type.</p>
+      <p>A standard side access of about 3.5m lets a tilt-tray place the home directly. Tighter access is routinely solved with a Franna crane lifting over a fence or garage — budget roughly $1,200–$4,000. Because expandable homes travel folded at 2.5m wide, they fit where fixed modular buildings simply can't go — which makes backyard installs a natural fit for them.</p>
       <h2>Which model suits a backyard?</h2>
       <p>The <a href="product-office-pod.html">Office Pod (8.6m²)</a> for work-from-home, the <a href="product-studio-pod.html">Studio Pod (15m²)</a> as a self-contained granny flat, and the <a href="product-20ft-expandable-tiny-home.html">20ft Expandable (39m²)</a> when you want a genuine one-bedroom home behind the house. All three clear standard height limits and standard side access.</p>
       <p>Want certainty for your block? <a href="quote.html">Send us your address and a photo of your access</a> — we'll assess deliverability free, before you commit to anything.</p>`,

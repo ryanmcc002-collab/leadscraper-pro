@@ -12,13 +12,13 @@ const body = `
 
     <section class="section section-white">
       <div class="wrap-narrow prose reveal">
-        <p class="lead">In 2021, looking for accommodation for a family property in the Southern Highlands, we did what our customers do now: searched "expandable tiny homes Australia" and started making calls.</p>
+        <p class="lead">When we first went looking for an expandable home for our own family property, we did what our customers do now: searched "expandable tiny homes Australia" and started making calls.</p>
         <p>What we found was unsettling. Importers who had never visited the factories they bought from. Prices that ballooned once "delivery extras" appeared. Homes that looked sharp in renders and arrived with single glazing, paper-thin walls and no compliance documentation. And when something went wrong? The support line rang out — or answered in a different time zone with no intention of helping.</p>
         <p>The product concept was brilliant. The industry around it wasn't. So we built the company we'd wanted to buy from.</p>
         <h2>Factory relationships, not factory listings</h2>
-        <p>We spent eight months in manufacturing regions across Asia, touring more than thirty factories. Most didn't meet our standard. Two did. Today we hold direct manufacturing agreements with both — covering our exact specifications for steel grade, insulation, glazing, waterproofing and Australian electrical compliance. No trading companies, no middlemen, no mystery about where your home comes from.</p>
+        <p>We went to the source ourselves. We tour the factories we buy from in person, and we only hold direct manufacturing agreements with factories that build to our written specification — steel grade, insulation, glazing, waterproofing and Australian electrical compliance. No trading companies, no middlemen, no mystery about where your home comes from.</p>
         <h2>Inspection isn't a promise. It's a process.</h2>
-        <p>Every single home passes three staged quality inspections — frame stage, fit-out stage and pre-shipment — carried out at the factory by independent inspectors. You receive the photo reports as your home is built. If a stage fails, it's rectified before the next begins. In four years, that discipline has meant zero homes arriving with structural defects.</p>
+        <p>Every single home passes three staged quality inspections — frame stage, fit-out stage and pre-shipment — carried out at the factory by independent inspectors. You receive the photo reports as your home is built. If a stage fails, it's rectified before the next begins.</p>
         <h2>Transparent pricing, delivered</h2>
         <p>The price we quote is the price you pay: home, shipping, customs clearance, quarantine, transport to your site and installation. GST included. If a quote needs a crane or long-distance transport, you'll see it as a line item before you commit — never as a surprise afterwards.</p>
         <h2>Support that answers in an Australian accent</h2>
@@ -39,12 +39,12 @@ const body = `
 
     <section class="section section-navy" aria-labelledby="num-h">
       <div class="wrap">
-        <div class="center reveal"><span class="eyebrow eyebrow-center">Four years in</span><h2 id="num-h">The numbers we're proudest of</h2></div>
+        <div class="center reveal"><span class="eyebrow eyebrow-center">In writing, on every order</span><h2 id="num-h">Our standards, in numbers</h2></div>
         <div class="stats reveal" style="margin-top:2.5rem">
-          <div><div class="num" data-count="300" data-suffix="+">0</div><div class="label">Homes delivered</div></div>
-          <div><div class="num" data-count="3" data-suffix="×">0</div><div class="label">Inspections per home</div></div>
-          <div><div class="num" data-count="0">0</div><div class="label">Structural defects on arrival</div></div>
-          <div><div class="num" data-count="93" data-suffix="%">0</div><div class="label">Customers who refer a friend</div></div>
+          <div><div class="num" data-count="3" data-suffix="×">0</div><div class="label">Staged inspections per home</div></div>
+          <div><div class="num" data-count="10" data-suffix="-yr">0</div><div class="label">Structural warranty</div></div>
+          <div><div class="num" data-count="60" data-suffix="-day">0</div><div class="label">Quote validity</div></div>
+          <div><div class="num" data-count="100" data-suffix="%">0</div><div class="label">Prices include GST</div></div>
         </div>
       </div>
     </section>

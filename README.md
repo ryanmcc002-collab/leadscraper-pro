@@ -37,7 +37,7 @@ To change site-wide details (phone, email, domain), edit `SITE` in `scripts/lib/
 - [ ] **Forms**: forms are front-end complete with validation, honeypot and success states. Wire each `form[data-enquiry]` `action` to your endpoint (Formspree, Netlify Forms, or a CRM webhook) and remove the `preventDefault` in `assets/js/main.js`.
 - [ ] **Photography**: illustrative SVG renders are used throughout. Replace hero/product/gallery images with real photography when available (keep the same filenames or update references). Also swap the `og:image` to a 1200×630 JPG/PNG for best social sharing.
 - [ ] **Business details**: replace placeholder ABN in the footer (`scripts/lib/layout.mjs`), confirm the phone number and email.
-- [ ] **Reviews**: the aggregate rating in the Organization schema (4.9/214) is a placeholder — connect real Google Reviews data before launch to stay within Google's structured-data guidelines.
+- [ ] **Reviews**: the site intentionally ships with no testimonials or rating schema. Once real customer reviews exist (e.g. Google Reviews), add them and the matching `aggregateRating` structured data — never publish placeholder ratings, which breach Google's guidelines.
 - [ ] **Analytics**: add your analytics snippet to `layout.mjs`.
 - [ ] **404 page**: configure your host to serve `404.html` for missing routes.
 - [ ] **Live chat**: a placeholder position is reserved bottom-right (floating quote button); swap in your chat widget if desired.

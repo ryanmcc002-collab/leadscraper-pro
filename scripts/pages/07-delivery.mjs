@@ -2,7 +2,7 @@ import { SITE, icons, layout, breadcrumbs, breadcrumbSchema, faqItem, faqSchema,
 
 const DEL_FAQS = [
   ["How much does delivery cost?", "It's included as a fixed line item in every quote, calculated for your exact postcode and site access. As a guide: metro deliveries typically add $1,500–$4,000, regional $3,000–$8,000, and remote sites are quoted individually. You'll always know before you commit."],
-  ["Can you deliver to remote and rural properties?", "Yes — it's a specialty. Because expandable homes travel at standard road width, our carriers reach properties that fixed modular homes physically can't. We've delivered past Broken Hill, into the Kimberley and across Bass Strait."],
+  ["Can you deliver to remote and rural properties?", "Yes — it's a specialty. Because expandable homes travel at standard road width, our carriers can reach properties that fixed modular homes physically can't — from outback stations to island sites. Remote deliveries are quoted individually so you know the exact cost up front."],
   ["What site access do I need?", "A truck needs roughly 3.5m width and 4.5m height clearance to your pad, and room to slide or crane the home off. Tight access isn't a dealbreaker — smaller models can be walked in with a Franna crane. Send us photos and we'll assess for free."],
   ["Who handles customs and quarantine?", "We do, entirely. Import clearance, duties, GST and quarantine inspection are all managed by our freight team and included in your delivered price."],
 ];
@@ -41,7 +41,7 @@ const body = `
           <ul class="checklist" style="margin-top:1.5rem">
             <li>${icons.check}<span><strong>Metro:</strong> Sydney, Melbourne, Brisbane, Perth, Adelaide, Hobart, Darwin, Canberra</span></li>
             <li>${icons.check}<span><strong>Regional:</strong> daily carrier routes on every major corridor</span></li>
-            <li>${icons.check}<span><strong>Remote:</strong> stations, islands and mine sites — individually quoted, routinely done</span></li>
+            <li>${icons.check}<span><strong>Remote:</strong> stations, islands and mine sites — individually quoted up front</span></li>
           </ul>
         </div>
         <div class="media-frame reveal reveal-d1"><img src="assets/img/map-au.svg" alt="Australia-wide delivery map with routes to all capital cities and regional centres" loading="lazy" width="900" height="720"></div>

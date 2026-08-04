@@ -1,4 +1,4 @@
-import { SITE, icons, layout, faqItem, faqSchema, testimonial, ctaBanner } from "../lib/layout.mjs";
+import { SITE, icons, layout, faqItem, faqSchema, ctaBanner } from "../lib/layout.mjs";
 import { products } from "../lib/products-data.mjs";
 
 const fmt = (n) => "$" + n.toLocaleString("en-AU");
@@ -39,8 +39,8 @@ const body = `
               <a class="btn btn-ghost-light btn-lg" href="quote.html?brochure=1">${icons.doc} Download Brochure</a>
             </div>
             <div class="hero-trust">
-              <span class="item">${icons.star} 4.9★ from 214 reviews</span>
               <span class="item">${icons.shield} 10-year structural warranty</span>
+              <span class="item">${icons.check} 3 staged factory inspections</span>
               <span class="item">${icons.truck} Delivery to every state</span>
             </div>
           </div>
@@ -90,13 +90,13 @@ const body = `
       </div>
     </section>
 
-    <section class="section section-navy" aria-label="Track record">
+    <section class="section section-navy" aria-label="Our standards">
       <div class="wrap">
         <div class="stats reveal">
-          <div><div class="num" data-count="300" data-suffix="+">0</div><div class="label">Homes delivered</div></div>
-          <div><div class="num" data-count="6" data-suffix="/6">0</div><div class="label">States delivered to</div></div>
           <div><div class="num" data-count="10" data-suffix="-yr">0</div><div class="label">Structural warranty</div></div>
-          <div><div class="num" data-count="9" data-prefix="4.">0</div><div class="label">Average review score</div></div>
+          <div><div class="num" data-count="3" data-suffix="×">0</div><div class="label">Staged factory inspections</div></div>
+          <div><div class="num" data-count="1" data-suffix="-day">0</div><div class="label">Typical installation</div></div>
+          <div><div class="num" data-count="8" data-suffix="/8">0</div><div class="label">States &amp; territories covered</div></div>
         </div>
       </div>
     </section>
@@ -140,25 +140,29 @@ const body = `
       </div>
     </section>
 
-    <section class="section section-white" aria-labelledby="test-h">
+    <section class="section section-white" aria-labelledby="promise-h">
       <div class="wrap">
         <div class="center reveal">
-          <span class="eyebrow eyebrow-center">Verified reviews</span>
-          <h2 id="test-h">Trusted with the biggest purchase after your house</h2>
+          <span class="eyebrow eyebrow-center">Our commitments</span>
+          <h2 id="promise-h">Promises we put in writing</h2>
+          <p class="lead center" style="margin-inline:auto">No invented review scores, no stock-photo "happy customers". Just commitments you'll find in your contract — and can hold us to.</p>
         </div>
         <div class="grid grid-3" style="margin-top:2.5rem">
-          <div class="reveal">${testimonial(
-            "We compared five suppliers over three months. Bondi were the only ones who talked us through council approval honestly instead of glossing over it. The 40ft arrived exactly on the date quoted and our kids had their own rooms that weekend.",
-            "Sarah & Tom K.", "Hunter Valley, NSW", "SK"
-          )}</div>
-          <div class="reveal reveal-d1">${testimonial(
-            "Our Airbnb Cabin paid for itself in 14 months. The glass gable is the photo everyone books from. When a tap fitting failed, a replacement was couriered in three days — that's the Australian support they promise, delivered.",
-            "Priya N.", "Daylesford, VIC", "PN"
-          )}</div>
-          <div class="reveal reveal-d2">${testimonial(
-            "As a builder I was sceptical about the panel construction. I inspected everything on delivery day — welds, wiring, waterproofing. Honestly better finished than some project homes I've worked on. Bought a second one for the farm six months later.",
-            "Mick D.", "Toowoomba, QLD", "MD"
-          )}</div>
+          <div class="card reveal">
+            <div class="icon">${icons.doc}</div>
+            <h3>The quote is the price</h3>
+            <p>Your delivered quote is itemised and fixed for 60 days — home, transport, customs and installation. Anything site-specific is a written line item before you commit, never a surprise after.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icon">${icons.shield}</div>
+            <h3>Proof before payment</h3>
+            <p>Progress payments are tied to inspection milestones you can verify yourself — you receive the staged factory inspection photo reports of your own home as it's built.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icon">${icons.phone}</div>
+            <h3>Support that answers</h3>
+            <p>A Sydney-based project manager owns your order from first call to handover, and the 10-year structural warranty is administered here in Australia — not by an overseas factory.</p>
+          </div>
         </div>
       </div>
     </section>

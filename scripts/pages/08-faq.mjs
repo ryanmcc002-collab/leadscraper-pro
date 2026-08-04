@@ -7,7 +7,7 @@ const CATS = [
     ["Can I put a tiny home in my backyard?", `On most suburban blocks, yes — as a granny flat, studio or home office, subject to your state's secondary dwelling or outbuilding rules. Our guide <a href="blog-can-i-put-a-tiny-home-in-my-backyard.html">Can I Put a Tiny Home in My Backyard?</a> walks through the rules for every state.`],
     ["Do you help with the approval process?", "Yes. Every home comes with engineering documentation, structural drawings and specification sheets your certifier or council needs. We can also refer you to private certifiers and town planners experienced with expandable homes in your state."],
     ["Are your homes compliant with Australian building standards?", "Homes are engineered to relevant Australian standards including AS/NZS 1170 structural actions, with electrical work to AS/NZS 3000 and waterproofing to AS 3740. Site-specific requirements (wind rating, bushfire BAL, energy) are addressed through your approval pathway — tell us your site early and we'll spec accordingly."],
-    ["Can I install one in a cyclone region?", "Yes, with site-specific engineering. Cyclonic regions (C and D) require engineered tie-down systems and, in some cases, glazing upgrades, which we arrange as part of your order. Several of our homes are installed in North Queensland and the NT."],
+    ["Can I install one in a cyclone region?", "Yes, with site-specific engineering. Cyclonic regions (C and D) require engineered tie-down systems and, in some cases, glazing upgrades, which we arrange as part of your order. Tell us your region code when you request a quote."],
     ["What about bushfire (BAL) zones?", "Homes can be specified for most BAL ratings with ember guards, metal mesh screens and appropriate external materials. BAL-FZ (flame zone) sites need case-by-case assessment. Include your BAL rating in your quote request."],
   ]],
   ["Site & Installation", [
@@ -21,7 +21,7 @@ const CATS = [
   ]],
   ["Construction & Quality", [
     ["What are the walls made of?", "100mm insulated sandwich panels — two colour-bonded steel skins around an insulating core — on a fully welded galvanised steel frame. It's the same technology used in commercial cold storage: strong, thermally excellent, termite-proof and rot-proof."],
-    ["How well insulated are the homes?", "Wall, roof and floor panels plus double glazing give thermal performance that surprises building professionals. Owners in alpine Victoria and tropical Queensland both report running a single split system comfortably."],
+    ["How well insulated are the homes?", "Wall, roof and floor panels plus double glazing give thermal performance that surprises building professionals — the same panel systems are used in commercial cold storage, and they're specified to handle climates from alpine Victoria to tropical Queensland."],
     ["Are the windows double glazed?", "Yes — every window and sliding door in every model, standard. Aluminium frames with double glazing for thermal and acoustic performance."],
     ["Will it withstand Australian conditions?", "The structures are engineered to AS/NZS 1170 wind actions, with cyclone-region packages available. Colour-bonded steel exteriors handle coastal air, UV and hail far better than timber cladding, and there's nothing for termites to eat."],
     ["How long will a tiny home last?", "Structurally, decades — galvanised steel and steel-skinned panels don't degrade the way timber does. That's why we're comfortable giving a 10-year structural warranty as standard, with homes expected to serve well beyond it."],
@@ -39,7 +39,7 @@ const CATS = [
   ]],
   ["Warranty & Aftercare", [
     ["What warranty comes with the home?", "A 10-year structural warranty on frame and panels, plus a minimum 2-year warranty on fixtures, fittings and appliances (3 years on the Luxury Series) — administered from Sydney, with parts stocked in Australia."],
-    ["What if something goes wrong after delivery?", "Call or email our Sydney aftercare team. Minor issues are usually resolved with couriered parts and guided fixes or a local trade we arrange; anything structural triggers an on-site assessment. Our median warranty resolution time is under two weeks."],
+    ["What if something goes wrong after delivery?", "Call or email our Sydney aftercare team. Minor issues are resolved with couriered parts and guided fixes or a local trade we arrange; anything structural triggers an on-site assessment. Every warranty claim gets a named owner and a written timeline."],
     ["What maintenance does a tiny home need?", "Very little: wash the exterior panels annually (like any colour-bonded structure), keep drainage paths clear, check sealants around wet areas yearly and service the split system as you would in any home. No painting, no restumping, no termite treatments."],
     ["Can the home be relocated later?", "Yes — that's a core advantage. The wings fold back in and the home travels as it arrived. Budget for a crane and transport, and check approvals at the new site. We can manage relocations end-to-end."],
     ["Does the warranty transfer if I sell?", "Yes, the balance of both warranties transfers to a new owner of the home — a genuine selling point if you ever move it on."],

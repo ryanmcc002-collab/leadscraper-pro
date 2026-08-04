@@ -64,7 +64,7 @@ const body = `
           <li><strong>Sites need preparation.</strong> A reasonably level, accessible pad with services nearby keeps installation simple. Steep, tight or remote sites are all solvable — but budget for cranes, longer service runs or extra transport, which we'll always quote up front.</li>
           <li><strong>Not every use suits every model.</strong> A family living permanently needs the approvals, insulation and space of our Grand Series — not a repurposed office pod. We'll steer you to the right model even when it's a cheaper one.</li>
         </ul>
-        <p>If, after all that, a conventional build or kit granny flat is genuinely better for your situation — we'll say so. It costs us a sale occasionally. It's also why our referral rate is 93%.</p>
+        <p>If, after all that, a conventional build or kit granny flat is genuinely better for your situation — we'll say so. It costs us a sale occasionally. We think it's the only way to earn trust in an industry short on it.</p>
       </div>
     </section>
 
