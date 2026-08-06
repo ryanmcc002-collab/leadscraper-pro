@@ -68,7 +68,7 @@ export function productPage(p) {
           <div>
             <span class="eyebrow">${p.series}</span>
             <h1>${p.name}</h1>
-            <p class="lead" style="font-size:var(--fs-600);color:#DCE1CF;font-weight:600">${p.tagline}</p>
+            <p class="lead" style="font-size:var(--fs-600);color:var(--gold-600);font-weight:600">${p.tagline}</p>
             <p class="lead">${p.intro}</p>
             <div class="price-tag"><span class="amount" style="font-size:var(--fs-600)">Delivered pricing on request</span></div>
             <p class="muted" style="font-size:var(--fs-300);margin-top:-1rem;margin-bottom:2rem">Fixed delivered quote for your postcode — including transport, customs and installation — within one business day.</p>
