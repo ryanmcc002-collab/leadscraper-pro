@@ -49,3 +49,18 @@ To change site-wide details (phone, email, domain), edit `SITE` in `scripts/lib/
 - **Motion**: IntersectionObserver reveal animations, gated behind an `html.js` class so no-JS users and crawlers always see full content; `prefers-reduced-motion` respected.
 - **Accessibility**: skip link, semantic landmarks, focus-visible styles, ARIA labels on interactive controls, keyboard-operable accordions (`<details>`), colour-contrast-checked palette.
 - **SEO**: unique titles/descriptions, canonical URLs, Open Graph, JSON-LD (Organization, WebSite, Product, FAQPage, BlogPosting, BreadcrumbList, ItemList), sitemap.xml, robots.txt, semantic internal linking.
+
+## Project status (updated 2026-08-06)
+
+Everything below is live on branch `claude/bondi-tiny-homes-website-48oqy4`:
+
+- **Brand**: Go Tiny Homes (gotinyhomes.com.au), logo green `#4C5B3B`/`#333D26` + wombat tan `#C99B54`, roof-over-GO monogram, tagline "Go Tiny. Live Big.", mascot at `assets/img/mascot.webp` (source `mascot.png`).
+- **Design**: light-first (paper/white pages, dark green only for stats band, CTA banners, footer), Fraunces serif headings with tan italic accents, bento grid, scrubbable delivery/unfold hero animation (daylight scene).
+- **Products**: real Model 0206 two-bedroom expandable only (Classic White + Black Edition, specs from the manufacturer's order sheets). No published prices anywhere — all CTAs lead to delivered-quote requests. No invented reviews, stats, or warranty terms.
+- **Lighthouse** (last run): Performance 96, Accessibility 100, Best Practices 96, SEO 100.
+
+### Waiting on
+1. **Manufacturer photos** — drop into repo, then replace scene SVG references in product hero/galleries and the homepage bento map tile.
+2. Real contact details (phone/email/ABN) in `scripts/lib/layout.mjs` → `SITE`.
+3. Warranty terms + exact dimensions when confirmed → product specs and FAQ.
+4. Form backend (Formspree or HubSpot) → `assets/js/main.js` enquiry handler.
