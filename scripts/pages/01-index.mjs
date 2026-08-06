@@ -25,12 +25,19 @@ const productCards = products
   )
   .join("");
 
+
+const marqueeItems = `<span aria-hidden="true">Delivered Australia-wide <em>&#10022;</em> Factory direct <em>&#10022;</em> 10-year structural warranty <em>&#10022;</em> Expands <em>in hours</em> <em>&#10022;</em> Two real bedrooms <em>&#10022;</em> Fixed delivered quotes <em>&#10022;</em></span>`;
+const marqueeBand = `
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee"><div class="marquee-track">${marqueeItems}${marqueeItems}</div></div>
+    </div>`;
+
 const body = `
     <section class="hero hero-cinema">
       <div class="wrap">
         <div class="hero-copy">
           <span class="eyebrow eyebrow-center">Australia's premium expandable homes</span>
-          <h1>Premium Expandable Tiny Homes, <span class="gold-text">Delivered Australia-Wide</span></h1>
+          <h1 class="kinetic"><span class="kw" style="--d:0s"><span>Premium</span></span> <span class="kw" style="--d:0.07s"><span>Expandable</span></span> <span class="kw" style="--d:0.14s"><span>Tiny</span></span> <span class="kw" style="--d:0.21s"><span>Homes,</span></span><br><span class="kw" style="--d:0.32s"><span><em>delivered</em></span></span> <span class="kw" style="--d:0.4s"><span><em>Australia-wide</em></span></span></h1>
           <p class="lead">Factory-direct pricing without the factory-direct gamble: every Go Tiny Homes build is independently quality-inspected, delivered to your site at a fixed price, and backed by a 10-year structural warranty and a real Australian support team.</p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="quote.html">Get a Free Quote ${icons.arrow}</a>
@@ -156,42 +163,46 @@ const body = `
       </div>
     </section>
 
+    ${marqueeBand}
+
     <section class="section" aria-labelledby="why-h">
       <div class="wrap">
         <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">01</span>
           <span class="eyebrow eyebrow-center">Why Go Tiny Homes</span>
-          <h2 id="why-h">Everything a site build gives you.<br>Without the year of your life.</h2>
+          <h2 id="why-h">Everything a site build gives you.<br><em>Without the year of your life.</em></h2>
         </div>
-        <div class="grid grid-3" style="margin-top:3rem">
-          <article class="card reveal">
-            <div class="icon">${icons.clock}</div>
-            <h3>Fast Installation</h3>
-            <p>Delivered finished and expanded on site in a day. Most owners are living in their home the same week it arrives — not 12–18 months after a slab is poured.</p>
-          </article>
-          <article class="card reveal reveal-d1">
+        <div class="bento reveal" style="margin-top:3rem">
+          <article class="bento-tile bento-wide">
             <div class="icon">${icons.expand}</div>
-            <h3>Expandable Design</h3>
+            <h3>Expandable by design</h3>
             <p>Transports at standard road width, then unfolds on site into a complete two-bedroom home. Real bedrooms, real walls, real doors — engineered hinged construction, not a caravan.</p>
+            <div class="bento-figure"><strong>2.5m</strong><span>on the truck</span><strong>&rarr;</strong><strong>2-bed</strong><span>home on site</span></div>
           </article>
-          <article class="card reveal reveal-d2">
-            <div class="icon">${icons.home}</div>
-            <h3>Modern Living</h3>
-            <p>Fitted kitchens, full bathrooms with shower, toilet and basin, double-glazed openings and clean modern finishes — complete and liveable as delivered.</p>
+          <article class="bento-tile">
+            <div class="icon">${icons.clock}</div>
+            <h3>Installed in a day</h3>
+            <p>Delivered finished and expanded on site in a day — not 12–18 months after a slab is poured.</p>
           </article>
-          <article class="card reveal">
-            <div class="icon">${icons.truck}</div>
-            <h3>Australia-Wide Delivery</h3>
-            <p>City block, coastal acreage or outback station — we quote a fixed delivered price to your postcode and manage transport, customs and installation end-to-end.</p>
-          </article>
-          <article class="card reveal reveal-d1">
-            <div class="icon">${icons.tag}</div>
-            <h3>Factory-Direct Pricing</h3>
-            <p>We buy directly from the manufacturers we've personally audited, with no importer margin stacked in between. You see one transparent price, GST included.</p>
-          </article>
-          <article class="card reveal reveal-d2">
+          <article class="bento-tile">
             <div class="icon">${icons.gem}</div>
-            <h3>Premium Quality</h3>
-            <p>Welded steel frames, fire-resistant EPS insulated wall panels, double-glazed openings — and staged factory inspections photographed and shared with you before your home ships.</p>
+            <h3>Premium quality</h3>
+            <p>Welded steel frames, fire-resistant EPS panels, double glazing — with staged factory inspections photographed for you.</p>
+          </article>
+          <article class="bento-tile bento-gold">
+            <div class="icon" style="background:rgba(13,35,63,0.12);border-color:rgba(13,35,63,0.25);color:var(--navy)">${icons.tag}</div>
+            <h3>One fixed delivered quote</h3>
+            <p>Factory-direct with no importer margin stacked in between. Transport, customs and installation included — GST too.</p>
+            <a class="btn btn-sm" href="quote.html">Get yours free ${icons.arrow}</a>
+          </article>
+          <article class="bento-tile bento-wide bento-media">
+            <img src="assets/img/map-au.svg" alt="Australia-wide delivery map showing routes to every capital and regional centre" loading="lazy" width="900" height="720">
+            <div class="cap">Australia-wide delivery — metro, regional and remote, quoted to your postcode.</div>
+          </article>
+          <article class="bento-tile">
+            <div class="icon">${icons.home}</div>
+            <h3>Complete as delivered</h3>
+            <p>Fitted kitchen, full bathroom with shower, toilet and basin, double-glazed openings — liveable from day one.</p>
           </article>
         </div>
       </div>
@@ -211,8 +222,9 @@ const body = `
     <section class="section section-white" aria-labelledby="range-h">
       <div class="wrap" style="padding-inline:0">
         <div class="wrap center reveal">
+          <span class="sec-num" aria-hidden="true">02</span>
           <span class="eyebrow eyebrow-center">The range</span>
-          <h2 id="range-h">One home. Two editions. Zero compromises.</h2>
+          <h2 id="range-h">One home. Two editions. <em>Zero compromises.</em></h2>
           <p class="lead center" style="margin-inline:auto">The Model 0206 two-bedroom expandable, in Classic White or the feature-clad Black Edition — same complete layout, two distinct characters.</p>
         </div>
         <div class="carousel" style="margin-top:2.5rem">
@@ -250,8 +262,9 @@ const body = `
     <section class="section section-white" aria-labelledby="promise-h">
       <div class="wrap">
         <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">03</span>
           <span class="eyebrow eyebrow-center">Our commitments</span>
-          <h2 id="promise-h">Promises we put in writing</h2>
+          <h2 id="promise-h">Promises we put <em>in writing</em></h2>
           <p class="lead center" style="margin-inline:auto">No invented review scores, no stock-photo "happy customers". Just commitments you'll find in your contract — and can hold us to.</p>
         </div>
         <div class="grid grid-3" style="margin-top:2.5rem">
@@ -277,8 +290,9 @@ const body = `
     <section class="section" aria-labelledby="cmp-h">
       <div class="wrap">
         <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">04</span>
           <span class="eyebrow eyebrow-center">The honest comparison</span>
-          <h2 id="cmp-h">Expandable home vs the alternatives</h2>
+          <h2 id="cmp-h">Expandable home <em>vs the alternatives</em></h2>
           <p class="lead center" style="margin-inline:auto">We'd rather you make an informed decision than a fast one. Here's how the options genuinely stack up.</p>
         </div>
         <div class="table-scroll reveal" style="margin-top:2.5rem">
@@ -303,8 +317,9 @@ const body = `
     <section class="section section-white" aria-labelledby="hfaq-h">
       <div class="wrap-narrow">
         <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">05</span>
           <span class="eyebrow eyebrow-center">Straight answers</span>
-          <h2 id="hfaq-h">Frequently asked questions</h2>
+          <h2 id="hfaq-h">Frequently asked <em>questions</em></h2>
         </div>
         <div style="margin-top:2rem" class="reveal">
           ${HOME_FAQS.map(([q, a]) => faqItem(q, a)).join("\n          ")}
@@ -312,6 +327,8 @@ const body = `
         <p class="center" style="margin-top:1.5rem"><a class="card-link" href="faq.html">See all 40+ questions answered ${icons.arrow}</a></p>
       </div>
     </section>
+
+    ${marqueeBand}
 
     <section class="section" aria-labelledby="guide-h">
       <div class="wrap">

@@ -308,6 +308,41 @@
     update();
   }
 
+  /* Scroll progress bar under the sticky header */
+  var progressBar = document.querySelector(".scroll-progress");
+  if (progressBar) {
+    var updateProgress = function () {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - window.innerHeight;
+      progressBar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
+    };
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+  }
+
+  /* Pointer tilt on product cards and bento tiles (pointer devices only) */
+  var canTilt =
+    window.matchMedia &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (canTilt) {
+    document.querySelectorAll(".product-card, .bento-tile").forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var rx = ((e.clientY - r.top) / r.height - 0.5) * -5;
+        var ry = ((e.clientX - r.left) / r.width - 0.5) * 5;
+        el.setAttribute("data-tilting", "");
+        el.style.transform =
+          "perspective(800px) rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) translateY(-4px)";
+      });
+      el.addEventListener("pointerleave", function () {
+        el.removeAttribute("data-tilting");
+        el.style.transform = "";
+      });
+    });
+  }
+
   /* Current year in footer */
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();
