@@ -159,11 +159,14 @@ const body = `
           <h2 id="why-h">Everything a site build gives you.<br><em>Without the year of your life.</em></h2>
         </div>
         <div class="bento reveal" style="margin-top:3rem">
-          <article class="bento-tile bento-wide">
+          <article class="bento-tile bento-wide bento-tall bento-media">
+            <img src="assets/photos/black-backyard-angle.webp" alt="Model 0206 Black Edition installed in a backyard, timber-look cladding with black frame" loading="lazy">
+            <div class="cap">2.5m wide on the truck &rarr; this on your site. Delivered Australia-wide.</div>
+          </article>
+          <article class="bento-tile">
             <div class="icon">${icons.expand}</div>
             <h3>Expandable by design</h3>
-            <p>Ships at road width, unfolds into a real two-bedroom home — not a caravan.</p>
-            <div class="bento-figure"><strong>2.5m</strong><span>on the truck</span><strong>&rarr;</strong><strong>2-bed</strong><span>home on site</span></div>
+            <p>Unfolds into a real two-bedroom home — not a caravan.</p>
           </article>
           <article class="bento-tile">
             <div class="icon">${icons.clock}</div>
@@ -180,15 +183,6 @@ const body = `
             <h3>One fixed delivered quote</h3>
             <p>Home, transport, customs, installation, GST. One number.</p>
             <a class="btn btn-sm" href="quote.html">Get yours free ${icons.arrow}</a>
-          </article>
-          <article class="bento-tile bento-wide bento-media">
-            <img src="assets/photos/black-backyard-angle.webp" alt="Model 0206 Black Edition installed in a backyard, timber-look cladding with black frame" loading="lazy">
-            <div class="cap">Installed. Delivered Australia-wide, quoted to your postcode.</div>
-          </article>
-          <article class="bento-tile">
-            <div class="icon">${icons.home}</div>
-            <h3>Complete as delivered</h3>
-            <p>Kitchen and full bathroom fitted before it leaves the factory.</p>
           </article>
         </div>
       </div>
