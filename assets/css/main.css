@@ -960,33 +960,10 @@ ul, ol { padding-left: 1.25rem; }
   box-shadow: var(--shadow-md);
   transform: rotate(-4deg);
 }
-.m-chip {
-  position: absolute;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  padding: 0.5rem 0.95rem;
-  font-weight: 700;
-  font-size: var(--fs-300);
-  color: var(--navy);
-  box-shadow: var(--shadow-md);
-  white-space: nowrap;
-}
-.m-chip svg { color: var(--gold-600); width: 18px; height: 18px; }
-.m-chip-a { right: -4%; top: 26%; }
-.m-chip-b { left: -6%; bottom: 10%; }
-html.js .m-bubble,
-html.js .m-chip {
+html.js .m-bubble {
   opacity: 0;
-  animation: mascot-in 0.7s var(--ease) forwards, m-float 5.5s ease-in-out 1.6s infinite;
+  animation: mascot-in 0.7s var(--ease) 0.9s forwards, m-float 5.5s ease-in-out 1.8s infinite;
 }
-html.js .m-bubble { animation-delay: 0.9s, 1.8s; }
-html.js .m-chip-a { animation-delay: 1.1s, 2.1s; }
-html.js .m-chip-b { animation-delay: 1.3s, 2.6s; }
 @keyframes m-float {
   0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
   50% { transform: translateY(-7px) rotate(var(--tilt, 0deg)); }
@@ -1003,12 +980,11 @@ html.js .hero-mascot img {
   .hero-cinema .hero-actions, .hero-cinema .hero-trust { justify-content: center; }
   .hero-mascot { order: -1; }
   .hero-mascot img { width: min(52%, 220px); }
-  .m-chip { display: none; }
   .m-bubble { top: 0; left: 8%; font-size: 0.95rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html.js .hero-mascot img { opacity: 1; transform: none; animation: none; }
-  html.js .m-bubble, html.js .m-chip { opacity: 1; animation: none; }
+  html.js .m-bubble { opacity: 1; animation: none; }
 }
 
 .cinema-stage { position: relative; overflow: hidden; }

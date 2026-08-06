@@ -17,7 +17,7 @@ const body = `
         <div class="hero-copy">
           <span class="eyebrow">Expandable homes &middot; delivered Australia-wide</span>
           <h1 class="hero-title">Go tiny. <em>Live big.</em></h1>
-          <p class="lead">The Model 0206 is a real two-bedroom home — full kitchen, full bathroom, 38&nbsp;m&sup2; — that arrives folded on one truck and opens up in a day.</p>
+          <p class="lead">2 bed. 1 bath. Full kitchen. Delivered on the back of a truck. <strong>Easy.</strong></p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="#quote">Get a Free Quote ${icons.arrow}</a>
             <a class="btn btn-ghost btn-lg" href="#unfold">Watch it unfold &darr;</a>
@@ -31,8 +31,6 @@ const body = `
         <div class="hero-mascot">
           <div class="m-bubble" aria-hidden="true">Two bedrooms.<br>One truck.</div>
           <img src="assets/img/mascot.webp" alt="Go Tiny Homes wombat mascot flexing his bicep" width="480" height="594" fetchpriority="high">
-          <div class="m-chip m-chip-a" aria-hidden="true">${icons.expand} 38 m&sup2; expanded</div>
-          <div class="m-chip m-chip-b" aria-hidden="true">${icons.clock} Installed in a day</div>
         </div>
       </div>
 
