@@ -942,33 +942,6 @@ ul, ol { padding-left: 1.25rem; }
   height: auto;
   filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.35));
 }
-.m-bubble {
-  position: absolute;
-  top: -2%;
-  left: 2%;
-  z-index: 2;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: 18px 18px 18px 4px;
-  padding: 0.7rem 1.05rem;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  line-height: 1.25;
-  color: var(--navy);
-  box-shadow: var(--shadow-md);
-  transform: rotate(-4deg);
-}
-html.js .m-bubble {
-  opacity: 0;
-  animation: mascot-in 0.7s var(--ease) 0.9s forwards, m-float 5.5s ease-in-out 1.8s infinite;
-}
-@keyframes m-float {
-  0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
-  50% { transform: translateY(-7px) rotate(var(--tilt, 0deg)); }
-}
-.m-bubble { --tilt: -4deg; }
 html.js .hero-mascot img {
   opacity: 0;
   transform: translateY(24px) scale(0.94);
@@ -980,11 +953,9 @@ html.js .hero-mascot img {
   .hero-cinema .hero-actions, .hero-cinema .hero-trust { justify-content: center; }
   .hero-mascot { order: -1; }
   .hero-mascot img { width: min(52%, 220px); }
-  .m-bubble { top: 0; left: 8%; font-size: 0.95rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html.js .hero-mascot img { opacity: 1; transform: none; animation: none; }
-  html.js .m-bubble { opacity: 1; animation: none; }
 }
 
 .cinema-stage { position: relative; overflow: hidden; }

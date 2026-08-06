@@ -17,7 +17,7 @@ const body = `
         <div class="hero-copy">
           <span class="eyebrow">Expandable homes &middot; delivered Australia-wide</span>
           <h1 class="hero-title">Go tiny. <em>Live big.</em></h1>
-          <p class="lead">2 bed. 1 bath. Full kitchen. Delivered on the back of a truck. <strong>Easy.</strong></p>
+          <p class="lead">Two bedrooms, a bathroom and a full kitchen — delivered on the back of a truck. <strong>Easy.</strong></p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="#quote">Get a Free Quote ${icons.arrow}</a>
             <a class="btn btn-ghost btn-lg" href="#unfold">Watch it unfold &darr;</a>
@@ -29,7 +29,6 @@ const body = `
           </div>
         </div>
         <div class="hero-mascot">
-          <div class="m-bubble" aria-hidden="true">Two bedrooms.<br>One truck.</div>
           <img src="assets/img/mascot.webp" alt="Go Tiny Homes wombat mascot flexing his bicep" width="480" height="594" fetchpriority="high">
         </div>
       </div>
