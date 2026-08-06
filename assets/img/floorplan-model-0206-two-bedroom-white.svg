@@ -4,23 +4,31 @@
   <text x="90" y="88" font-size="17" fill="#6A7259">2 bedrooms · kitchen · bathroom · transports at standard road width</text>
   <rect x="80" y="110" width="840" height="340" rx="12" fill="#333D26"/>
   <g>
-      <rect x="93" y="123" width="240" height="314" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
-      <text x="213" y="280" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Bedroom 1</text>
+      <rect x="93" y="123" width="305.6" height="96.4" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="245.8" y="171.2" text-anchor="middle" dominant-baseline="middle" font-size="19" font-weight="700" fill="#333D26">Kitchen</text>
     </g>
   <g>
-      <rect x="339" y="123" width="322" height="314" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
-      <text x="500" y="280" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Living / Kitchen</text>
+      <rect x="93" y="225.4" width="305.6" height="211.60000000000002" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="245.8" y="331.20000000000005" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Living / Dining</text>
     </g>
   <g>
-      <rect x="667" y="123" width="240" height="170" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
-      <text x="787" y="208" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Bedroom 2</text>
+      <rect x="404.6" y="123" width="190.79999999999998" height="141.20000000000002" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="500" y="193.60000000000002" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Bathroom</text>
     </g>
   <g>
-      <rect x="667" y="299" width="240" height="138" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
-      <text x="787" y="368" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Bathroom</text>
+      <rect x="404.6" y="270.20000000000005" width="190.79999999999998" height="166.8" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="500" y="353.6" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Entry</text>
+    </g>
+  <g>
+      <rect x="601.4" y="123" width="305.6" height="179.6" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="754.2" y="212.8" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Bedroom 1</text>
+    </g>
+  <g>
+      <rect x="601.4" y="308.6" width="305.6" height="128.4" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="754.2" y="372.8" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#333D26">Bedroom 2</text>
     </g>
   <g stroke="#C99B54" stroke-width="2.5" stroke-dasharray="8 6" fill="none">
-    <rect x="237.6" y="94" width="524.8" height="372" rx="10"/>
+    <rect x="360.6" y="94" width="278.8" height="372" rx="10"/>
   </g>
   <text x="500" y="502" text-anchor="middle" font-size="16" font-weight="700" fill="#A97F3B">— — transport core (wings fold in for delivery) — —</text>
   <g font-size="15" fill="#6A7259">

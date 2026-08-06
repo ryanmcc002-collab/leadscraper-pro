@@ -137,7 +137,7 @@ export function productPage(p) {
         <div class="reveal">
           <span class="eyebrow">Layout</span>
           <h2 id="plan-h">Two bedrooms. Nothing wasted.</h2>
-          <p class="lead">Bedrooms at each end, living and kitchen at the centre, and a full bathroom with toilet, basin and shower.</p>
+          <p class="lead">Living, dining and kitchen on one wing, both bedrooms on the other, and the bathroom at the centre core beside the entry.</p>
           <p class="muted">${p.planNote}</p>
           <table class="spec-table" style="margin-top:1.5rem">
             <tbody>
@@ -151,7 +151,7 @@ export function productPage(p) {
         <div class="reveal reveal-d1">
           <div class="media-frame" style="background:#fff"><img src="assets/img/floorplan-${p.slug}.svg" alt="Indicative floor plan of the ${p.name}" loading="lazy" width="1000" height="560"></div>
           <figure class="media-frame" style="margin:1rem 0 0"><img src="assets/photos/interior-hall.webp" alt="Looking across the kitchen to both bedroom doors inside the Model 0206" loading="lazy" style="aspect-ratio:16/10;object-fit:cover;object-position:50% 60%"></figure>
-          <p class="muted" style="font-size:var(--fs-300);margin-top:0.75rem">The layout as built — kitchen at the centre, a bedroom at each end.</p>
+          <p class="muted" style="font-size:var(--fs-300);margin-top:0.75rem">The layout as built — both bedrooms open off the central hall.</p>
         </div>
       </div>
     </section>

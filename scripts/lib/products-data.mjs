@@ -70,10 +70,12 @@ export const products = [
       ["Dimensions", "Confirmed with order specification"],
     ],
     floorplan: [
-      { x: 0, y: 0, w: 30, h: 100, label: "Bedroom 1" },
-      { x: 30, y: 0, w: 40, h: 100, label: "Living / Kitchen" },
-      { x: 70, y: 0, w: 30, h: 55, label: "Bedroom 2" },
-      { x: 70, y: 55, w: 30, h: 45, label: "Bathroom" },
+      { x: 0, y: 0, w: 38, h: 32, label: "Kitchen" },
+      { x: 0, y: 32, w: 38, h: 68, label: "Living / Dining" },
+      { x: 38, y: 0, w: 24, h: 46, label: "Bathroom" },
+      { x: 38, y: 46, w: 24, h: 54, label: "Entry" },
+      { x: 62, y: 0, w: 38, h: 58, label: "Bedroom 1" },
+      { x: 62, y: 58, w: 38, h: 42, label: "Bedroom 2" },
     ],
     faqs: [
       ["Is the Model 0206 suitable as a granny flat?", "Yes — with two bedrooms, a kitchen and a full bathroom it's a complete secondary dwelling. Approval requirements depend on your state and block; we supply the specification documents your certifier needs."],
@@ -144,10 +146,12 @@ export const products = [
       ["Dimensions", "Confirmed with order specification"],
     ],
     floorplan: [
-      { x: 0, y: 0, w: 30, h: 100, label: "Bedroom 1" },
-      { x: 30, y: 0, w: 40, h: 100, label: "Living / Kitchen" },
-      { x: 70, y: 0, w: 30, h: 55, label: "Bedroom 2" },
-      { x: 70, y: 55, w: 30, h: 45, label: "Bathroom" },
+      { x: 0, y: 0, w: 38, h: 32, label: "Kitchen" },
+      { x: 0, y: 32, w: 38, h: 68, label: "Living / Dining" },
+      { x: 38, y: 0, w: 24, h: 46, label: "Bathroom" },
+      { x: 38, y: 46, w: 24, h: 54, label: "Entry" },
+      { x: 62, y: 0, w: 38, h: 58, label: "Bedroom 1" },
+      { x: 62, y: 58, w: 38, h: 42, label: "Bedroom 2" },
     ],
     faqs: [
       ["What's different from the Classic White?", "The layout is identical — the difference is the exterior and window package: 20mm feature cladding over the EPS panels, a black RAL 9011 frame and entrance door, and thermal-break aluminium windows with fly screens instead of plastic-steel."],

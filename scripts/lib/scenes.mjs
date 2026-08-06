@@ -136,7 +136,7 @@ export function floorplanSvg({ rooms, subtitle, label }) {
   <rect x="${M - 10}" y="${planY - 10}" width="${planW + 20}" height="${planH + 20}" rx="12" fill="#333D26"/>
   ${roomRects}
   <g stroke="#C99B54" stroke-width="2.5" stroke-dasharray="8 6" fill="none">
-    <rect x="${M + planW * 0.18}" y="${planY - 26}" width="${planW * 0.64}" height="${planH + 52}" rx="10"/>
+    <rect x="${M + planW * 0.33}" y="${planY - 26}" width="${planW * 0.34}" height="${planH + 52}" rx="10"/>
   </g>
   <text x="${M + planW / 2}" y="${planY + planH + 62}" text-anchor="middle" font-size="16" font-weight="700" fill="#A97F3B">— — transport core (wings fold in for delivery) — —</text>
   <g font-size="15" fill="#6A7259">
