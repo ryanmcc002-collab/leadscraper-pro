@@ -6,8 +6,7 @@ import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { products } from "./lib/products-data.mjs";
-import { sceneSvg, floorplanSvg } from "./lib/scenes.mjs";
-import { productPage } from "./lib/product-page.mjs";
+import { floorplanSvg } from "./lib/scenes.mjs";
 import { SITE } from "./lib/layout.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -22,18 +21,7 @@ async function out(rel, content) {
 
 /* ------------------------- Product imagery (SVG) ------------------------- */
 
-const ALT_PALETTE = { dusk: "day", day: "forest", forest: "dusk" };
-const widthFor = (p) => p.sceneWidth || 560;
-
 for (const p of products) {
-  await out(
-    `assets/img/scene-${p.slug}.svg`,
-    sceneSvg({ palette: p.palette, homeWidth: widthFor(p), label: `${p.name} — illustrative exterior render` })
-  );
-  await out(
-    `assets/img/scene-${p.slug}-alt.svg`,
-    sceneSvg({ palette: ALT_PALETTE[p.palette], homeWidth: widthFor(p), label: `${p.name} — alternate setting render` })
-  );
   await out(
     `assets/img/floorplan-${p.slug}.svg`,
     floorplanSvg({
@@ -49,12 +37,6 @@ await out(
   "assets/img/favicon.svg",
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><rect width="44" height="44" rx="10" fill="#333D26"/><path d="M9 24.5L22 13l13 11.5" stroke="#C99B54" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13 22.5V32h18v-9.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
 );
-
-/* ------------------------------ Product pages ---------------------------- */
-
-for (const p of products) {
-  await out(`product-${p.slug}.html`, productPage(p));
-}
 
 /* ------------------------------- Site pages ------------------------------ */
 
@@ -74,7 +56,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${htmlPages
   .map((f) => {
     const loc = `${SITE.url}/${f === "index.html" ? "" : f}`;
-    const priority = f === "index.html" ? "1.0" : f.startsWith("product") || f === "products.html" || f === "quote.html" ? "0.9" : f.startsWith("blog-") ? "0.6" : "0.7";
+    const priority = f === "index.html" ? "1.0" : f.startsWith("blog-") ? "0.6" : "0.7";
     return `  <url><loc>${loc}</loc><changefreq>monthly</changefreq><priority>${priority}</priority></url>`;
   })
   .join("\n")}

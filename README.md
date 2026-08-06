@@ -14,22 +14,21 @@ The generated HTML at the repo root is committed, so the site can be deployed as
 ## Architecture
 
 ```
-index.html, products.html, …      Generated pages (committed, deployable as-is)
-product-*.html                    7 product pages, generated from data
-blog-*.html                       SEO articles with BlogPosting schema
-assets/css/main.css               Design system (navy #0D233F / gold #D6AF5E)
-assets/js/main.js                 Interactions: nav, reveal, carousel, forms, calculator
-assets/img/*.svg                  Generated illustrative imagery + hand-drawn hero/map
+index.html                        The entire site — one page, anchor-navigated
+blog.html, blog-*.html            SEO guide articles (satellite pages)
+assets/css/main.css               Design system
+assets/js/main.js                 Interactions: nav, reveal, cinema, forms, calculator
+assets/photos/*.webp              Real manufacturer photography
+assets/img/*.svg                  Floor plan, map, favicon, mascot
 scripts/build.mjs                 Build entry point
 scripts/lib/layout.mjs            Shared header/footer/SEO layout + site constants
-scripts/lib/products-data.mjs     Single source of truth for the product catalogue
-scripts/lib/scenes.mjs            Parametric SVG scene + floorplan generators
-scripts/lib/product-page.mjs      Product page template
-scripts/pages/*.mjs               One module per site page
-sitemap.xml, robots.txt, 404.html SEO infrastructure (sitemap is generated)
+scripts/lib/products-data.mjs     Product/edition data (specs, floor plan, photos)
+scripts/pages/*.mjs               01-index (one-pager), 09-blog, 10-404
+sitemap.xml, robots.txt, 404.html SEO infrastructure
 ```
 
-To change site-wide details (phone, email, domain), edit `SITE` in `scripts/lib/layout.mjs` and rebuild. To add or edit a product, edit `scripts/lib/products-data.mjs` and rebuild — the product page, catalogue cards, imagery, floorplan and schema all update.
+One-pager sections and anchors: `#home` (specs + floor plan), `#editions`, `#inside`
+(gallery), `#delivery`, `#about` (quality), `#finance` (calculator), `#faq`, `#quote` (form).
 
 ## Go-live checklist
 

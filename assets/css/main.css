@@ -340,6 +340,11 @@ ul, ol { padding-left: 1.25rem; }
 }
 @media (max-width: 560px) {
   .nav-cta .btn { padding: 0.55rem 1.1rem; font-size: var(--fs-300); }
+  .nav-cta { gap: 0.4rem; }
+  .nav-phone { display: none; }
+}
+@media (max-width: 430px) {
+  .nav-cta .btn { display: none; }
 }
 
 /* --------------------------------- Hero ---------------------------------- */
@@ -1185,6 +1190,23 @@ h1 em, h2 em, h3 em {
 .cta-banner { position: relative; overflow: hidden; }
 
 /* Bento grid */
+/* Quote section grid */
+.quote-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .quote-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+/* One-page anchors */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+section[id] { scroll-margin-top: 84px; }
+
 /* Blog card thumbnails + article hero */
 .card-media {
   border-radius: var(--radius-md);

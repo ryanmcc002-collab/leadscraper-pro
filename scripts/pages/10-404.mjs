@@ -8,8 +8,8 @@ const body = `
         <p class="lead center" style="margin-inline:auto">The page you're after has moved or never existed. Everything worth seeing is one click away.</p>
         <div style="display:flex;gap:0.9rem;justify-content:center;flex-wrap:wrap;margin-top:2rem">
           <a class="btn btn-gold" href="index.html">Back to home ${icons.arrow}</a>
-          <a class="btn btn-ghost" href="products.html">Browse the range</a>
-          <a class="btn btn-ghost" href="quote.html">Get a free quote</a>
+          <a class="btn btn-ghost" href="index.html#editions">Browse the range</a>
+          <a class="btn btn-ghost" href="index.html#quote">Get a free quote</a>
         </div>
       </div>
     </section>

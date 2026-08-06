@@ -67,7 +67,9 @@ export const products = [
       ["Entrance door", "RAL 7015 grey exterior, white interior"],
       ["Flooring", "016 PVC"],
       ["Electrical", "Australian standard, 240V"],
-      ["Dimensions", "Confirmed with order specification"],
+      ["Expanded size", "L6.2m &times; W6.14m &times; H2.53m (&asymp;38 m&sup2;)"],
+      ["Transport", "Folds to standard road width on one truck"],
+      ["Weight", "3,345 kg"],
     ],
     floorplan: [
       { x: 0, y: 0, w: 38, h: 32, label: "Kitchen" },
@@ -143,7 +145,9 @@ export const products = [
       ["Entrance door", "RAL 9011 black"],
       ["Flooring", "016 PVC"],
       ["Electrical", "Australian standard, 240V"],
-      ["Dimensions", "Confirmed with order specification"],
+      ["Expanded size", "L6.2m &times; W6.14m &times; H2.53m (&asymp;38 m&sup2;)"],
+      ["Transport", "Folds to standard road width on one truck"],
+      ["Weight", "Approx. 5,200 kg with cladding"],
     ],
     floorplan: [
       { x: 0, y: 0, w: 38, h: 32, label: "Kitchen" },

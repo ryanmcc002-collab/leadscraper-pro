@@ -31,13 +31,13 @@ export const icons = {
 export const brandMark = `<svg class="brand-mark" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M5 20 L22 6 L39 20 L39 38" stroke="#4C5B3B" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><text x="21" y="35" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="19" font-weight="800" fill="#4C5B3B">GO</text></svg>`;
 
 const NAV = [
-  ["products.html", "Products"],
-  ["why-expandable-homes.html", "Why Expandable"],
-  ["finance.html", "Finance"],
-  ["delivery.html", "Delivery"],
-  ["about.html", "About"],
-  ["faq.html", "FAQ"],
-  ["blog.html", "Blog"],
+  ["index.html#home", "The Home"],
+  ["index.html#editions", "Editions"],
+  ["index.html#inside", "Inside"],
+  ["index.html#delivery", "Delivery"],
+  ["index.html#finance", "Finance"],
+  ["index.html#faq", "FAQ"],
+  ["blog.html", "Guides"],
 ];
 
 function header(active) {
@@ -60,7 +60,7 @@ function header(active) {
       </nav>
       <div class="nav-cta">
         <a class="nav-phone" href="${SITE.phoneHref}" aria-label="Call ${SITE.phone}">${icons.phone}<span>${SITE.phone}</span></a>
-        <a class="btn btn-gold btn-sm" href="quote.html">Get a Free Quote</a>
+        <a class="btn btn-gold btn-sm" href="index.html#quote">Get a Free Quote</a>
         <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
@@ -85,32 +85,30 @@ function footer() {
           </ul>
         </div>
         <div>
-          <h3>Products</h3>
+          <h3>The Home</h3>
           <ul>
-            <li><a href="products.html">The Range</a></li>
-            <li><a href="product-model-0206-two-bedroom-white.html">Model 0206 — Classic White</a></li>
-            <li><a href="product-model-0206-two-bedroom-black.html">Model 0206 — Black Edition</a></li>
-            <li><a href="quote.html">Get a Delivered Quote</a></li>
+            <li><a href="index.html#home">Model 0206 Specs</a></li>
+            <li><a href="index.html#editions">Classic White &amp; Black Edition</a></li>
+            <li><a href="index.html#inside">Photo Gallery</a></li>
+            <li><a href="index.html#quote">Get a Delivered Quote</a></li>
           </ul>
         </div>
         <div>
-          <h3>Company</h3>
+          <h3>Buying</h3>
           <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="why-expandable-homes.html">Why Expandable Homes</a></li>
-            <li><a href="delivery.html">Delivery Process</a></li>
-            <li><a href="finance.html">Finance Options</a></li>
-            <li><a href="quote.html">Get a Free Quote</a></li>
+            <li><a href="index.html#delivery">Delivery Process</a></li>
+            <li><a href="index.html#about">Quality &amp; Inspections</a></li>
+            <li><a href="index.html#finance">Finance Options</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
           </ul>
         </div>
         <div>
-          <h3>Resources</h3>
+          <h3>Guides</h3>
           <ul>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="blog.html">Blog &amp; Guides</a></li>
+            <li><a href="blog.html">All Guides</a></li>
             <li><a href="blog-how-much-does-a-tiny-home-cost.html">Tiny Home Prices</a></li>
             <li><a href="blog-do-tiny-homes-need-council-approval.html">Council Approvals</a></li>
-            <li><a href="quote.html">Download Brochure</a></li>
+            <li><a href="blog-can-i-put-a-tiny-home-in-my-backyard.html">Backyard Guide</a></li>
           </ul>
         </div>
       </div>
@@ -122,10 +120,10 @@ function footer() {
     </div>
   </footer>
 
-  <a class="float-quote" href="quote.html">${icons.doc} Get a Free Quote</a>
+  <a class="float-quote" href="index.html#quote">${icons.doc} Get a Free Quote</a>
   <div class="sticky-cta">
     <a class="call" href="${SITE.phoneHref}">${icons.phone} Call ${SITE.phone}</a>
-    <a class="quote" href="quote.html">${icons.doc} Free Quote</a>
+    <a class="quote" href="index.html#quote">${icons.doc} Free Quote</a>
   </div>`;
 }
 
@@ -251,7 +249,7 @@ export function ctaBanner(heading, sub) {
           <h2>${heading}</h2>
           <p class="lead center" style="margin-inline:auto">${sub}</p>
           <div class="actions">
-            <a class="btn btn-gold btn-lg" href="quote.html">Get a Free Quote ${icons.arrow}</a>
+            <a class="btn btn-gold btn-lg" href="index.html#quote">Get a Free Quote ${icons.arrow}</a>
             <a class="btn btn-ghost-light btn-lg" href="${SITE.phoneHref}">${icons.phone} Call ${SITE.phone}</a>
           </div>
         </div>

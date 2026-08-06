@@ -26,7 +26,7 @@ const ARTICLES = [
           <tr><td>Kit / site-built granny flat</td><td>$120,000–$200,000+</td><td>Conventional construction, months of trades on site</td></tr>
         </tbody>
       </table>
-      <p>Why the huge spread? Three drivers: construction method (factory panel construction is dramatically cheaper than site labour), inclusions (a "from" price that excludes the kitchen is not a price), and the importer's margin structure. Factory-direct models like ours remove a middle layer — that's the difference between a $45,000 and a $70,000 quote for a comparable home. Compare complete models on <a href="products.html">our range page</a>.</p>
+      <p>Why the huge spread? Three drivers: construction method (factory panel construction is dramatically cheaper than site labour), inclusions (a "from" price that excludes the kitchen is not a price), and the importer's margin structure. Factory-direct models like ours remove a middle layer — that's the difference between a $45,000 and a $70,000 quote for a comparable home. Compare complete models on <a href="index.html#editions">our range page</a>.</p>
       <h2>The costs nobody puts in the brochure</h2>
       <p>Budget for these regardless of who you buy from:</p>
       <ul>
@@ -38,7 +38,7 @@ const ARTICLES = [
       </ul>
       <blockquote>Rule of thumb: take the delivered home price and add 15–25% for a realistic move-in budget on a normal suburban block.</blockquote>
       <h2>A complete worked example</h2>
-      <p>Take a Sydney homeowner adding a two-bedroom expandable as a granny flat, with a delivered home price of (say) $55,000: site prep on a level backyard $1,800; complying development approval $3,200; plumber and electrician $3,600. <strong>Total project: about $63,600</strong> — renting a two-bedroom flat at $450+/week, gross payback in around three years. For your own numbers, <a href="quote.html">get a delivered quote</a> for the <a href="product-model-0206-two-bedroom-white.html">Model 0206</a>.</p>
+      <p>Take a Sydney homeowner adding a two-bedroom expandable as a granny flat, with a delivered home price of (say) $55,000: site prep on a level backyard $1,800; complying development approval $3,200; plumber and electrician $3,600. <strong>Total project: about $63,600</strong> — renting a two-bedroom flat at $450+/week, gross payback in around three years. For your own numbers, <a href="index.html#quote">get a delivered quote</a> for the <a href="index.html#editions">Model 0206</a>.</p>
       <h2>Ways to pay less (without buying worse)</h2>
       <ul>
         <li><strong>Choose expandable over site-built</strong> — you're deleting on-site labour, not quality.</li>
@@ -46,7 +46,7 @@ const ARTICLES = [
         <li><strong>Bundle upgrades at order time</strong> — factory-fitted solar or decks cost far less than retrofitting.</li>
         <li><strong>Get a delivered quote, not a "from" price.</strong> If a supplier can't fix the delivery cost to your postcode, the real number arrives later — and it's never smaller.</li>
       </ul>
-      <p>Ready for real numbers? <a href="quote.html">Request a free delivered quote</a> for your postcode, or explore <a href="finance.html">what the weekly repayments look like</a>.</p>`,
+      <p>Ready for real numbers? <a href="index.html#quote">Request a free delivered quote</a> for your postcode, or explore <a href="index.html#finance">what the weekly repayments look like</a>.</p>`,
   },
   {
     slug: "do-tiny-homes-need-council-approval",
@@ -89,7 +89,7 @@ const ARTICLES = [
       </ul>
       <h2>What we provide for your application</h2>
       <p>Every Go Tiny Homes build ships with structural engineering drawings, specification sheets, electrical and waterproofing compliance documentation — the paperwork certifiers actually ask for. We'll also point you to certifiers and planners who have approved expandable homes before, so you're not paying someone to learn on your project.</p>
-      <p>Two good next steps: read <a href="blog-can-i-put-a-tiny-home-in-my-backyard.html">Can I Put a Tiny Home in My Backyard?</a> for the suburban specifics, or <a href="quote.html">ask us about the approval pathway</a> for your postcode — we'll tell you honestly how hard or easy your site is.</p>`,
+      <p>Two good next steps: read <a href="blog-can-i-put-a-tiny-home-in-my-backyard.html">Can I Put a Tiny Home in My Backyard?</a> for the suburban specifics, or <a href="index.html#quote">ask us about the approval pathway</a> for your postcode — we'll tell you honestly how hard or easy your site is.</p>`,
   },
   {
     slug: "can-i-put-a-tiny-home-in-my-backyard",
@@ -123,8 +123,8 @@ const ARTICLES = [
       <h2>Delivery into a backyard</h2>
       <p>A standard side access of about 3.5m lets a tilt-tray place the home directly. Tighter access is routinely solved with a Franna crane lifting over a fence or garage — budget roughly $1,200–$4,000. Because expandable homes travel folded at 2.5m wide, they fit where fixed modular buildings simply can't go — which makes backyard installs a natural fit for them.</p>
       <h2>Which home suits a backyard?</h2>
-      <p>The <a href="product-model-0206-two-bedroom-white.html">Model 0206 two-bedroom expandable</a> is a natural backyard secondary dwelling: two real bedrooms, kitchen and full bathroom, transported folded at standard road width so it can be placed where fixed modular buildings can't. Prefer a darker, architectural look? The <a href="product-model-0206-two-bedroom-black.html">Black Edition</a> adds feature cladding and black thermal-break windows.</p>
-      <p>Want certainty for your block? <a href="quote.html">Send us your address and a photo of your access</a> — we'll assess deliverability free, before you commit to anything.</p>`,
+      <p>The <a href="index.html#editions">Model 0206 two-bedroom expandable</a> is a natural backyard secondary dwelling: two real bedrooms, kitchen and full bathroom, transported folded at standard road width so it can be placed where fixed modular buildings can't. Prefer a darker, architectural look? The <a href="index.html#editions">Black Edition</a> adds feature cladding and black thermal-break windows.</p>
+      <p>Want certainty for your block? <a href="index.html#quote">Send us your address and a photo of your access</a> — we'll assess deliverability free, before you commit to anything.</p>`,
   },
   {
     slug: "tiny-homes-vs-granny-flats",
@@ -167,7 +167,7 @@ const ARTICLES = [
         <li><strong>Mortgage-rate money:</strong> if you're refinancing anyway, construction debt at home-loan rates is cheap.</li>
       </ul>
       <blockquote>Decision shortcut: optimising for income and flexibility → tiny home. Optimising for maximum long-term property value on a blue-chip block → site-built flat.</blockquote>
-      <p>Halfway between the two: the feature-clad <a href="product-model-0206-two-bedroom-black.html">Model 0206 Black Edition</a> reads as architectural rather than transportable. Compare the numbers with the <a href="finance.html">repayment calculator</a>, or read the <a href="blog-how-much-does-a-tiny-home-cost.html">full cost guide</a> first.</p>`,
+      <p>Halfway between the two: the feature-clad <a href="index.html#editions">Model 0206 Black Edition</a> reads as architectural rather than transportable. Compare the numbers with the <a href="index.html#finance">repayment calculator</a>, or read the <a href="blog-how-much-does-a-tiny-home-cost.html">full cost guide</a> first.</p>`,
   },
   {
     slug: "best-tiny-homes-for-airbnb",
@@ -199,7 +199,7 @@ const ARTICLES = [
       <p>That's payback in just over two years. Income is never guaranteed — model your own area on AirDNA or by shadowing comparable listings for a month — but the structural advantage is real: the capital cost is a fraction of a house, while the nightly rate isn't.</p>
       <h2>What actually moves the nightly rate</h2>
       <ul>
-        <li><strong>The hero photo.</strong> Guests book on the first image — a striking exterior against your landscape. Feature cladding and black window frames (see the <a href="product-model-0206-two-bedroom-black.html">Black Edition</a>) photograph like an architectural build.</li>
+        <li><strong>The hero photo.</strong> Guests book on the first image — a striking exterior against your landscape. Feature cladding and black window frames (see the <a href="index.html#editions">Black Edition</a>) photograph like an architectural build.</li>
         <li><strong>A genuine bathroom.</strong> Rainfall shower, real toilet. "Compost toilet" in a listing measurably suppresses rate outside the eco niche.</li>
         <li><strong>Climate control.</strong> Reviews mention temperature more than décor. Insulated panel construction plus a split system keeps the 5-star streak alive in February and July.</li>
         <li><strong>One signature outdoor feature.</strong> Fire pit, outdoor tub or deck with a view — the second photo, and the reason guests pay $60/night more.</li>
@@ -212,7 +212,7 @@ const ARTICLES = [
         <li>No owner storage — set aside a lockable cupboard so you're not hauling supplies every turnover.</li>
         <li>Furnishing as a house instead of a stay: fewer, better pieces; hotel linen; a coffee ritual guests photograph.</li>
       </ol>
-      <p>Serious about the numbers? <a href="quote.html">Request a quote</a> and mention Airbnb — we'll include a state short-stay compliance checklist with your delivered pricing. For premium positioning, look at the <a href="product-model-0206-two-bedroom-black.html">Model 0206 Black Edition</a>.</p>`,
+      <p>Serious about the numbers? <a href="index.html#quote">Request a quote</a> and mention Airbnb — we'll include a state short-stay compliance checklist with your delivered pricing. For premium positioning, look at the <a href="index.html#editions">Model 0206 Black Edition</a>.</p>`,
   },
   {
     slug: "expandable-homes-explained",
@@ -249,7 +249,7 @@ const ARTICLES = [
         <li><strong>Warranty domicile:</strong> who honours the warranty, from where, with parts stocked in which country?</li>
       </ol>
       <blockquote>A supplier who answers all seven in writing is selling a home. One who changes the subject is selling a container with windows.</blockquote>
-      <p>See how we answer them on the <a href="about.html">About page</a>, walk through the fold animation on <a href="why-expandable-homes.html">Why Expandable</a>, or go straight to the <a href="products.html">range</a>.</p>`,
+      <p>See how we answer them on the <a href="index.html#about">About page</a>, walk through the fold animation on <a href="index.html#home">Why Expandable</a>, or go straight to the <a href="index.html#editions">range</a>.</p>`,
   },
 ];
 

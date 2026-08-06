@@ -59,13 +59,15 @@
           var target = parseFloat(el.getAttribute("data-count"));
           var suffix = el.getAttribute("data-suffix") || "";
           var prefix = el.getAttribute("data-prefix") || "";
+          var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
           var dur = 1400;
           var start = null;
           var step = function (ts) {
             if (!start) start = ts;
             var p = Math.min((ts - start) / dur, 1);
             var eased = 1 - Math.pow(1 - p, 3);
-            el.textContent = prefix + Math.round(target * eased).toLocaleString() + suffix;
+            var val = target * eased;
+            el.textContent = prefix + (decimals ? val.toFixed(decimals) : Math.round(val).toLocaleString()) + suffix;
             if (p < 1) requestAnimationFrame(step);
           };
           requestAnimationFrame(step);

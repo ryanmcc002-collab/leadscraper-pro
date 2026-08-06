@@ -1,53 +1,25 @@
-import { SITE, icons, layout, faqItem, faqSchema, ctaBanner } from "../lib/layout.mjs";
-import { products } from "../lib/products-data.mjs";
+import { SITE, icons, layout, faqItem, faqSchema } from "../lib/layout.mjs";
 
-const HOME_FAQS = [
-  ["How much does a tiny home cost?", `We quote one fixed delivered price for your postcode — free, within a business day. <a href="quote.html">Request yours</a> or read the <a href="blog-how-much-does-a-tiny-home-cost.html">cost guide</a>.`],
-  ["Do I need council approval?", `Usually, if someone will live in it. We supply the documents your certifier needs — see the <a href="blog-do-tiny-homes-need-council-approval.html">state-by-state guide</a>.`],
-  ["How long does it take?", `Your quote includes the current factory and shipping timeline. Installation itself takes about a day — <a href="delivery.html">how delivery works</a>.`],
-  ["What does 'expandable' mean?", `The home ships folded at road width, then unfolds on site into a full two-bedroom home. <a href="why-expandable-homes.html">See how it works</a>.`],
-]
-
-const EDITIONS = [
-  {
-    slug: "model-0206-two-bedroom-white",
-    photo: "white-factory-1.webp",
-    alt: "Model 0206 Classic White fully expanded, white panels with grid-design windows",
-    name: "Classic White",
-    line: "Crisp white panels, grid windows. Bright and timeless.",
-  },
-  {
-    slug: "model-0206-two-bedroom-black",
-    photo: "hero-backyard.webp",
-    alt: "Model 0206 Black Edition with timber-look cladding in a landscaped backyard",
-    name: "Black Edition",
-    line: "Matte black frame, timber-look feature cladding.",
-  },
+const FAQS = [
+  ["How much does the Model 0206 cost delivered?", `We quote one fixed delivered price for your postcode — home, shipping, customs, transport and installation, GST included. Free, within a business day. <a href="#quote">Request yours</a> or read the <a href="blog-how-much-does-a-tiny-home-cost.html">cost guide</a>.`],
+  ["Do I need council approval?", `Usually, if someone will live in it. We supply the specification documents your certifier needs — see the <a href="blog-do-tiny-homes-need-council-approval.html">state-by-state guide</a>.`],
+  ["How big is it?", `Expanded: 6.2m long, 6.14m wide and 2.53m high — about 38 m&sup2; with two bedrooms, living/dining, a fitted kitchen and a full bathroom. It folds to standard road width for transport.`],
+  ["How long does delivery take?", `Your quote includes the current factory and shipping timeline — typically a few months end to end. Installation itself takes about a day.`],
+  ["What arrives on the truck?", `The complete home, folded — bedrooms, kitchen cabinetry, bathroom, flooring, wiring and glazing already fitted. On site it expands to its full footprint and is connected to services by licensed local trades.`],
+  ["What's the difference between the two editions?", `The layout is identical. Classic White: white EPS panels, RAL 7015 light-grey frame, white grid windows. Black Edition: 20mm feature cladding, matte black RAL 9011 frame and door, thermal-break aluminium windows with fly screens.`],
+  ["Can I finance it?", `Yes — typically a secured personal loan, chattel mortgage (business) or home equity. The <a href="#finance">calculator above</a> models repayments at your numbers.`],
+  ["Is my deposit protected?", `Your deposit is held against a signed agreement with staged payments tied to build milestones you verify through inspection photo reports. The balance is only payable when your home lands in Australia and passes final inspection. Consumer guarantees under Australian Consumer Law apply.`],
 ];
-
-const editionPanels = EDITIONS.map(
-  (e, i) => `
-          <a class="edition reveal reveal-d${i}" href="product-${e.slug}.html">
-            <img src="assets/photos/${e.photo}" alt="${e.alt}" loading="lazy">
-            <div class="edition-overlay">
-              <span class="edition-tag">Model 0206 &middot; Two bedrooms</span>
-              <h3>${e.name}</h3>
-              <p>${e.line}</p>
-              <span class="edition-cta">Explore this edition ${icons.arrow}</span>
-            </div>
-          </a>`
-).join("");
-
 
 const body = `
     <section class="hero hero-cinema">
       <div class="wrap hero-top">
         <div class="hero-copy">
-          <h1>Premium Expandable Tiny Homes, <em>delivered Australia-wide</em></h1>
-          <p class="lead">Two real bedrooms, factory-direct, one fixed delivered price.</p>
+          <h1>A real two-bedroom home, <em>delivered on one truck</em></h1>
+          <p class="lead">The Model 0206 expandable — 38&nbsp;m&sup2;, factory-built, one fixed delivered quote.</p>
           <div class="hero-actions">
-            <a class="btn btn-gold btn-lg" href="quote.html">Get a Free Quote ${icons.arrow}</a>
-            <a class="btn btn-ghost btn-lg" href="quote.html?brochure=1">${icons.doc} Download Brochure</a>
+            <a class="btn btn-gold btn-lg" href="#quote">Get a Free Quote ${icons.arrow}</a>
+            <a class="btn btn-ghost btn-lg" href="#quote">${icons.doc} Download Brochure</a>
           </div>
           <div class="hero-trust">
             <span class="item">${icons.shield} Australian owned &amp; supported</span>
@@ -166,96 +138,165 @@ const body = `
         </div>
       </div>
     </section>
+    <section class="section section-navy" aria-label="Key numbers">
+      <div class="wrap">
+        <div class="stats reveal">
+          <div><div class="num" data-count="38" data-suffix="&nbsp;m&sup2;">0</div><div class="label">Expanded footprint</div></div>
+          <div><div class="num" data-count="2.5" data-suffix="m" data-decimals="1">0</div><div class="label">Wide on the truck</div></div>
+          <div><div class="num" data-count="1" data-suffix="-day">0</div><div class="label">Typical installation</div></div>
+          <div><div class="num" data-count="3" data-suffix="&times;">0</div><div class="label">Staged factory inspections</div></div>
+        </div>
+      </div>
+    </section>
 
-    <section class="section" aria-labelledby="why-h">
+    <section class="section section-white" id="home" aria-labelledby="home-h">
       <div class="wrap">
         <div class="center reveal">
           <span class="sec-num" aria-hidden="true">01</span>
-          <span class="eyebrow eyebrow-center">Why Go Tiny Homes</span>
-          <h2 id="why-h">Everything a site build gives you.<br><em>Without the year of your life.</em></h2>
+          <span class="eyebrow eyebrow-center">The home</span>
+          <h2 id="home-h">Meet the <em>Model 0206</em></h2>
+          <p class="lead center" style="margin-inline:auto">Two real bedrooms, a fitted kitchen and a full bathroom in 38&nbsp;m&sup2; — built in the factory, unfolded on your site.</p>
         </div>
-        <div class="bento reveal" style="margin-top:3rem">
-          <article class="bento-tile bento-wide bento-tall bento-media">
-            <img src="assets/photos/black-backyard-angle.webp" alt="Model 0206 Black Edition installed in a backyard, timber-look cladding with black frame" loading="lazy">
-            <div class="cap">2.5m wide on the truck &rarr; this on your site. Delivered Australia-wide.</div>
-          </article>
-          <article class="bento-tile">
-            <div class="icon">${icons.expand}</div>
-            <h3>Expandable by design</h3>
-            <p>Unfolds into a real two-bedroom home — not a caravan.</p>
-          </article>
-          <article class="bento-tile">
-            <div class="icon">${icons.clock}</div>
-            <h3>Installed in a day</h3>
-            <p>Finished at the factory. Expanded on your site in a day.</p>
-          </article>
-          <article class="bento-tile">
-            <div class="icon">${icons.gem}</div>
-            <h3>Premium quality</h3>
-            <p>Steel frame, fire-resistant panels, double glazing — inspected three times before it ships.</p>
-          </article>
-          <article class="bento-tile bento-gold">
-            <div class="icon" style="background:rgba(51,61,38,0.12);border-color:rgba(51,61,38,0.25);color:var(--navy)">${icons.tag}</div>
-            <h3>One fixed delivered quote</h3>
-            <p>Home, transport, customs, installation, GST. One number.</p>
-            <a class="btn btn-sm" href="quote.html">Get yours free ${icons.arrow}</a>
-          </article>
+        <div class="two-col" style="margin-top:3rem;align-items:start">
+          <div class="reveal">
+            <table class="spec-table">
+              <tbody>
+                <tr><th scope="row">Expanded size</th><td>L6.2m &times; W6.14m &times; H2.53m</td></tr>
+                <tr><th scope="row">Footprint</th><td>&asymp;38 m&sup2; — two bedrooms, living/dining, kitchen, bathroom</td></tr>
+                <tr><th scope="row">Transport</th><td>Folds to standard road width — one truck, no escorts or permits</td></tr>
+                <tr><th scope="row">Weight</th><td>From 3,345 kg</td></tr>
+                <tr><th scope="row">Structure</th><td>Welded steel frame, 50mm fire-resistant EPS wall panels</td></tr>
+                <tr><th scope="row">Bathroom</th><td>Toilet, basin and shower — fitted at the factory</td></tr>
+                <tr><th scope="row">Kitchen</th><td>Fitted cabinetry, ready for your appliances</td></tr>
+                <tr><th scope="row">Flooring</th><td>016 PVC timber-look flooring throughout</td></tr>
+                <tr><th scope="row">Electrical</th><td>Australian standard, 240V</td></tr>
+              </tbody>
+            </table>
+            <p class="muted" style="margin-top:1rem;font-size:var(--fs-300)">Specifications from the current production order sheets. Your delivered quote includes the full dimensioned drawings.</p>
+          </div>
+          <div class="reveal reveal-d1">
+            <div class="media-frame" style="background:#fff"><img src="assets/img/floorplan-model-0206-two-bedroom-white.svg" alt="Model 0206 floor plan: living, dining and kitchen on one wing, both bedrooms on the other, bathroom and entry at the centre" loading="lazy" width="1000" height="560"></div>
+            <figure class="media-frame" style="margin:1rem 0 0"><img src="assets/photos/interior-hall.webp" alt="Looking across the kitchen to both bedroom doors inside the Model 0206" loading="lazy" style="aspect-ratio:16/10;object-fit:cover;object-position:50% 60%"></figure>
+            <p class="muted" style="font-size:var(--fs-300);margin-top:0.75rem">The layout as built — both bedrooms open off the central hall.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-navy" aria-label="Our standards">
-      <div class="wrap">
-        <div class="stats reveal">
-          <div><div class="num" data-count="100" data-suffix="%">0</div><div class="label">Prices include GST</div></div>
-          <div><div class="num" data-count="3" data-suffix="×">0</div><div class="label">Staged factory inspections</div></div>
-          <div><div class="num" data-count="1" data-suffix="-day">0</div><div class="label">Typical installation</div></div>
-          <div><div class="num" data-count="8" data-suffix="/8">0</div><div class="label">States &amp; territories covered</div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-white" aria-labelledby="range-h">
+    <section class="section" id="editions" aria-labelledby="editions-h">
       <div class="wrap">
         <div class="center reveal">
           <span class="sec-num" aria-hidden="true">02</span>
-          <span class="eyebrow eyebrow-center">The range</span>
-          <h2 id="range-h">One home. Two editions. <em>Zero compromises.</em></h2>
-          <p class="lead center" style="margin-inline:auto">Same two-bedroom layout. Choose your exterior.</p>
+          <span class="eyebrow eyebrow-center">Two editions</span>
+          <h2 id="editions-h">Same home. <em>Choose your exterior.</em></h2>
         </div>
-        <div class="editions" style="margin-top:2.5rem">${editionPanels}
+        <div class="editions" style="margin-top:2.5rem">
+          <a class="edition reveal" href="#quote" data-model="model-0206-two-bedroom-white">
+            <img src="assets/photos/white-factory-1.webp" alt="Model 0206 Classic White fully expanded, white panels with grid-design windows" loading="lazy">
+            <div class="edition-overlay">
+              <span class="edition-tag">Model 0206 &middot; Two bedrooms</span>
+              <h3>Classic White</h3>
+              <p>White EPS panels, RAL 7015 light-grey frame, white grid windows with net shades. Bright and timeless.</p>
+              <span class="edition-cta">Get a delivered quote ${icons.arrow}</span>
+            </div>
+          </a>
+          <a class="edition reveal reveal-d1" href="#quote" data-model="model-0206-two-bedroom-black">
+            <img src="assets/photos/hero-backyard.webp" alt="Model 0206 Black Edition with timber-look cladding in a landscaped backyard" loading="lazy">
+            <div class="edition-overlay">
+              <span class="edition-tag">Model 0206 &middot; Two bedrooms</span>
+              <h3>Black Edition</h3>
+              <p>20mm feature cladding, matte black RAL 9011 frame and door, thermal-break aluminium windows with fly screens.</p>
+              <span class="edition-cta">Get a delivered quote ${icons.arrow}</span>
+            </div>
+          </a>
         </div>
-        <p class="center reveal" style="margin-top:1.75rem"><a class="text-link" href="products.html">Compare both editions side by side ${icons.arrow}</a></p>
+        <div class="table-scroll reveal" style="margin-top:2.5rem">
+          <table class="compare">
+            <thead>
+              <tr><th scope="col">What differs</th><th scope="col">Classic White</th><th scope="col">Black Edition</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Wall panels</th><td>50mm fire-resistant white EPS</td><td>50mm EPS + 20mm exterior feature cladding</td></tr>
+              <tr><th scope="row">Frame &amp; entrance door</th><td>RAL 7015 light grey, white interior</td><td>RAL 9011 matte black</td></tr>
+              <tr><th scope="row">Windows</th><td>White plastic-steel, grid design, net shades</td><td>Thermal-break aluminium, fly screens</td></tr>
+              <tr><th scope="row">Glazing</th><td class="yes">Double-glazed door &amp; window</td><td class="yes">Double-glazed door &amp; window</td></tr>
+              <tr><th scope="row">Layout, kitchen &amp; bathroom</th><td class="yes">Identical</td><td class="yes">Identical</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="inside-h">
-      <div class="wrap">
-        <div class="center reveal">
-          <span class="eyebrow eyebrow-center">Step inside</span>
-          <h2 id="inside-h">Complete and liveable, <em>as delivered</em></h2>
-        </div>
-        <div class="grid grid-3 reveal" style="margin-top:2.5rem">
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-dining.webp" alt="Dining and kitchen area with white cabinetry inside the Model 0206" loading="lazy"></figure>
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-living.webp" alt="Living area with sofa inside the Model 0206" loading="lazy"></figure>
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bedroom.webp" alt="Bedroom with wardrobe inside the Model 0206" loading="lazy"></figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-white" aria-labelledby="promise-h">
+    <section class="section section-white" id="inside" aria-labelledby="inside-h">
       <div class="wrap">
         <div class="center reveal">
           <span class="sec-num" aria-hidden="true">03</span>
-          <span class="eyebrow eyebrow-center">Our commitments</span>
-          <h2 id="promise-h">Promises we put <em>in writing</em></h2>
-          <p class="lead center" style="margin-inline:auto">In your contract, not just on this page.</p>
+          <span class="eyebrow eyebrow-center">Step inside</span>
+          <h2 id="inside-h">Complete and liveable, <em>as delivered</em></h2>
+          <p class="lead center" style="margin-inline:auto">Photographed in current production units.</p>
+        </div>
+        <div class="grid grid-3 reveal" style="margin-top:2.5rem">
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-dining.webp" alt="Dining area with table and chairs inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-kitchen.webp" alt="Fitted kitchen with cabinetry, oven and fridge inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-living.webp" alt="Living area with sofa and double glass doors inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bedroom.webp" alt="Furnished bedroom with double bed and curtains inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bathroom.webp" alt="Bathroom with shower, vanity and toilet inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-empty.webp" alt="Inside the Model 0206 with both wings expanded, before fit-out — full-height ceilings" loading="lazy"></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="delivery" aria-labelledby="delivery-h">
+      <div class="wrap">
+        <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">04</span>
+          <span class="eyebrow eyebrow-center">Factory to front door</span>
+          <h2 id="delivery-h">This is how it arrives</h2>
+        </div>
+        <div class="two-col" style="margin-top:3rem">
+          <figure class="media-frame reveal" style="margin:0"><img src="assets/photos/white-folded.webp" alt="Model 0206 folded to 2.5m road width for transport" loading="lazy"></figure>
+          <div class="reveal reveal-d1">
+            <p class="lead">Folded to 2.5m — one standard truck, no escort vehicles, no oversize permits. The wings unfold on your site the same day.</p>
+            <div class="steps" style="margin-top:1.75rem">
+              <div class="step"><div><h3>Built &amp; inspected</h3><p>Factory-built to your locked-in specification, with three staged inspections — you receive every photo report.</p></div></div>
+              <div class="step"><div><h3>Shipped &amp; cleared</h3><p>Ocean freight, customs, duties and quarantine — all handled by us, all inside your delivered price.</p></div></div>
+              <div class="step"><div><h3>Delivered &amp; unfolded</h3><p>Positioned, levelled, expanded and weather-sealed — usually within one working day.</p></div></div>
+              <div class="step"><div><h3>Connected &amp; handed over</h3><p>Licensed local trades connect services. Documented walkthrough, paperwork, keys.</p></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top:3.5rem">
+          <div class="reveal">
+            <h3 style="font-size:var(--fs-600)">Every state. Every territory. <em>Genuinely.</em></h3>
+            <p class="lead" style="margin-top:0.75rem">Standard road-width transport means the map isn't marketing — it's logistics.</p>
+            <ul class="checklist" style="margin-top:1.5rem">
+              <li>${icons.check}<span><strong>Metro:</strong> all eight capital cities</span></li>
+              <li>${icons.check}<span><strong>Regional:</strong> daily carrier routes on every major corridor</span></li>
+              <li>${icons.check}<span><strong>Remote:</strong> stations, islands and mine sites — quoted up front</span></li>
+            </ul>
+          </div>
+          <div class="media-frame reveal reveal-d1"><img src="assets/img/map-au.svg" alt="Australia-wide delivery map with routes to all capital cities and regional centres" loading="lazy" width="900" height="720"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-white" id="about" aria-labelledby="about-h">
+      <div class="wrap">
+        <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">05</span>
+          <span class="eyebrow eyebrow-center">Why trust us</span>
+          <h2 id="about-h">Inspection isn't a promise. <em>It's a process.</em></h2>
+          <p class="lead center" style="margin-inline:auto">We tour the factories we buy from and hold direct manufacturing agreements — no trading companies, no middlemen. Every home passes three staged inspections before it ships, and you receive the photo reports as yours is built.</p>
+        </div>
+        <div class="grid grid-2 reveal" style="margin-top:2.5rem">
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/factory-yard.webp" alt="A Model 0206 expanded for inspection in the manufacturer's yard" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/black-factory-2.webp" alt="Model 0206 fully expanded on the factory floor during pre-shipment inspection" loading="lazy"></figure>
         </div>
         <div class="grid grid-3" style="margin-top:2.5rem">
           <div class="card reveal">
             <div class="icon">${icons.doc}</div>
             <h3>The quote is the price</h3>
-            <p>Itemised, fixed for 60 days. Site extras are written line items before you commit.</p>
+            <p>Itemised, fixed for 60 days, GST included. Site extras are written line items before you commit.</p>
           </div>
           <div class="card reveal reveal-d1">
             <div class="icon">${icons.shield}</div>
@@ -265,65 +306,151 @@ const body = `
           <div class="card reveal reveal-d2">
             <div class="icon">${icons.phone}</div>
             <h3>Support that answers</h3>
-            <p>One Sydney-based project manager, first call to handover.</p>
+            <p>One Sydney-based project manager, first call to handover. Parts ship from Australia.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="cmp-h">
+    <section class="section" id="finance" aria-labelledby="finance-h">
       <div class="wrap">
-        <div class="center reveal">
-          <span class="sec-num" aria-hidden="true">04</span>
-          <span class="eyebrow eyebrow-center">The honest comparison</span>
-          <h2 id="cmp-h">Expandable home <em>vs the alternatives</em></h2>
-        </div>
-        <div class="table-scroll reveal" style="margin-top:2.5rem">
-          <table class="compare">
-            <thead>
-              <tr><th scope="col">Factor</th><th scope="col">Go Tiny Expandable</th><th scope="col">Traditional Build</th><th scope="col">Kit Granny Flat</th><th scope="col">Caravan / Trailer</th></tr>
-            </thead>
-            <tbody>
-              <tr><th scope="row">Typical cost</th><td>One fixed delivered quote</td><td>$180,000+</td><td>$120,000+</td><td>$60,000–$150,000</td></tr>
-              <tr><th scope="row">Time to move in</th><td>10–18 weeks</td><td>12–24 months</td><td>4–8 months</td><td>Immediate</td></tr>
-              <tr><th scope="row">Real bedrooms &amp; 2.6m+ ceilings</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">Rarely</td></tr>
-              <tr><th scope="row">Site trades required</th><td>Connections only</td><td class="no">Every trade</td><td class="no">Most trades</td><td>Connections only</td></tr>
-              <tr><th scope="row">Relocatable later</th><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
-              <tr><th scope="row">Weather delays</th><td class="yes">None — built indoors</td><td class="no">Constant risk</td><td>Some</td><td class="yes">None</td></tr>
-              <tr><th scope="row">Aftercare handled in Australia</th><td class="yes">Yes</td><td>Varies by builder</td><td>Varies</td><td class="no">Rarely</td></tr>
-            </tbody>
-          </table>
+        <div class="two-col" style="align-items:start">
+          <div class="reveal">
+            <span class="sec-num" aria-hidden="true">06</span>
+            <span class="eyebrow">Finance</span>
+            <h2 id="finance-h">Run your numbers</h2>
+            <p class="lead">Most owners finance with a secured personal loan or home equity. Drag the sliders — indicative only, not financial advice.</p>
+            <ul class="checklist" style="margin-top:1.5rem">
+              <li>${icons.check}<span>Terms from 3 to 7 years with most lenders</span></li>
+              <li>${icons.check}<span>Business buyers: chattel mortgage + GST credits</span></li>
+              <li>${icons.check}<span>Rental income often covers repayments — model your local rents conservatively</span></li>
+            </ul>
+          </div>
+          <div class="form-card reveal reveal-d1" data-calc>
+            <div class="calc">
+              <div class="row">
+                <div class="vals"><span>Amount financed</span><span id="calc-amount-val">$55,000</span></div>
+                <input type="range" id="calc-amount" min="20000" max="120000" step="500" value="55000" aria-label="Amount financed">
+              </div>
+              <div class="row">
+                <div class="vals"><span>Deposit</span><span id="calc-deposit-val">$10,000</span></div>
+                <input type="range" id="calc-deposit" min="0" max="60000" step="500" value="10000" aria-label="Deposit">
+              </div>
+              <div class="row">
+                <div class="vals"><span>Loan term</span><span id="calc-years-val">7 years</span></div>
+                <input type="range" id="calc-years" min="3" max="7" step="1" value="7" aria-label="Loan term in years">
+              </div>
+              <div class="row">
+                <div class="vals"><span>Interest rate</span><span id="calc-rate-val">9.0% p.a.</span></div>
+                <input type="range" id="calc-rate" min="6" max="16" step="0.5" value="9" aria-label="Interest rate">
+              </div>
+              <div class="calc-result">
+                <div class="per">Estimated monthly repayment</div>
+                <div class="amount" id="calc-result">$803</div>
+                <div class="per">Indicative only. Confirm figures with your lender or adviser.</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-white" aria-labelledby="hfaq-h">
+    <section class="section section-white" id="faq" aria-labelledby="faq-h">
       <div class="wrap-narrow">
         <div class="center reveal">
-          <span class="sec-num" aria-hidden="true">05</span>
+          <span class="sec-num" aria-hidden="true">07</span>
           <span class="eyebrow eyebrow-center">Straight answers</span>
-          <h2 id="hfaq-h">Frequently asked <em>questions</em></h2>
+          <h2 id="faq-h">Frequently asked <em>questions</em></h2>
         </div>
         <div style="margin-top:2rem" class="reveal">
-          ${HOME_FAQS.map(([q, a]) => faqItem(q, a)).join("\n          ")}
+          ${FAQS.map(([q, a]) => faqItem(q, a)).join("\n          ")}
         </div>
-        <p class="center" style="margin-top:1.5rem"><a class="card-link" href="faq.html">See all 40+ questions answered ${icons.arrow}</a></p>
       </div>
     </section>
 
-    ${ctaBanner(
-      "Get delivered pricing for your postcode",
-      "One number: home, transport, customs, installation. Free, within a business day."
-    )}
+    <section class="section" id="quote" aria-labelledby="quote-h">
+      <div class="wrap">
+        <div class="center reveal">
+          <span class="sec-num" aria-hidden="true">08</span>
+          <span class="eyebrow eyebrow-center">Free &middot; no obligation &middot; one business day</span>
+          <h2 id="quote-h">Get your <em>delivered price</em></h2>
+          <p class="lead center" style="margin-inline:auto">Postcode and plans in — delivered pricing, drawings and lead times back within one business day.</p>
+        </div>
+        <div class="quote-grid" style="margin-top:2.5rem">
+          <form class="form-card reveal" data-enquiry novalidate aria-label="Quote request form" id="quote-form">
+            <div class="form-grid">
+              <div class="field"><label for="q-name">Full name *</label><input id="q-name" name="name" type="text" autocomplete="name" required></div>
+              <div class="field"><label for="q-phone">Phone *</label><input id="q-phone" name="phone" type="tel" autocomplete="tel" required></div>
+              <div class="field"><label for="q-email">Email *</label><input id="q-email" name="email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="q-postcode">Delivery postcode *</label><input id="q-postcode" name="postcode" type="text" inputmode="numeric" pattern="[0-9]{4}" autocomplete="postal-code" required></div>
+              <div class="field"><label for="q-model">Which edition?</label>
+                <select id="q-model" name="model">
+                  <option value="">Not sure yet — recommend one</option>
+                  <option value="model-0206-two-bedroom-white">Model 0206 — Classic White</option>
+                  <option value="model-0206-two-bedroom-black">Model 0206 — Black Edition</option>
+                </select>
+              </div>
+              <div class="field"><label for="q-purpose">What will it be used for?</label>
+                <select id="q-purpose" name="purpose">
+                  <option value="">Select&hellip;</option>
+                  <option>Primary residence / first home</option>
+                  <option>Granny flat / family accommodation</option>
+                  <option>Airbnb / holiday accommodation</option>
+                  <option>Rural property / farm</option>
+                  <option>Investment / rental</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field full"><label for="q-msg">Anything else? (site access, timing, questions)</label><textarea id="q-msg" name="message"></textarea></div>
+            </div>
+            <p class="honeypot" aria-hidden="true"><input type="text" name="company_website" tabindex="-1" autocomplete="off"></p>
+            <button class="btn btn-gold btn-lg" type="submit" style="width:100%;margin-top:1.5rem">Send my free quote request ${icons.arrow}</button>
+            <p class="form-success" role="status">Thank you! Your request is in. A Sydney-based project manager will be in touch within one business day with your delivered pricing.</p>
+            <p class="form-note">${icons.lock} Secure enquiry. Your details are never sold or shared.</p>
+          </form>
+          <div style="display:grid;gap:1.5rem">
+            <div class="card reveal reveal-d1">
+              <h3>Prefer to talk now?</h3>
+              <p class="muted">8am&ndash;6pm AEST, Monday to Saturday.</p>
+              <a class="btn btn-navy" href="${SITE.phoneHref}" style="width:100%;margin-top:0.5rem">${icons.phone} Call ${SITE.phone}</a>
+              <a class="btn btn-ghost" href="mailto:${SITE.email}" style="width:100%;margin-top:0.75rem">Email us</a>
+            </div>
+            <div class="card reveal reveal-d2">
+              <h3>What happens next</h3>
+              <ul class="checklist" style="margin-top:0.75rem">
+                <li>${icons.check}<span><strong>One business day:</strong> delivered pricing and drawings for your postcode.</span></li>
+                <li>${icons.check}<span><strong>One conversation:</strong> approvals, site prep, finance — no scripts.</span></li>
+                <li>${icons.check}<span><strong>Your pace:</strong> the quote stays valid for 60 days.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      /* Edition panels pre-select their edition in the quote form */
+      (function () {
+        var sel = document.getElementById("q-model");
+        if (!sel) return;
+        document.querySelectorAll("[data-model]").forEach(function (a) {
+          a.addEventListener("click", function () {
+            for (var i = 0; i < sel.options.length; i++) {
+              if (sel.options[i].value === a.getAttribute("data-model")) { sel.selectedIndex = i; break; }
+            }
+          });
+        });
+      })();
+    </script>
 `;
 
 export const page = {
   path: "index.html",
   html: layout({
     path: "index.html",
-    title: "Expandable Tiny Homes Australia | Go Tiny Homes",
+    title: "Expandable Tiny Homes Australia | Model 0206 | Go Tiny Homes",
     description:
-      "Premium two-bedroom expandable tiny homes, imported factory-direct and delivered Australia-wide. Fixed delivered quotes, Australian support. Free quotes in 1 business day.",
+      "The Model 0206 two-bedroom expandable tiny home — 38 m&#178;, factory-built, delivered and installed Australia-wide with one fixed quote. Classic White or Black Edition.",
     body,
     active: null,
     schema: [
@@ -334,7 +461,15 @@ export const page = {
         name: SITE.name,
         publisher: { "@id": `${SITE.url}/#organization` },
       },
-      faqSchema(`${SITE.url}/#faq`, HOME_FAQS),
+      {
+        "@type": "Product",
+        "@id": `${SITE.url}/#model0206`,
+        name: "Model 0206 Two-Bedroom Expandable Home",
+        description: "Two-bedroom expandable home, 6.2m x 6.14m x 2.53m expanded (approx. 38 sqm), steel frame with 50mm fire-resistant EPS panels. Available in Classic White and Black Edition.",
+        image: `${SITE.url}/assets/photos/og-image.jpg`,
+        brand: { "@type": "Brand", name: SITE.name },
+      },
+      faqSchema(`${SITE.url}/#faq`, FAQS),
     ],
   }),
 };
