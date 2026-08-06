@@ -24,7 +24,7 @@ const CATS = [
     ["How well insulated are the homes?", "Wall, roof and floor panels plus double glazing give thermal performance that surprises building professionals — the same panel systems are used in commercial cold storage, and they're specified to handle climates from alpine Victoria to tropical Queensland."],
     ["Are the windows double glazed?", "The door and window package is double glazed as standard. The Classic White uses plastic-steel framed windows with net shades; the Black Edition upgrades to thermal-break aluminium frames with fly screens."],
     ["Will it withstand Australian conditions?", "The structures are engineered to AS/NZS 1170 wind actions, with cyclone-region packages available. Colour-bonded steel exteriors handle coastal air, UV and hail far better than timber cladding, and there's nothing for termites to eat."],
-    ["How long will a tiny home last?", "Structurally, decades — welded steel framing and EPS panel construction don't degrade the way timber does. That's why we're comfortable giving a 10-year structural warranty as standard, with homes expected to serve well beyond it."],
+    ["How long will a tiny home last?", "Structurally, decades — welded steel framing and EPS panel construction don't degrade the way timber does, and there's nothing for termites to eat. Build quality and basic maintenance drive lifespan, which is why every home is inspected three times before it ships."],
     ["Can I customise layouts and finishes?", "Yes. Start by choosing between the Classic White and Black Edition exteriors, then add options — decks, awnings, solar, furniture and appliance packages are scoped with your order and itemised in your delivered quote."],
     ["Are the kitchens and bathrooms really complete?", "The home arrives with fitted kitchen cabinetry and a complete bathroom — toilet, basin and shower — ready for connection by licensed trades. Appliances and any extras are itemised in your quote, so what you see in the specification is exactly what arrives."],
   ]],
@@ -37,12 +37,12 @@ const CATS = [
     ["Do prices include GST?", "Always. Every price on this website and every quote we issue includes GST. Business buyers may be able to claim GST credits — ask your accountant about a chattel mortgage structure."],
     ["What are current lead times?", "Lead times depend on the factory production schedule and shipping. Your quote includes the current timeline, and your order confirmation locks a delivery window."],
   ]],
-  ["Warranty & Aftercare", [
-    ["What warranty comes with the home?", "A 10-year structural warranty on frame and panels, plus a minimum 2-year warranty on fixtures, fittings and appliances (3 years on the Luxury Series) — administered from Sydney, with parts stocked in Australia."],
-    ["What if something goes wrong after delivery?", "Call or email our Sydney aftercare team. Minor issues are resolved with couriered parts and guided fixes or a local trade we arrange; anything structural triggers an on-site assessment. Every warranty claim gets a named owner and a written timeline."],
+  ["Aftercare & Support", [
+    ["What warranty comes with the home?", "Warranty terms are set out in writing with your quote and order agreement — never as verbal promises. Whatever is agreed is administered from Sydney with parts stocked in Australia, and it sits on top of the consumer guarantees that apply automatically under Australian Consumer Law."],
+    ["What if something goes wrong after delivery?", "Call or email our Sydney aftercare team. Minor issues are resolved with couriered parts and guided fixes or a local trade we arrange; anything structural triggers an on-site assessment. Every aftercare request gets a named owner and a written timeline."],
     ["What maintenance does a tiny home need?", "Very little: wash the exterior panels annually (like any colour-bonded structure), keep drainage paths clear, check sealants around wet areas yearly and service the split system as you would in any home. No painting, no restumping, no termite treatments."],
     ["Can the home be relocated later?", "Yes — that's a core advantage. The wings fold back in and the home travels as it arrived. Budget for a crane and transport, and check approvals at the new site. We can manage relocations end-to-end."],
-    ["Does the warranty transfer if I sell?", "Yes, the balance of both warranties transfers to a new owner of the home — a genuine selling point if you ever move it on."],
+    ["Does support transfer if I sell?", "Yes — aftercare follows the home, not just its first owner, and any written warranty in your order agreement transfers with it. A genuine selling point if you ever move it on."],
   ]],
   ["Living & Practicalities", [
     ["Can I live in a tiny home permanently?", "Thousands of Australians do. Legally it requires dwelling approval (see Approvals above); practically, the Model 0206's two bedrooms, kitchen and full bathroom are exactly the ingredients of a permanent small home."],
@@ -100,7 +100,7 @@ export const page = {
     path: "faq.html",
     title: "Tiny Home FAQs | Approvals, Prices & More | Go Tiny Homes",
     description:
-      "Council approvals, foundations, insulation, cyclone ratings, warranty, pricing, lead times and finance — 40 detailed answers on Australian tiny homes.",
+      "Council approvals, foundations, insulation, cyclone ratings, aftercare, pricing, lead times and finance — 40 detailed answers on Australian tiny homes.",
     body,
     active: "faq.html",
     schema: [

@@ -27,7 +27,7 @@ const body = `
           <div class="step"><div><h3>Shipping</h3><p>Your home travels to the nearest Australian port — typically 3–5 weeks. You get the vessel name and tracking so you can literally watch it come to you.</p></div></div>
           <div class="step"><div><h3>Australian customs &amp; quarantine</h3><p>Our licensed customs broker manages clearance, duties and biosecurity inspection. All costs are already in your delivered price.</p></div></div>
           <div class="step"><div><h3>Transport &amp; installation</h3><p>A carrier delivers to your site on the scheduled day. The home is positioned, levelled, expanded and weather-sealed — usually within one working day.</p></div></div>
-          <div class="step"><div><h3>Connection &amp; handover</h3><p>Licensed local trades connect power, water and waste. We complete a documented walkthrough with you, hand over compliance paperwork and warranty documents — and the keys.</p></div></div>
+          <div class="step"><div><h3>Connection &amp; handover</h3><p>Licensed local trades connect power, water and waste. We complete a documented walkthrough with you, hand over the compliance and handover paperwork — and the keys.</p></div></div>
         </div>
       </div>
     </section>

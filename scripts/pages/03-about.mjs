@@ -22,7 +22,7 @@ const body = `
         <h2>Transparent pricing, delivered</h2>
         <p>The price we quote is the price you pay: home, shipping, customs clearance, quarantine, transport to your site and installation. GST included. If a quote needs a crane or long-distance transport, you'll see it as a line item before you commit — never as a surprise afterwards.</p>
         <h2>Support that answers in an Australian accent</h2>
-        <p>Our project managers and after-sales team are based in Sydney. When you call, the person who answers can see your file, your inspection photos and your delivery schedule. Warranty parts ship from our Australian warehouse, not from overseas.</p>
+        <p>Our project managers and after-sales team are based in Sydney. When you call, the person who answers can see your file, your inspection photos and your delivery schedule. Replacement parts ship from our Australian warehouse, not from overseas.</p>
       </div>
     </section>
 
@@ -42,7 +42,7 @@ const body = `
         <div class="center reveal"><span class="eyebrow eyebrow-center">In writing, on every order</span><h2 id="num-h">Our standards, in numbers</h2></div>
         <div class="stats reveal" style="margin-top:2.5rem">
           <div><div class="num" data-count="3" data-suffix="×">0</div><div class="label">Staged inspections per home</div></div>
-          <div><div class="num" data-count="10" data-suffix="-yr">0</div><div class="label">Structural warranty</div></div>
+          <div><div class="num" data-count="1" data-suffix="-day">0</div><div class="label">Typical installation</div></div>
           <div><div class="num" data-count="60" data-suffix="-day">0</div><div class="label">Quote validity</div></div>
           <div><div class="num" data-count="100" data-suffix="%">0</div><div class="label">Prices include GST</div></div>
         </div>

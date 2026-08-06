@@ -7,7 +7,7 @@ const HOME_FAQS = [
   ["How long does delivery take?", `Lead times depend on the production schedule and shipping — your quote includes the current timeline. Installation and expansion is typically completed in a single day. The <a href="delivery.html">delivery page</a> walks through every step from factory to handover.`],
   ["What does 'expandable' actually mean?", `The home transports as a standard shipping-width load, then hinged wing sections fold out on site to double or triple the floor area. You get real rooms and real ceilings — not a trailer, not a caravan. <a href="why-expandable-homes.html">Learn how expandable homes work</a>.`],
   ["Is finance available?", `Yes — through Australian lenders offering personal, secured and business loans for tiny homes, with terms from 3 to 7 years. Use the <a href="finance.html">repayment calculator</a> to estimate weekly repayments.`],
-  ["What warranty do you offer?", `Every home carries a 10-year structural warranty and a minimum 2-year warranty on fixtures and fittings, backed by our Australian support team — not an overseas factory.`],
+  ["What warranty do you offer?", `Warranty terms are set out in writing with your quote and order agreement — no verbal promises — and administered by our Australian team, not an overseas factory. That sits on top of the consumer guarantees that apply automatically under Australian Consumer Law.`],
 ];
 
 const productCards = products
@@ -26,7 +26,7 @@ const productCards = products
   .join("");
 
 
-const marqueeItems = `<span aria-hidden="true">Delivered Australia-wide <em>&#10022;</em> Factory direct <em>&#10022;</em> 10-year structural warranty <em>&#10022;</em> Expands <em>in hours</em> <em>&#10022;</em> Two real bedrooms <em>&#10022;</em> Fixed delivered quotes <em>&#10022;</em></span>`;
+const marqueeItems = `<span aria-hidden="true">Delivered Australia-wide <em>&#10022;</em> Factory direct <em>&#10022;</em> Quality <em>inspected</em> <em>&#10022;</em> Expands <em>in hours</em> <em>&#10022;</em> Two real bedrooms <em>&#10022;</em> Fixed delivered quotes <em>&#10022;</em></span>`;
 const marqueeBand = `
     <div class="marquee-wrap" aria-hidden="true">
       <div class="marquee"><div class="marquee-track">${marqueeItems}${marqueeItems}</div></div>
@@ -38,13 +38,13 @@ const body = `
         <div class="hero-copy">
           <span class="eyebrow eyebrow-center">Australia's premium expandable homes</span>
           <h1 class="kinetic"><span class="kw" style="--d:0s"><span>Premium</span></span> <span class="kw" style="--d:0.07s"><span>Expandable</span></span> <span class="kw" style="--d:0.14s"><span>Tiny</span></span> <span class="kw" style="--d:0.21s"><span>Homes,</span></span><br><span class="kw" style="--d:0.32s"><span><em>delivered</em></span></span> <span class="kw" style="--d:0.4s"><span><em>Australia-wide</em></span></span></h1>
-          <p class="lead">Factory-direct pricing without the factory-direct gamble: every Go Tiny Homes build is independently quality-inspected, delivered to your site at a fixed price, and backed by a 10-year structural warranty and a real Australian support team.</p>
+          <p class="lead">Factory-direct pricing without the factory-direct gamble: every Go Tiny Homes build is independently quality-inspected, delivered to your site at a fixed price, and backed by staged factory inspections and a real Australian support team.</p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="quote.html">Get a Free Quote ${icons.arrow}</a>
             <a class="btn btn-ghost-light btn-lg" href="quote.html?brochure=1">${icons.doc} Download Brochure</a>
           </div>
           <div class="hero-trust">
-            <span class="item">${icons.shield} 10-year structural warranty</span>
+            <span class="item">${icons.shield} Australian owned &amp; supported</span>
             <span class="item">${icons.check} 3 staged factory inspections</span>
             <span class="item">${icons.truck} Delivery to every state</span>
           </div>
@@ -211,7 +211,7 @@ const body = `
     <section class="section section-navy" aria-label="Our standards">
       <div class="wrap">
         <div class="stats reveal">
-          <div><div class="num" data-count="10" data-suffix="-yr">0</div><div class="label">Structural warranty</div></div>
+          <div><div class="num" data-count="100" data-suffix="%">0</div><div class="label">Prices include GST</div></div>
           <div><div class="num" data-count="3" data-suffix="×">0</div><div class="label">Staged factory inspections</div></div>
           <div><div class="num" data-count="1" data-suffix="-day">0</div><div class="label">Typical installation</div></div>
           <div><div class="num" data-count="8" data-suffix="/8">0</div><div class="label">States &amp; territories covered</div></div>
@@ -281,7 +281,7 @@ const body = `
           <div class="card reveal reveal-d2">
             <div class="icon">${icons.phone}</div>
             <h3>Support that answers</h3>
-            <p>A Sydney-based project manager owns your order from first call to handover, and the 10-year structural warranty is administered here in Australia — not by an overseas factory.</p>
+            <p>A Sydney-based project manager owns your order from first call to handover, and aftercare is handled here in Australia — not by an overseas factory.</p>
           </div>
         </div>
       </div>
@@ -307,7 +307,7 @@ const body = `
               <tr><th scope="row">Site trades required</th><td>Connections only</td><td class="no">Every trade</td><td class="no">Most trades</td><td>Connections only</td></tr>
               <tr><th scope="row">Relocatable later</th><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
               <tr><th scope="row">Weather delays</th><td class="yes">None — built indoors</td><td class="no">Constant risk</td><td>Some</td><td class="yes">None</td></tr>
-              <tr><th scope="row">10-year structural warranty</th><td class="yes">Standard</td><td>Varies by builder</td><td>Varies</td><td class="no">Uncommon</td></tr>
+              <tr><th scope="row">Aftercare handled in Australia</th><td class="yes">Yes</td><td>Varies by builder</td><td>Varies</td><td class="no">Rarely</td></tr>
             </tbody>
           </table>
         </div>
