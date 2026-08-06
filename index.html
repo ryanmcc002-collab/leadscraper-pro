@@ -71,7 +71,69 @@
               <span class="item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg> Delivery to every state</span>
             </div>
           </div>
-          <div class="hero-media reveal"><img src="assets/img/hero-home.svg" alt="Modern expandable tiny home at dusk with wings extended and warm interior lighting" width="1200" height="900" fetchpriority="high"></div>
+          <div class="hero-media hero-demo" data-hero-demo>
+            <svg viewBox="0 0 1200 800" role="img" aria-label="Animation of a Go Tiny Homes expandable home unfolding from its folded transport width into a full two-bedroom home with lit windows">
+              <defs>
+                <linearGradient id="hd-sky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#0E2440"/><stop offset="0.55" stop-color="#1B3A5F"/><stop offset="1" stop-color="#3E5E7E"/>
+                </linearGradient>
+                <radialGradient id="hd-glow" cx="0.72" cy="0.32" r="0.55">
+                  <stop offset="0" stop-color="#D6AF5E" stop-opacity="0.4"/><stop offset="1" stop-color="#D6AF5E" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="hd-h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#122C4C"/><stop offset="1" stop-color="#0B1E36"/></linearGradient>
+                <linearGradient id="hd-h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#183A60"/><stop offset="1" stop-color="#102A48"/></linearGradient>
+                <linearGradient id="hd-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#233F60"/><stop offset="1" stop-color="#16304F"/></linearGradient>
+                <linearGradient id="hd-warm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5D488"/><stop offset="1" stop-color="#D6AF5E"/></linearGradient>
+              </defs>
+              <rect width="1200" height="800" fill="url(#hd-sky)"/>
+              <rect width="1200" height="800" fill="url(#hd-glow)"/>
+              <circle cx="880" cy="180" r="42" fill="#F0CE84" opacity="0.9"/>
+              <circle cx="880" cy="180" r="66" fill="#F0CE84" opacity="0.16"/>
+              <g fill="#E8EEF5" opacity="0.65">
+                <circle cx="150" cy="110" r="2"/><circle cx="340" cy="70" r="1.6"/><circle cx="540" cy="140" r="1.8"/>
+                <circle cx="720" cy="80" r="1.4"/><circle cx="1040" cy="120" r="2"/><circle cx="1130" cy="230" r="1.5"/>
+                <circle cx="250" cy="220" r="1.4"/><circle cx="950" cy="60" r="1.7"/>
+              </g>
+              <path d="M0 500 Q 220 420 460 485 T 920 470 T 1200 500 V 800 H 0 Z" fill="url(#hd-h1)"/>
+              <path d="M0 575 Q 320 510 640 562 T 1200 555 V 800 H 0 Z" fill="url(#hd-h2)"/>
+
+              <!-- deck -->
+              <rect class="demo-deck" x="310" y="636" width="580" height="14" rx="4" fill="#6B5430"/>
+
+              <!-- left wing -->
+              <g class="wing wing-l">
+                <rect x="330" y="446" width="180" height="190" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/>
+                <rect x="354" y="478" width="132" height="92" rx="5" fill="#16304F"/>
+                <rect class="win-lit" x="354" y="478" width="132" height="92" rx="5" fill="url(#hd-warm)" opacity="0.95"/>
+                <line x1="420" y1="478" x2="420" y2="570" stroke="#0F2743" stroke-width="5"/>
+              </g>
+              <!-- right wing -->
+              <g class="wing wing-r">
+                <rect x="690" y="446" width="180" height="190" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/>
+                <rect x="714" y="478" width="132" height="92" rx="5" fill="#16304F"/>
+                <rect class="win-lit" x="714" y="478" width="132" height="92" rx="5" fill="url(#hd-warm)" opacity="0.95"/>
+                <line x1="780" y1="478" x2="780" y2="570" stroke="#0F2743" stroke-width="5"/>
+              </g>
+              <!-- core -->
+              <g>
+                <rect x="505" y="436" width="190" height="200" rx="8" fill="url(#hd-wall)" stroke="#2E4E74" stroke-width="2"/>
+                <rect x="525" y="458" width="150" height="178" rx="5" fill="#142C4C"/>
+                <rect class="win-lit" x="525" y="458" width="150" height="178" rx="5" fill="url(#hd-warm)"/>
+                <line x1="575" y1="458" x2="575" y2="636" stroke="#0F2743" stroke-width="5"/>
+                <line x1="625" y1="458" x2="625" y2="636" stroke="#0F2743" stroke-width="5"/>
+              </g>
+              <!-- roof -->
+              <path class="demo-roof" d="M310 436 L 600 374 L 890 436 L 890 452 L 310 452 Z" fill="#0A1B30"/>
+              <!-- light spill -->
+              <path class="demo-spill" d="M525 650 L 675 650 L 735 716 L 465 716 Z" fill="url(#hd-warm)" fill-opacity="0.14"/>
+
+              <path d="M0 690 Q 300 662 640 686 T 1200 678 V 800 H 0 Z" fill="#0A1A2E"/>
+            </svg>
+            <div class="demo-ui">
+              <span class="demo-status" role="status">Folded to standard road width</span>
+              <button class="btn btn-gold btn-sm demo-toggle" type="button" aria-pressed="false">Expand on site</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>

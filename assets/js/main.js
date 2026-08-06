@@ -91,6 +91,35 @@
     if (next) next.addEventListener("click", function () { scrollBy(1); });
   });
 
+  /* Hero unfold demo — auto-plays on load, then user-toggleable */
+  var heroDemo = document.querySelector("[data-hero-demo]");
+  if (heroDemo) {
+    var heroBtn = heroDemo.querySelector(".demo-toggle");
+    var heroStatus = heroDemo.querySelector(".demo-status");
+    var setHeroOpen = function (open) {
+      heroDemo.classList.toggle("is-open", open);
+      if (heroBtn) {
+        heroBtn.textContent = open ? "Fold for transport" : "Expand on site";
+        heroBtn.setAttribute("aria-pressed", open ? "true" : "false");
+      }
+      if (heroStatus) {
+        heroStatus.textContent = open
+          ? "Expanded on site — installed in a day"
+          : "Folded to standard road width";
+      }
+    };
+    setHeroOpen(false);
+    var reduceMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(function () { setHeroOpen(true); }, reduceMotion ? 0 : 800);
+    if (heroBtn) {
+      heroBtn.addEventListener("click", function () {
+        setHeroOpen(!heroDemo.classList.contains("is-open"));
+      });
+    }
+  }
+
   /* Expand animation concept */
   document.querySelectorAll("[data-expand-demo]").forEach(function (demo) {
     var home = demo.querySelector(".expand-home");

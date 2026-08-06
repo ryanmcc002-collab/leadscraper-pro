@@ -903,6 +903,58 @@ ul, ol { padding-left: 1.25rem; }
 .included-list svg { color: var(--success); flex: none; margin-top: 0.2rem; }
 @media (max-width: 640px) { .included-list { grid-template-columns: 1fr; } }
 
+/* Hero unfold demo — plays on page load, toggleable.
+   Folded state only applies with JS available (html.js), so no-JS users
+   and crawlers see the expanded home. */
+.hero-demo { position: relative; }
+.hero-demo svg { display: block; width: 100%; height: auto; }
+
+.hero-demo .wing,
+.hero-demo .demo-roof,
+.hero-demo .demo-deck {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 1.15s var(--ease) 0.1s;
+}
+.hero-demo .win-lit { transition: opacity 0.7s ease 1s; }
+.hero-demo .demo-spill { transition: opacity 0.9s ease 1.15s; }
+
+html.js .hero-demo:not(.is-open) .wing-l { transform: translateX(185px); }
+html.js .hero-demo:not(.is-open) .wing-r { transform: translateX(-185px); }
+html.js .hero-demo:not(.is-open) .demo-roof { transform: scaleX(0.36); }
+html.js .hero-demo:not(.is-open) .demo-deck { transform: scaleX(0.34); }
+html.js .hero-demo:not(.is-open) .win-lit,
+html.js .hero-demo:not(.is-open) .demo-spill { opacity: 0; transition-delay: 0s; }
+
+.hero-demo .demo-ui {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-inline: 1.1rem;
+  pointer-events: none;
+}
+.hero-demo .demo-status {
+  background: rgba(13, 35, 63, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #E8EEF5;
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 1rem;
+  font-size: var(--fs-200);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hero-demo .demo-toggle { pointer-events: auto; flex: none; }
+
 /* Expand animation concept */
 .expand-demo { position: relative; }
 .expand-demo .stage {
