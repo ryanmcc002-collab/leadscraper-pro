@@ -243,7 +243,7 @@ const body = `
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-living.webp" alt="Living area with sofa and double glass doors inside the Model 0206" loading="lazy"></figure>
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bedroom.webp" alt="Furnished bedroom with double bed and curtains inside the Model 0206" loading="lazy"></figure>
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bathroom.webp" alt="Bathroom with shower, vanity and toilet inside the Model 0206" loading="lazy"></figure>
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-empty.webp" alt="Inside the Model 0206 with both wings expanded, before fit-out — full-height ceilings" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-dining-wide.webp" alt="Wide view of the dining area and windows inside the Model 0206" loading="lazy" style="height:100%;object-fit:cover"></figure>
         </div>
       </div>
     </section>
@@ -255,18 +255,36 @@ const body = `
           <span class="eyebrow eyebrow-center">Delivery, handled end-to-end</span>
           <h2 id="delivery-h">From our factory <em>to your front door</em></h2>
         </div>
-        <div class="two-col" style="margin-top:3rem">
-          <div class="reveal">
-            <figure class="media-frame" style="margin:0"><img src="assets/photos/factory-gate.webp" alt="A Model 0206 Classic White outside the factory, ready for folding and shipping" loading="lazy"></figure>
-            <p class="muted" style="font-size:var(--fs-300);margin-top:0.75rem">A Model 0206 leaving the production line.</p>
-          </div>
-          <div class="reveal reveal-d1">
-            <p class="lead">It folds to 2.5m and travels on one standard truck — no escort vehicles, no oversize permits. The wings unfold on your site the same day.</p>
-            <div class="steps" style="margin-top:1.75rem">
-              <div class="step"><div><h3>Built &amp; inspected</h3><p>Factory-built to your locked-in specification, with three staged inspections — you receive every photo report.</p></div></div>
-              <div class="step"><div><h3>Shipped &amp; cleared</h3><p>Ocean freight, customs, duties and quarantine — all handled by us, all inside your delivered price.</p></div></div>
-              <div class="step"><div><h3>Delivered &amp; unfolded</h3><p>Positioned, levelled, expanded and weather-sealed — usually within one working day.</p></div></div>
-              <div class="step"><div><h3>Connected &amp; handed over</h3><p>Licensed local trades connect services. Documented walkthrough, paperwork, keys.</p></div></div>
+        <p class="lead center reveal" style="margin-inline:auto">It folds to 2.5m and travels on one standard truck — no escorts, no permits. Follow the journey:</p>
+        <div class="journey reveal" data-stages data-autoplay style="margin-top:2.5rem">
+          <ol class="journey-track" role="tablist" aria-label="Delivery journey stages">
+            <div class="journey-line" aria-hidden="true"><div class="journey-fill" data-stage-fill></div></div>
+            <li><button class="jt-node is-active" data-stage-btn role="tab" aria-selected="true"><span class="n">01</span><span class="t">Built</span></button></li>
+            <li><button class="jt-node" data-stage-btn role="tab" aria-selected="false"><span class="n">02</span><span class="t">Inspected</span></button></li>
+            <li><button class="jt-node" data-stage-btn role="tab" aria-selected="false"><span class="n">03</span><span class="t">Shipped</span></button></li>
+            <li><button class="jt-node" data-stage-btn role="tab" aria-selected="false"><span class="n">04</span><span class="t">Delivered</span></button></li>
+            <li><button class="jt-node" data-stage-btn role="tab" aria-selected="false"><span class="n">05</span><span class="t">Move in</span></button></li>
+          </ol>
+          <div class="journey-panels">
+            <div class="journey-panel is-active" data-stage-panel>
+              <figure><img src="assets/photos/factory-gate.webp" alt="A Model 0206 Classic White outside the factory" loading="lazy"></figure>
+              <div><h3>Built to your locked-in spec</h3><p>Your home is built indoors — steel frame, panels, glazing, kitchen and bathroom all fitted on the line. Nothing is weather-dependent, nothing is left to site trades.</p></div>
+            </div>
+            <div class="journey-panel" data-stage-panel>
+              <figure><img src="assets/photos/black-factory-1.webp" alt="Model 0206 expanded during factory inspection" loading="lazy"></figure>
+              <div><h3>Inspected three times</h3><p>Frame stage, fit-out stage and pre-shipment — by independent inspectors. You receive every photo report as your home is built.</p></div>
+            </div>
+            <div class="journey-panel" data-stage-panel>
+              <figure><img src="assets/photos/white-folded.webp" alt="Model 0206 folded to 2.5m road width" loading="lazy"></figure>
+              <div><h3>Folded, shipped &amp; cleared</h3><p>Folded to 2.5m for ocean freight. Customs, duties and quarantine are all handled by us — and already inside your delivered price.</p></div>
+            </div>
+            <div class="journey-panel" data-stage-panel>
+              <figure><img src="assets/photos/black-backyard-angle.webp" alt="Model 0206 Black Edition installed in a backyard" loading="lazy"></figure>
+              <div><h3>One truck to your site</h3><p>Standard road width means a normal truck and no escort vehicles. Positioned, levelled, expanded and weather-sealed — usually in one working day.</p></div>
+            </div>
+            <div class="journey-panel" data-stage-panel>
+              <figure><img src="assets/photos/hero-backyard.webp" alt="Model 0206 Black Edition expanded in a landscaped backyard" loading="lazy"></figure>
+              <div><h3>Connected. Keys. Done.</h3><p>Licensed local trades connect power, water and waste. Documented walkthrough, compliance paperwork, keys in hand.</p></div>
             </div>
           </div>
         </div>
@@ -291,11 +309,52 @@ const body = `
           <span class="sec-num" aria-hidden="true">05</span>
           <span class="eyebrow eyebrow-center">Why trust us</span>
           <h2 id="about-h">Inspection isn't a promise. <em>It's a process.</em></h2>
-          <p class="lead center" style="margin-inline:auto">We tour the factories we buy from and hold direct manufacturing agreements — no trading companies, no middlemen. Every home passes three staged inspections before it ships, and you receive the photo reports as yours is built.</p>
+          <p class="lead center" style="margin-inline:auto">Direct manufacturing agreements, no middlemen — and three staged inspections on every single home. Tap a stage to see what gets checked.</p>
         </div>
-        <div class="grid grid-2 reveal" style="margin-top:2.5rem">
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/factory-yard.webp" alt="A Model 0206 expanded for inspection in the manufacturer's yard" loading="lazy"></figure>
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/black-factory-2.webp" alt="Model 0206 fully expanded on the factory floor during pre-shipment inspection" loading="lazy"></figure>
+        <div class="inspect reveal" data-stages style="margin-top:2.5rem">
+          <div class="inspect-tabs" role="tablist" aria-label="Inspection stages">
+            <button class="is-active" data-stage-btn role="tab" aria-selected="true"><span class="n">1</span> Frame stage</button>
+            <button data-stage-btn role="tab" aria-selected="false"><span class="n">2</span> Fit-out stage</button>
+            <button data-stage-btn role="tab" aria-selected="false"><span class="n">3</span> Pre-shipment</button>
+          </div>
+          <div class="inspect-panels">
+            <div class="inspect-panel is-active" data-stage-panel>
+              <div>
+                <h3>Before the walls close in</h3>
+                <ul class="checklist">
+                  <li>${icons.check}<span>Steel welds, frame geometry and chassis levelling points</span></li>
+                  <li>${icons.check}<span>Hinge and wing-locking mechanisms cycled and checked</span></li>
+                  <li>${icons.check}<span>Anti-corrosion coating coverage</span></li>
+                  <li>${icons.check}<span>Photo report #1 sent to you</span></li>
+                </ul>
+              </div>
+              <figure><img src="assets/photos/factory-yard.webp" alt="A Model 0206 expanded for inspection in the manufacturer's yard" loading="lazy"></figure>
+            </div>
+            <div class="inspect-panel" data-stage-panel>
+              <div>
+                <h3>Midway through fit-out</h3>
+                <ul class="checklist">
+                  <li>${icons.check}<span>Waterproofing and wet-area seals tested</span></li>
+                  <li>${icons.check}<span>Electrical checked to Australian 240V standard</span></li>
+                  <li>${icons.check}<span>Plumbing pressure-tested, insulation and panel joins verified</span></li>
+                  <li>${icons.check}<span>Photo report #2 sent to you</span></li>
+                </ul>
+              </div>
+              <figure><img src="assets/photos/interior-hall.webp" alt="Fitted interior of the Model 0206 with kitchen and bedroom doors" loading="lazy"></figure>
+            </div>
+            <div class="inspect-panel" data-stage-panel>
+              <div>
+                <h3>Before it ships</h3>
+                <ul class="checklist">
+                  <li>${icons.check}<span>Full-home QC — wings expanded and cycled, glazing and seals checked</span></li>
+                  <li>${icons.check}<span>Kitchen, bathroom and electrical operation verified</span></li>
+                  <li>${icons.check}<span>Folded, sealed and secured with humidity protection</span></li>
+                  <li>${icons.check}<span>Photo report #3 sent to you — then it sails</span></li>
+                </ul>
+              </div>
+              <figure><img src="assets/photos/black-factory-2.webp" alt="Model 0206 fully expanded on the factory floor during pre-shipment inspection" loading="lazy"></figure>
+            </div>
+          </div>
         </div>
         <div class="grid grid-3" style="margin-top:2.5rem">
           <div class="card reveal">
