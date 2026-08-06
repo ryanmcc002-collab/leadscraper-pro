@@ -3,6 +3,8 @@ import { SITE, icons, layout, breadcrumbs, breadcrumbSchema, ctaBanner } from ".
 const ARTICLES = [
   {
     slug: "how-much-does-a-tiny-home-cost",
+    photo: "white-front.webp",
+    photoAlt: "Model 0206 Classic White expandable home fully expanded at the factory",
     tag: "Pricing",
     date: "2026-06-10",
     minutes: 8,
@@ -48,6 +50,8 @@ const ARTICLES = [
   },
   {
     slug: "do-tiny-homes-need-council-approval",
+    photo: "black-factory-2.webp",
+    photoAlt: "Model 0206 expanded on the factory floor during pre-shipment inspection",
     tag: "Approvals",
     date: "2026-05-22",
     minutes: 9,
@@ -89,6 +93,8 @@ const ARTICLES = [
   },
   {
     slug: "can-i-put-a-tiny-home-in-my-backyard",
+    photo: "hero-backyard.webp",
+    photoAlt: "Model 0206 Black Edition installed in a landscaped Australian backyard",
     tag: "Approvals",
     date: "2026-04-18",
     minutes: 7,
@@ -122,6 +128,8 @@ const ARTICLES = [
   },
   {
     slug: "tiny-homes-vs-granny-flats",
+    photo: "interior-dining-wide.webp",
+    photoAlt: "Dining area inside the Model 0206 two-bedroom expandable home",
     tag: "Comparisons",
     date: "2026-03-30",
     minutes: 7,
@@ -163,6 +171,8 @@ const ARTICLES = [
   },
   {
     slug: "best-tiny-homes-for-airbnb",
+    photo: "black-backyard-angle.webp",
+    photoAlt: "Model 0206 Black Edition with timber-look cladding, styled for guests",
     tag: "Investment",
     date: "2026-03-05",
     minutes: 8,
@@ -206,6 +216,8 @@ const ARTICLES = [
   },
   {
     slug: "expandable-homes-explained",
+    photo: "white-folded.webp",
+    photoAlt: "Model 0206 folded to 2.5m road width for transport",
     tag: "Education",
     date: "2026-02-12",
     minutes: 6,
@@ -262,14 +274,17 @@ function articlePage(a) {
       </div>
     </section>
     <section class="section section-white">
-      <div class="wrap-narrow prose reveal">${a.content}
+      <div class="wrap-narrow">
+        <figure class="media-frame article-hero reveal" style="margin:0 0 2.5rem"><img src="assets/photos/${a.photo}" alt="${a.photoAlt}" fetchpriority="high"></figure>
+        <div class="prose reveal">${a.content}
+        </div>
       </div>
     </section>
     <section class="section" aria-labelledby="rel-h">
       <div class="wrap">
         <h2 id="rel-h" class="center reveal" style="font-size:var(--fs-700)">Keep reading</h2>
         <div class="grid grid-3" style="margin-top:2rem">
-          ${related.map((r) => `<a class="card blog-card reveal" href="blog-${r.slug}.html"><span class="tag">${r.tag}</span><h3>${r.title}</h3><p>${r.excerpt}</p><span class="card-link">Read article ${icons.arrow}</span></a>`).join("\n          ")}
+          ${related.map((r) => `<a class="card blog-card reveal" href="blog-${r.slug}.html"><div class="card-media"><img src="assets/photos/${r.photo}" alt="" loading="lazy"></div><span class="tag">${r.tag}</span><h3>${r.title}</h3><p>${r.excerpt}</p><span class="card-link">Read article ${icons.arrow}</span></a>`).join("\n          ")}
         </div>
       </div>
     </section>
@@ -291,6 +306,7 @@ function articlePage(a) {
           "@id": `${SITE.url}/${path}#article`,
           headline: a.title,
           description: a.description,
+          image: `${SITE.url}/assets/photos/${a.photo}`,
           datePublished: a.date,
           dateModified: a.date,
           author: { "@type": "Organization", name: SITE.name },
@@ -316,6 +332,7 @@ const indexBody = `
         <div class="grid grid-3">
           ${ARTICLES.map((a, i) => `
           <a class="card blog-card reveal reveal-d${i % 3}" href="blog-${a.slug}.html">
+            <div class="card-media"><img src="assets/photos/${a.photo}" alt="${a.photoAlt}" loading="lazy"></div>
             <span class="tag">${a.tag}</span>
             <h3>${a.title}</h3>
             <p>${a.excerpt}</p>

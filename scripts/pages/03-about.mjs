@@ -17,6 +17,8 @@ const body = `
         <p>The product concept was brilliant. The industry around it wasn't. So we built the company we'd wanted to buy from.</p>
         <h2>Factory relationships, not factory listings</h2>
         <p>We went to the source ourselves. We tour the factories we buy from in person, and we only hold direct manufacturing agreements with factories that build to our written specification — steel grade, insulation, glazing, waterproofing and Australian electrical compliance. No trading companies, no middlemen, no mystery about where your home comes from.</p>
+        <figure class="media-frame" style="margin:2rem 0 0"><img src="assets/photos/factory-yard.webp" alt="A Model 0206 expanded for inspection in the manufacturer's yard" loading="lazy"></figure>
+        <p class="muted" style="font-size:var(--fs-300);margin-top:0.75rem">On the ground at our manufacturing partner's yard.</p>
         <h2>Inspection isn't a promise. It's a process.</h2>
         <p>Every single home passes three staged quality inspections — frame stage, fit-out stage and pre-shipment — carried out at the factory by independent inspectors. You receive the photo reports as your home is built. If a stage fails, it's rectified before the next begins.</p>
         <figure class="media-frame" style="margin:2rem 0 0"><img src="assets/photos/black-factory-2.webp" alt="Model 0206 fully expanded on the factory floor during inspection" loading="lazy"></figure>

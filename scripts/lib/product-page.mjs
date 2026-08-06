@@ -148,7 +148,11 @@ export function productPage(p) {
             </tbody>
           </table>
         </div>
-        <div class="media-frame reveal reveal-d1" style="background:#fff"><img src="assets/img/floorplan-${p.slug}.svg" alt="Indicative floor plan of the ${p.name}" loading="lazy" width="1000" height="560"></div>
+        <div class="reveal reveal-d1">
+          <div class="media-frame" style="background:#fff"><img src="assets/img/floorplan-${p.slug}.svg" alt="Indicative floor plan of the ${p.name}" loading="lazy" width="1000" height="560"></div>
+          <figure class="media-frame" style="margin:1rem 0 0"><img src="assets/photos/interior-hall.webp" alt="Looking across the kitchen to both bedroom doors inside the Model 0206" loading="lazy" style="aspect-ratio:16/10;object-fit:cover;object-position:50% 60%"></figure>
+          <p class="muted" style="font-size:var(--fs-300);margin-top:0.75rem">The layout as built — kitchen at the centre, a bedroom at each end.</p>
+        </div>
       </div>
     </section>
 

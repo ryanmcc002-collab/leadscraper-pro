@@ -45,13 +45,15 @@ const body = `
       </div>
     </section>
 
-    <section class="section section-white" aria-label="Expanded interior">
-      <div class="wrap two-col">
-        <figure class="media-frame reveal" style="margin:0"><img src="assets/photos/interior-empty.webp" alt="Inside the Model 0206 with both wings expanded, before fit-out" loading="lazy"></figure>
-        <div class="reveal reveal-d1">
-          <span class="eyebrow">The result</span>
-          <h2>Real rooms. Real ceilings.</h2>
-          <p class="lead">Both wings deployed — one continuous space with full-height ceilings and timber-look floors, ready for walls and fit-out. Not a caravan interior.</p>
+    <section class="section section-white" aria-label="Before and after expansion">
+      <div class="wrap">
+        <div class="center reveal">
+          <span class="eyebrow eyebrow-center">The result</span>
+          <h2>Arrives folded. <em>Opens into real rooms.</em></h2>
+        </div>
+        <div class="grid grid-2 before-after reveal" style="margin-top:2.5rem">
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/white-folded.webp" alt="Model 0206 folded to 2.5m road width for transport" loading="lazy"><figcaption>On the truck — folded to 2.5m</figcaption></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-empty.webp" alt="Inside the Model 0206 with both wings expanded — full-height ceilings and timber-look floors" loading="lazy"><figcaption>On site — full-height ceilings, real rooms</figcaption></figure>
         </div>
       </div>
     </section>
