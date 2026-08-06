@@ -1,30 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Modern expandable tiny home at dusk with warm interior lighting">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0E2440"/>
-      <stop offset="0.55" stop-color="#1B3A5F"/>
-      <stop offset="1" stop-color="#3E5E7E"/>
+      <stop offset="0" stop-color="#2C3520"/>
+      <stop offset="0.55" stop-color="#43512F"/>
+      <stop offset="1" stop-color="#75825A"/>
     </linearGradient>
     <radialGradient id="glow" cx="0.72" cy="0.38" r="0.55">
-      <stop offset="0" stop-color="#D6AF5E" stop-opacity="0.55"/>
-      <stop offset="0.5" stop-color="#D6AF5E" stop-opacity="0.15"/>
-      <stop offset="1" stop-color="#D6AF5E" stop-opacity="0"/>
+      <stop offset="0" stop-color="#C99B54" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#C99B54" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#C99B54" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="hill1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#122C4C"/>
-      <stop offset="1" stop-color="#0B1E36"/>
+      <stop offset="0" stop-color="#3A4629"/>
+      <stop offset="1" stop-color="#2A331F"/>
     </linearGradient>
     <linearGradient id="hill2" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#183A60"/>
-      <stop offset="1" stop-color="#102A48"/>
+      <stop offset="0" stop-color="#465433"/>
+      <stop offset="1" stop-color="#333E26"/>
     </linearGradient>
     <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#233F60"/>
-      <stop offset="1" stop-color="#16304F"/>
+      <stop offset="0" stop-color="#4C5B3B"/>
+      <stop offset="1" stop-color="#3A4730"/>
     </linearGradient>
     <linearGradient id="warm" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#F5D488"/>
-      <stop offset="1" stop-color="#D6AF5E"/>
+      <stop offset="0" stop-color="#E8CD91"/>
+      <stop offset="1" stop-color="#C99B54"/>
     </linearGradient>
     <linearGradient id="deck" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#8A6B36"/>
@@ -34,10 +34,10 @@
 
   <rect width="1200" height="900" fill="url(#sky)"/>
   <rect width="1200" height="900" fill="url(#glow)"/>
-  <circle cx="860" cy="340" r="46" fill="#F0CE84" opacity="0.9"/>
-  <circle cx="860" cy="340" r="70" fill="#F0CE84" opacity="0.18"/>
+  <circle cx="860" cy="340" r="46" fill="#E5C687" opacity="0.9"/>
+  <circle cx="860" cy="340" r="70" fill="#E5C687" opacity="0.18"/>
 
-  <g fill="#E8EEF5" opacity="0.7">
+  <g fill="#F0F2E6" opacity="0.7">
     <circle cx="140" cy="120" r="2"/><circle cx="320" cy="80" r="1.6"/><circle cx="520" cy="150" r="1.8"/>
     <circle cx="700" cy="90" r="1.4"/><circle cx="1030" cy="130" r="2"/><circle cx="1120" cy="240" r="1.5"/>
     <circle cx="240" cy="230" r="1.4"/><circle cx="960" cy="70" r="1.7"/><circle cx="60" cy="320" r="1.6"/>
@@ -48,11 +48,11 @@
 
   <!-- gum tree -->
   <g opacity="0.9">
-    <path d="M150 640 C 148 560 156 520 150 470" stroke="#0A1B30" stroke-width="10" fill="none" stroke-linecap="round"/>
-    <path d="M150 520 C 120 500 105 470 108 445" stroke="#0A1B30" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <ellipse cx="150" cy="445" rx="64" ry="40" fill="#0E2440"/>
-    <ellipse cx="102" cy="428" rx="42" ry="28" fill="#122C4C"/>
-    <ellipse cx="196" cy="425" rx="46" ry="30" fill="#122C4C"/>
+    <path d="M150 640 C 148 560 156 520 150 470" stroke="#262E1B" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M150 520 C 120 500 105 470 108 445" stroke="#262E1B" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="150" cy="445" rx="64" ry="40" fill="#2C3520"/>
+    <ellipse cx="102" cy="428" rx="42" ry="28" fill="#3A4629"/>
+    <ellipse cx="196" cy="425" rx="46" ry="30" fill="#3A4629"/>
   </g>
 
   <!-- tiny home -->
@@ -64,23 +64,23 @@
     <rect x="630" y="716" width="10" height="34" fill="#3E3118"/>
 
     <!-- roof -->
-    <path d="M310 520 L 640 480 L 970 520 L 970 538 L 310 538 Z" fill="#0A1B30"/>
-    <rect x="700" y="440" width="16" height="60" rx="3" fill="#0A1B30"/>
+    <path d="M310 520 L 640 480 L 970 520 L 970 538 L 310 538 Z" fill="#262E1B"/>
+    <rect x="700" y="440" width="16" height="60" rx="3" fill="#262E1B"/>
 
     <!-- main body -->
     <rect x="330" y="536" width="620" height="166" rx="8" fill="url(#wall)"/>
 
     <!-- expanded wing (left) -->
-    <rect x="330" y="548" width="180" height="154" rx="6" fill="#1C3A5E"/>
+    <rect x="330" y="548" width="180" height="154" rx="6" fill="#455436"/>
     <rect x="352" y="572" width="136" height="90" rx="5" fill="url(#warm)" opacity="0.95"/>
-    <g stroke="#0F2743" stroke-width="5">
+    <g stroke="#2E3722" stroke-width="5">
       <line x1="420" y1="572" x2="420" y2="662"/>
       <line x1="352" y1="617" x2="488" y2="617"/>
     </g>
 
     <!-- glass wall centre -->
     <rect x="530" y="556" width="250" height="146" rx="5" fill="url(#warm)"/>
-    <g stroke="#0F2743" stroke-width="6">
+    <g stroke="#2E3722" stroke-width="6">
       <line x1="613" y1="556" x2="613" y2="702"/>
       <line x1="697" y1="556" x2="697" y2="702"/>
     </g>
@@ -92,12 +92,12 @@
     </g>
 
     <!-- right wing -->
-    <rect x="800" y="548" width="150" height="154" rx="6" fill="#1C3A5E"/>
+    <rect x="800" y="548" width="150" height="154" rx="6" fill="#455436"/>
     <rect x="820" y="572" width="110" height="70" rx="5" fill="url(#warm)" opacity="0.9"/>
-    <line x1="875" y1="572" x2="875" y2="642" stroke="#0F2743" stroke-width="5"/>
+    <line x1="875" y1="572" x2="875" y2="642" stroke="#2E3722" stroke-width="5"/>
 
     <!-- cladding lines -->
-    <g stroke="#10294A" stroke-width="2" opacity="0.7">
+    <g stroke="#313B24" stroke-width="2" opacity="0.7">
       <line x1="330" y1="690" x2="950" y2="690"/>
     </g>
 
@@ -106,8 +106,8 @@
   </g>
 
   <!-- foreground grass -->
-  <path d="M0 760 Q 300 730 640 755 T 1200 745 V 900 H 0 Z" fill="#0A1A2E"/>
-  <g stroke="#122C4C" stroke-width="3" stroke-linecap="round" opacity="0.8">
+  <path d="M0 760 Q 300 730 640 755 T 1200 745 V 900 H 0 Z" fill="#232B19"/>
+  <g stroke="#3A4629" stroke-width="3" stroke-linecap="round" opacity="0.8">
     <path d="M120 780 q 4 -18 -2 -30"/>
     <path d="M136 784 q 6 -16 2 -26"/>
     <path d="M1050 790 q 4 -18 -2 -30"/>

@@ -44,7 +44,7 @@ To change site-wide details (phone, email, domain), edit `SITE` in `scripts/lib/
 
 ## Design system
 
-- **Palette**: Deep Navy `#0D233F`, Warm Gold `#D6AF5E`, Light Grey `#F7F8FA`, White.
+- **Palette** (from the Go Tiny Homes logo): Forest Green `#333D26` (logo green `#4C5B3B` for mid-tones), Wombat Tan `#C99B54`, Warm Paper `#F7F7F1`, White. The mascot artwork itself should be added as an image asset when you have the master file.
 - **Type**: Manrope (Google Fonts) with fluid `clamp()` scale.
 - **Motion**: IntersectionObserver reveal animations, gated behind an `html.js` class so no-JS users and crawlers always see full content; `prefers-reduced-motion` respected.
 - **Accessibility**: skip link, semantic landmarks, focus-visible styles, ARIA labels on interactive controls, keyboard-operable accordions (`<details>`), colour-contrast-checked palette.

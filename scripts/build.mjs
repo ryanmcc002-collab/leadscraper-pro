@@ -47,7 +47,7 @@ for (const p of products) {
 /* Favicon */
 await out(
   "assets/img/favicon.svg",
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><rect width="44" height="44" rx="10" fill="#0D233F"/><path d="M9 24.5L22 13l13 11.5" stroke="#D6AF5E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13 22.5V32h18v-9.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><rect width="44" height="44" rx="10" fill="#333D26"/><path d="M9 24.5L22 13l13 11.5" stroke="#C99B54" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13 22.5V32h18v-9.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
 );
 
 /* ------------------------------ Product pages ---------------------------- */

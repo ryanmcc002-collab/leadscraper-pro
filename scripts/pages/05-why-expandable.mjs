@@ -31,13 +31,13 @@ const body = `
         <div class="expand-demo reveal" data-expand-demo style="margin-top:2.5rem">
           <div class="stage">
             <svg class="expand-home" viewBox="0 0 560 240" aria-hidden="true">
-              <g class="wing wing-l"><rect x="150" y="70" width="130" height="130" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/><rect x="170" y="95" width="90" height="60" rx="5" fill="#D6AF5E" opacity="0.9"/></g>
-              <g class="wing wing-r"><rect x="280" y="70" width="130" height="130" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/><rect x="300" y="95" width="90" height="60" rx="5" fill="#D6AF5E" opacity="0.9"/></g>
-              <rect x="190" y="60" width="180" height="140" rx="8" fill="#16304F" stroke="#3E5E7E" stroke-width="2"/>
-              <rect x="215" y="85" width="130" height="90" rx="5" fill="#F5D488"/>
-              <line x1="258" y1="85" x2="258" y2="175" stroke="#0F2743" stroke-width="5"/>
-              <line x1="301" y1="85" x2="301" y2="175" stroke="#0F2743" stroke-width="5"/>
-              <path d="M170 60 L 280 28 L 390 60" stroke="#0A1B30" stroke-width="14" fill="none" stroke-linecap="round"/>
+              <g class="wing wing-l"><rect x="150" y="70" width="130" height="130" rx="8" fill="#455436" stroke="#5C6B49" stroke-width="2"/><rect x="170" y="95" width="90" height="60" rx="5" fill="#C99B54" opacity="0.9"/></g>
+              <g class="wing wing-r"><rect x="280" y="70" width="130" height="130" rx="8" fill="#455436" stroke="#5C6B49" stroke-width="2"/><rect x="300" y="95" width="90" height="60" rx="5" fill="#C99B54" opacity="0.9"/></g>
+              <rect x="190" y="60" width="180" height="140" rx="8" fill="#3A4730" stroke="#75825A" stroke-width="2"/>
+              <rect x="215" y="85" width="130" height="90" rx="5" fill="#E8CD91"/>
+              <line x1="258" y1="85" x2="258" y2="175" stroke="#2E3722" stroke-width="5"/>
+              <line x1="301" y1="85" x2="301" y2="175" stroke="#2E3722" stroke-width="5"/>
+              <path d="M170 60 L 280 28 L 390 60" stroke="#262E1B" stroke-width="14" fill="none" stroke-linecap="round"/>
             </svg>
             <div class="center"><button class="btn btn-gold expand-toggle" type="button" aria-pressed="false">Expand on site</button></div>
           </div>

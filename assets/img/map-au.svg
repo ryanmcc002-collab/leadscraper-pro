@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" role="img" aria-label="Map of Australia showing Bondi Tiny Homes delivery coverage to every state and territory">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" role="img" aria-label="Map of Australia showing Go Tiny Homes delivery coverage to every state and territory">
   <defs>
     <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1A3A5C"/>
-      <stop offset="1" stop-color="#12304F"/>
+      <stop offset="0" stop-color="#4A5939"/>
+      <stop offset="1" stop-color="#3D4A2E"/>
     </linearGradient>
     <radialGradient id="pulse" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#D6AF5E" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#D6AF5E" stop-opacity="0"/>
+      <stop offset="0" stop-color="#C99B54" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#C99B54" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
@@ -29,14 +29,14 @@
            C 96 316 112 270 148 242
            C 158 198 190 162 232 148
            C 246 118 268 104 292 96 Z"
-        fill="url(#land)" stroke="#2A4A6E" stroke-width="3"/>
+        fill="url(#land)" stroke="#5A684A" stroke-width="3"/>
 
   <!-- tasmania -->
   <path d="M 560 668 C 580 656 606 658 620 672 C 630 690 622 708 604 714 C 584 720 564 710 558 692 C 554 682 554 674 560 668 Z"
-        fill="url(#land)" stroke="#2A4A6E" stroke-width="3"/>
+        fill="url(#land)" stroke="#5A684A" stroke-width="3"/>
 
   <!-- routes from factory port hub -->
-  <g stroke="#D6AF5E" stroke-width="2" stroke-dasharray="2 7" fill="none" opacity="0.75" stroke-linecap="round">
+  <g stroke="#C99B54" stroke-width="2" stroke-dasharray="2 7" fill="none" opacity="0.75" stroke-linecap="round">
     <path d="M 660 400 Q 600 480 560 520"/>
     <path d="M 660 400 Q 680 300 664 232"/>
     <path d="M 660 400 Q 500 470 452 520"/>
@@ -46,37 +46,37 @@
   </g>
 
   <!-- city nodes -->
-  <g font-family="Manrope, Arial, sans-serif" font-size="21" font-weight="700" fill="#E7ECF2">
+  <g font-family="Manrope, Arial, sans-serif" font-size="21" font-weight="700" fill="#E8EBDF">
     <g>
-      <circle cx="664" cy="232" r="20" fill="url(#pulse)"/><circle cx="664" cy="232" r="6" fill="#D6AF5E"/>
+      <circle cx="664" cy="232" r="20" fill="url(#pulse)"/><circle cx="664" cy="232" r="6" fill="#C99B54"/>
       <text x="640" y="208">Darwin</text>
     </g>
     <g>
-      <circle cx="700" cy="330" r="20" fill="url(#pulse)"/><circle cx="700" cy="330" r="6" fill="#D6AF5E"/>
+      <circle cx="700" cy="330" r="20" fill="url(#pulse)"/><circle cx="700" cy="330" r="6" fill="#C99B54"/>
       <text x="716" y="336">Brisbane</text>
     </g>
     <g>
-      <circle cx="660" cy="400" r="26" fill="url(#pulse)"/><circle cx="660" cy="400" r="8" fill="#D6AF5E"/>
+      <circle cx="660" cy="400" r="26" fill="url(#pulse)"/><circle cx="660" cy="400" r="8" fill="#C99B54"/>
       <text x="678" y="408">Sydney</text>
     </g>
     <g>
-      <circle cx="560" cy="520" r="20" fill="url(#pulse)"/><circle cx="560" cy="520" r="6" fill="#D6AF5E"/>
+      <circle cx="560" cy="520" r="20" fill="url(#pulse)"/><circle cx="560" cy="520" r="6" fill="#C99B54"/>
       <text x="500" y="556">Melbourne</text>
     </g>
     <g>
-      <circle cx="452" cy="520" r="20" fill="url(#pulse)"/><circle cx="452" cy="520" r="6" fill="#D6AF5E"/>
+      <circle cx="452" cy="520" r="20" fill="url(#pulse)"/><circle cx="452" cy="520" r="6" fill="#C99B54"/>
       <text x="380" y="500">Adelaide</text>
     </g>
     <g>
-      <circle cx="210" cy="452" r="20" fill="url(#pulse)"/><circle cx="210" cy="452" r="6" fill="#D6AF5E"/>
+      <circle cx="210" cy="452" r="20" fill="url(#pulse)"/><circle cx="210" cy="452" r="6" fill="#C99B54"/>
       <text x="150" y="428">Perth</text>
     </g>
     <g>
-      <circle cx="350" cy="200" r="14" fill="url(#pulse)"/><circle cx="350" cy="200" r="5" fill="#D6AF5E"/>
+      <circle cx="350" cy="200" r="14" fill="url(#pulse)"/><circle cx="350" cy="200" r="5" fill="#C99B54"/>
       <text x="300" y="176">Broome</text>
     </g>
     <g>
-      <circle cx="596" cy="682" r="16" fill="url(#pulse)"/><circle cx="596" cy="682" r="5" fill="#D6AF5E"/>
+      <circle cx="596" cy="682" r="16" fill="url(#pulse)"/><circle cx="596" cy="682" r="5" fill="#C99B54"/>
       <text x="620" y="700">Hobart</text>
     </g>
   </g>

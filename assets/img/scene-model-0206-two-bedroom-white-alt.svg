@@ -9,13 +9,13 @@
     <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D3A38"/><stop offset="1" stop-color="#12292A"/></linearGradient>
     <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A4A44"/><stop offset="1" stop-color="#1D3A38"/></linearGradient>
     <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A4C48"/><stop offset="1" stop-color="#263835"/></linearGradient>
-    <linearGradient id="warm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5D488"/><stop offset="1" stop-color="#D6AF5E"/></linearGradient>
+    <linearGradient id="warm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8CD91"/><stop offset="1" stop-color="#C99B54"/></linearGradient>
   </defs>
   <rect width="1200" height="800" fill="url(#sky)"/>
   <rect width="1200" height="800" fill="url(#glow)"/>
-  <circle cx="880" cy="180" r="42" fill="#F0CE84" opacity="0.9"/>
-  <circle cx="880" cy="180" r="66" fill="#F0CE84" opacity="0.16"/>
-  <g fill="#E8EEF5" opacity="0.65">
+  <circle cx="880" cy="180" r="42" fill="#E5C687" opacity="0.9"/>
+  <circle cx="880" cy="180" r="66" fill="#E5C687" opacity="0.16"/>
+  <g fill="#F0F2E6" opacity="0.65">
         <circle cx="150" cy="110" r="2"/><circle cx="340" cy="70" r="1.6"/><circle cx="540" cy="140" r="1.8"/>
         <circle cx="720" cy="80" r="1.4"/><circle cx="1040" cy="120" r="2"/><circle cx="1130" cy="230" r="1.5"/>
         <circle cx="250" cy="220" r="1.4"/><circle cx="950" cy="60" r="1.7"/>

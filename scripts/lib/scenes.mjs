@@ -2,17 +2,17 @@
 
 const PALETTES = {
   dusk: {
-    sky: ["#0E2440", "#1B3A5F", "#3E5E7E"],
-    glow: "#D6AF5E",
-    hill1: ["#122C4C", "#0B1E36"],
-    hill2: ["#183A60", "#102A48"],
-    ground: "#0A1A2E",
-    wall: ["#233F60", "#16304F"],
-    wing: "#1C3A5E",
-    roof: "#0A1B30",
-    warm: ["#F5D488", "#D6AF5E"],
-    mullion: "#0F2743",
-    sun: "#F0CE84",
+    sky: ["#2C3520", "#43512F", "#75825A"],
+    glow: "#C99B54",
+    hill1: ["#3A4629", "#2A331F"],
+    hill2: ["#465433", "#333E26"],
+    ground: "#232B19",
+    wall: ["#4C5B3B", "#3A4730"],
+    wing: "#455436",
+    roof: "#262E1B",
+    warm: ["#E8CD91", "#C99B54"],
+    mullion: "#2E3722",
+    sun: "#E5C687",
     sunY: 200,
     stars: true,
   },
@@ -40,9 +40,9 @@ const PALETTES = {
     wall: ["#3A4C48", "#263835"],
     wing: "#2F413D",
     roof: "#0F1E1C",
-    warm: ["#F5D488", "#D6AF5E"],
+    warm: ["#E8CD91", "#C99B54"],
     mullion: "#16302E",
-    sun: "#F0CE84",
+    sun: "#E5C687",
     sunY: 180,
     stars: true,
   },
@@ -60,7 +60,7 @@ export function sceneSvg({ palette = "dusk", homeWidth = 620, label }) {
   const glassX = cx - glassW / 2;
   const wingW = Math.max(90, (hw - glassW) / 2 - 30);
   const stars = p.stars
-    ? `<g fill="#E8EEF5" opacity="0.65">
+    ? `<g fill="#F0F2E6" opacity="0.65">
         <circle cx="150" cy="110" r="2"/><circle cx="340" cy="70" r="1.6"/><circle cx="540" cy="140" r="1.8"/>
         <circle cx="720" cy="80" r="1.4"/><circle cx="1040" cy="120" r="2"/><circle cx="1130" cy="230" r="1.5"/>
         <circle cx="250" cy="220" r="1.4"/><circle cx="950" cy="60" r="1.7"/>
@@ -124,22 +124,22 @@ export function floorplanSvg({ rooms, subtitle, label }) {
       const maxFs = h < 130 ? 19 : 22;
       const fs = Math.max(13, Math.min(maxFs, Math.floor((w - 18) / (r.label.length * 0.58))));
       return `<g>
-      <rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="6" fill="#F7F8FA" stroke="#C6D0DC" stroke-width="2"/>
-      <text x="${x + w / 2}" y="${y + h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="${fs}" font-weight="700" fill="#0D233F">${r.label}</text>
+      <rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="6" fill="#F7F7F1" stroke="#C3CAB2" stroke-width="2"/>
+      <text x="${x + w / 2}" y="${y + h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="${fs}" font-weight="700" fill="#333D26">${r.label}</text>
     </g>`;
     })
     .join("\n  ");
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" font-family="Manrope, Arial, sans-serif">
   <rect width="${W}" height="${H}" fill="#FFFFFF"/>
-  <text x="${M}" y="60" font-size="26" font-weight="800" fill="#0D233F">Floor Plan</text>
-  <text x="${M}" y="88" font-size="17" fill="#5B6B7E">${subtitle}</text>
-  <rect x="${M - 10}" y="${planY - 10}" width="${planW + 20}" height="${planH + 20}" rx="12" fill="#0D233F"/>
+  <text x="${M}" y="60" font-size="26" font-weight="800" fill="#333D26">Floor Plan</text>
+  <text x="${M}" y="88" font-size="17" fill="#6A7259">${subtitle}</text>
+  <rect x="${M - 10}" y="${planY - 10}" width="${planW + 20}" height="${planH + 20}" rx="12" fill="#333D26"/>
   ${roomRects}
-  <g stroke="#D6AF5E" stroke-width="2.5" stroke-dasharray="8 6" fill="none">
+  <g stroke="#C99B54" stroke-width="2.5" stroke-dasharray="8 6" fill="none">
     <rect x="${M + planW * 0.18}" y="${planY - 26}" width="${planW * 0.64}" height="${planH + 52}" rx="10"/>
   </g>
-  <text x="${M + planW / 2}" y="${planY + planH + 62}" text-anchor="middle" font-size="16" font-weight="700" fill="#C29A45">— — transport core (wings fold in for delivery) — —</text>
-  <g font-size="15" fill="#5B6B7E">
+  <text x="${M + planW / 2}" y="${planY + planH + 62}" text-anchor="middle" font-size="16" font-weight="700" fill="#A97F3B">— — transport core (wings fold in for delivery) — —</text>
+  <g font-size="15" fill="#6A7259">
     <text x="${W - M}" y="60" text-anchor="end" font-weight="700">Indicative layout</text>
     <text x="${W - M}" y="82" text-anchor="end">Final dimensions confirmed on order</text>
   </g>

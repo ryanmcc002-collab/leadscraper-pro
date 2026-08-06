@@ -258,7 +258,7 @@ function articlePage(a) {
         ${breadcrumbs([["Home", "index.html"], ["Blog", "blog.html"], [a.tag, path]])}
         <span class="eyebrow">${a.tag}</span>
         <h1 style="max-width:26ch">${a.title}</h1>
-        <div class="post-meta" style="color:#93A5BB"><span>Go Tiny Homes Editorial</span><span>Updated ${new Date(a.date + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}</span><span>${a.minutes} min read</span></div>
+        <div class="post-meta" style="color:#A8B294"><span>Go Tiny Homes Editorial</span><span>Updated ${new Date(a.date + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}</span><span>${a.minutes} min read</span></div>
       </div>
     </section>
     <section class="section section-white">

@@ -55,22 +55,22 @@ const body = `
         <svg viewBox="0 0 1600 880" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Animated story of a Go Tiny Homes delivery: a truck arrives carrying the folded home, sets it down, and the home unfolds into a full two-bedroom house with lit windows">
           <defs>
             <linearGradient id="cn-sky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#0E2440"/><stop offset="0.55" stop-color="#1B3A5F"/><stop offset="1" stop-color="#3E5E7E"/>
+              <stop offset="0" stop-color="#2C3520"/><stop offset="0.55" stop-color="#43512F"/><stop offset="1" stop-color="#75825A"/>
             </linearGradient>
             <radialGradient id="cn-glow" cx="0.78" cy="0.24" r="0.5">
-              <stop offset="0" stop-color="#D6AF5E" stop-opacity="0.38"/><stop offset="1" stop-color="#D6AF5E" stop-opacity="0"/>
+              <stop offset="0" stop-color="#C99B54" stop-opacity="0.38"/><stop offset="1" stop-color="#C99B54" stop-opacity="0"/>
             </radialGradient>
-            <linearGradient id="cn-h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#122C4C"/><stop offset="1" stop-color="#0B1E36"/></linearGradient>
-            <linearGradient id="cn-h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#183A60"/><stop offset="1" stop-color="#102A48"/></linearGradient>
-            <linearGradient id="cn-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#233F60"/><stop offset="1" stop-color="#16304F"/></linearGradient>
-            <linearGradient id="cn-warm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5D488"/><stop offset="1" stop-color="#D6AF5E"/></linearGradient>
+            <linearGradient id="cn-h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A4629"/><stop offset="1" stop-color="#2A331F"/></linearGradient>
+            <linearGradient id="cn-h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#465433"/><stop offset="1" stop-color="#333E26"/></linearGradient>
+            <linearGradient id="cn-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4C5B3B"/><stop offset="1" stop-color="#3A4730"/></linearGradient>
+            <linearGradient id="cn-warm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8CD91"/><stop offset="1" stop-color="#C99B54"/></linearGradient>
           </defs>
 
           <rect width="1600" height="880" fill="url(#cn-sky)"/>
           <rect width="1600" height="880" fill="url(#cn-glow)"/>
-          <circle cx="1265" cy="300" r="46" fill="#F0CE84" opacity="0.9"/>
-          <circle cx="1265" cy="300" r="72" fill="#F0CE84" opacity="0.15"/>
-          <g fill="#E8EEF5">
+          <circle cx="1265" cy="300" r="46" fill="#E5C687" opacity="0.9"/>
+          <circle cx="1265" cy="300" r="72" fill="#E5C687" opacity="0.15"/>
+          <g fill="#F0F2E6">
             <circle class="tw" cx="160" cy="120" r="2.2"/><circle class="tw2" cx="360" cy="330" r="1.7"/><circle class="tw3" cx="560" cy="150" r="1.9"/>
             <circle class="tw2" cx="760" cy="85" r="1.5"/><circle class="tw" cx="1030" cy="105" r="2"/><circle class="tw3" cx="1480" cy="240" r="1.6"/>
             <circle class="tw3" cx="255" cy="235" r="1.5"/><circle class="tw" cx="960" cy="305" r="1.8"/><circle class="tw2" cx="1400" cy="352" r="2"/>
@@ -81,35 +81,35 @@ const body = `
 
           <!-- gum trees for depth -->
           <g opacity="0.9">
-            <path d="M170 656 C 168 566 176 522 170 470" stroke="#0A1B30" stroke-width="11" fill="none" stroke-linecap="round"/>
-            <ellipse cx="170" cy="448" rx="70" ry="42" fill="#0E2440"/>
-            <ellipse cx="118" cy="430" rx="45" ry="29" fill="#122C4C"/>
-            <ellipse cx="220" cy="426" rx="49" ry="31" fill="#122C4C"/>
+            <path d="M170 656 C 168 566 176 522 170 470" stroke="#262E1B" stroke-width="11" fill="none" stroke-linecap="round"/>
+            <ellipse cx="170" cy="448" rx="70" ry="42" fill="#2C3520"/>
+            <ellipse cx="118" cy="430" rx="45" ry="29" fill="#3A4629"/>
+            <ellipse cx="220" cy="426" rx="49" ry="31" fill="#3A4629"/>
           </g>
           <g opacity="0.85">
-            <path d="M1452 656 C 1450 580 1457 545 1452 505 " stroke="#0A1B30" stroke-width="9" fill="none" stroke-linecap="round"/>
-            <ellipse cx="1452" cy="486" rx="56" ry="34" fill="#0E2440"/>
-            <ellipse cx="1412" cy="470" rx="36" ry="23" fill="#122C4C"/>
+            <path d="M1452 656 C 1450 580 1457 545 1452 505 " stroke="#262E1B" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <ellipse cx="1452" cy="486" rx="56" ry="34" fill="#2C3520"/>
+            <ellipse cx="1412" cy="470" rx="36" ry="23" fill="#3A4629"/>
           </g>
 
           <!-- delivery truck -->
           <g class="cine-truck" transform="translate(-9999 0)">
-            <rect x="555" y="596" width="470" height="15" rx="4" fill="#0A1B30"/>
-            <rect x="1018" y="600" width="26" height="12" fill="#0A1B30"/>
-            <rect x="1036" y="520" width="100" height="116" rx="12" fill="#0A1B30"/>
-            <rect x="1052" y="536" width="58" height="36" rx="5" fill="#3E5E7E"/>
-            <rect x="1130" y="596" width="9" height="18" rx="2" fill="#F0CE84" opacity="0.85"/>
+            <rect x="555" y="596" width="470" height="15" rx="4" fill="#262E1B"/>
+            <rect x="1018" y="600" width="26" height="12" fill="#262E1B"/>
+            <rect x="1036" y="520" width="100" height="116" rx="12" fill="#262E1B"/>
+            <rect x="1052" y="536" width="58" height="36" rx="5" fill="#75825A"/>
+            <rect x="1130" y="596" width="9" height="18" rx="2" fill="#E5C687" opacity="0.85"/>
             <g class="cine-wheel" data-cx="622" data-cy="632">
-              <circle cx="622" cy="632" r="24" fill="#0A1B30" stroke="#2E4E74" stroke-width="4"/>
-              <line x1="622" y1="614" x2="622" y2="650" stroke="#2E4E74" stroke-width="4"/>
+              <circle cx="622" cy="632" r="24" fill="#262E1B" stroke="#5C6B49" stroke-width="4"/>
+              <line x1="622" y1="614" x2="622" y2="650" stroke="#5C6B49" stroke-width="4"/>
             </g>
             <g class="cine-wheel" data-cx="948" data-cy="632">
-              <circle cx="948" cy="632" r="24" fill="#0A1B30" stroke="#2E4E74" stroke-width="4"/>
-              <line x1="948" y1="614" x2="948" y2="650" stroke="#2E4E74" stroke-width="4"/>
+              <circle cx="948" cy="632" r="24" fill="#262E1B" stroke="#5C6B49" stroke-width="4"/>
+              <line x1="948" y1="614" x2="948" y2="650" stroke="#5C6B49" stroke-width="4"/>
             </g>
             <g class="cine-wheel" data-cx="1082" data-cy="632">
-              <circle cx="1082" cy="632" r="24" fill="#0A1B30" stroke="#2E4E74" stroke-width="4"/>
-              <line x1="1082" y1="614" x2="1082" y2="650" stroke="#2E4E74" stroke-width="4"/>
+              <circle cx="1082" cy="632" r="24" fill="#262E1B" stroke="#5C6B49" stroke-width="4"/>
+              <line x1="1082" y1="614" x2="1082" y2="650" stroke="#5C6B49" stroke-width="4"/>
             </g>
           </g>
 
@@ -117,27 +117,27 @@ const body = `
           <g class="cine-home">
             <rect class="cine-deck" x="505" y="640" width="590" height="13" rx="4" fill="#6B5430"/>
             <g class="cine-wing-l">
-              <rect x="530" y="450" width="175" height="190" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/>
-              <rect x="552" y="482" width="130" height="92" rx="5" fill="#16304F"/>
+              <rect x="530" y="450" width="175" height="190" rx="8" fill="#455436" stroke="#5C6B49" stroke-width="2"/>
+              <rect x="552" y="482" width="130" height="92" rx="5" fill="#3A4730"/>
               <rect class="win-lit lit-l" x="552" y="482" width="130" height="92" rx="5" fill="url(#cn-warm)" opacity="0.95"/>
-              <line x1="617" y1="482" x2="617" y2="574" stroke="#0F2743" stroke-width="5"/>
+              <line x1="617" y1="482" x2="617" y2="574" stroke="#2E3722" stroke-width="5"/>
             </g>
             <g class="cine-wing-r">
-              <rect x="895" y="450" width="175" height="190" rx="8" fill="#1C3A5E" stroke="#2E4E74" stroke-width="2"/>
-              <rect x="917" y="482" width="130" height="92" rx="5" fill="#16304F"/>
+              <rect x="895" y="450" width="175" height="190" rx="8" fill="#455436" stroke="#5C6B49" stroke-width="2"/>
+              <rect x="917" y="482" width="130" height="92" rx="5" fill="#3A4730"/>
               <rect class="win-lit lit-r" x="917" y="482" width="130" height="92" rx="5" fill="url(#cn-warm)" opacity="0.95"/>
-              <line x1="982" y1="482" x2="982" y2="574" stroke="#0F2743" stroke-width="5"/>
+              <line x1="982" y1="482" x2="982" y2="574" stroke="#2E3722" stroke-width="5"/>
             </g>
             <g>
-              <rect x="705" y="440" width="190" height="200" rx="8" fill="url(#cn-wall)" stroke="#2E4E74" stroke-width="2"/>
-              <rect x="725" y="462" width="150" height="178" rx="5" fill="#142C4C"/>
+              <rect x="705" y="440" width="190" height="200" rx="8" fill="url(#cn-wall)" stroke="#5C6B49" stroke-width="2"/>
+              <rect x="725" y="462" width="150" height="178" rx="5" fill="#38442B"/>
               <rect class="win-lit lit-core" x="725" y="462" width="150" height="178" rx="5" fill="url(#cn-warm)"/>
-              <line x1="775" y1="462" x2="775" y2="640" stroke="#0F2743" stroke-width="5"/>
-              <line x1="825" y1="462" x2="825" y2="640" stroke="#0F2743" stroke-width="5"/>
+              <line x1="775" y1="462" x2="775" y2="640" stroke="#2E3722" stroke-width="5"/>
+              <line x1="825" y1="462" x2="825" y2="640" stroke="#2E3722" stroke-width="5"/>
             </g>
-            <path class="cine-roof" d="M505 440 L 800 376 L 1095 440 L 1095 456 L 505 456 Z" fill="#0A1B30"/>
-            <rect class="cine-flue" x="838" y="398" width="14" height="46" rx="3" fill="#0A1B30"/>
-            <g fill="#C9D4E2">
+            <path class="cine-roof" d="M505 440 L 800 376 L 1095 440 L 1095 456 L 505 456 Z" fill="#262E1B"/>
+            <rect class="cine-flue" x="838" y="398" width="14" height="46" rx="3" fill="#262E1B"/>
+            <g fill="#CDD4BD">
               <circle class="smoke" cx="845" cy="388" r="7"/>
               <circle class="smoke smoke2" cx="845" cy="388" r="9"/>
               <circle class="smoke smoke3" cx="845" cy="388" r="6"/>
@@ -145,7 +145,7 @@ const body = `
             <path class="cine-spill" d="M725 653 L 875 653 L 940 722 L 660 722 Z" fill="url(#cn-warm)" fill-opacity="0.14"/>
           </g>
 
-          <path d="M0 656 Q 400 640 800 652 T 1600 648 V 880 H 0 Z" fill="#0A1A2E"/>
+          <path d="M0 656 Q 400 640 800 652 T 1600 648 V 880 H 0 Z" fill="#232B19"/>
         </svg>
 
         <div class="cinema-ui">
@@ -190,7 +190,7 @@ const body = `
             <p>Welded steel frames, fire-resistant EPS panels, double glazing — with staged factory inspections photographed for you.</p>
           </article>
           <article class="bento-tile bento-gold">
-            <div class="icon" style="background:rgba(13,35,63,0.12);border-color:rgba(13,35,63,0.25);color:var(--navy)">${icons.tag}</div>
+            <div class="icon" style="background:rgba(51,61,38,0.12);border-color:rgba(51,61,38,0.25);color:var(--navy)">${icons.tag}</div>
             <h3>One fixed delivered quote</h3>
             <p>Factory-direct with no importer margin stacked in between. Transport, customs and installation included — GST too.</p>
             <a class="btn btn-sm" href="quote.html">Get yours free ${icons.arrow}</a>
@@ -350,7 +350,7 @@ const body = `
             <p class="honeypot" aria-hidden="true"><input type="text" name="company_website" tabindex="-1" autocomplete="off"></p>
             <button class="btn btn-gold" type="submit" style="width:100%">Send me the free guide</button>
             <p class="form-success" role="status">Thanks! Your guide is on its way — check your inbox in the next few minutes.</p>
-            <p class="form-note" style="color:#A9B8CB">${icons.lock} Your details stay with us. Unsubscribe anytime.</p>
+            <p class="form-note" style="color:#AEB89A">${icons.lock} Your details stay with us. Unsubscribe anytime.</p>
           </form>
         </div>
       </div>

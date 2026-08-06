@@ -28,7 +28,7 @@ export const icons = {
   lock: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
 };
 
-export const brandMark = `<svg class="brand-mark" viewBox="0 0 44 44" fill="none" aria-hidden="true"><rect width="44" height="44" rx="12" fill="#0D233F"/><path d="M9 24.5L22 13l13 11.5" stroke="#D6AF5E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 22.5V32h18v-9.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 32v-6h6v6" stroke="#D6AF5E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+export const brandMark = `<svg class="brand-mark" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M5 20 L22 6 L39 20 L39 38" stroke="#4C5B3B" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><text x="21" y="35" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="19" font-weight="800" fill="#4C5B3B">GO</text></svg>`;
 
 const NAV = [
   ["products.html", "Products"],
@@ -51,7 +51,7 @@ function header(active) {
     <div class="wrap nav">
       <a class="brand" href="index.html" aria-label="${SITE.name} — home">
         ${brandMark}
-        <span>Go Tiny Homes<small>Expandable Living</small></span>
+        <span>Go Tiny Homes<small>Go Tiny. Live Big.</small></span>
       </a>
       <nav aria-label="Main navigation">
         <ul class="nav-links" id="nav-links">
@@ -76,7 +76,7 @@ function footer() {
     <div class="wrap">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a class="brand" href="index.html">${brandMark}<span>Go Tiny Homes<small>Expandable Living</small></span></a>
+          <a class="brand" href="index.html">${brandMark}<span>Go Tiny Homes<small>Go Tiny. Live Big.</small></span></a>
           <p>Australia's premium supplier of expandable tiny homes. Factory-direct pricing, obsessive quality control and genuine Australian support — delivered to every state and territory.</p>
           <ul>
             <li><a href="${SITE.phoneHref}">${SITE.phone}</a></li>
@@ -180,7 +180,7 @@ export function layout(o) {
   <meta property="og:image" content="${SITE.url}/assets/img/hero-home.svg">
   <meta property="og:locale" content="en_AU">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#0D233F">
+  <meta name="theme-color" content="#333D26">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
