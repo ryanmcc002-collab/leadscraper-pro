@@ -33,8 +33,11 @@ export const products = [
       gallery: [
         ["white-factory-1.webp", "Model 0206 Classic White fully expanded during factory inspection"],
         ["interior-dining.webp", "Dining and kitchen area with white cabinetry inside the Model 0206"],
-        ["interior-bedroom.webp", "Bedroom with wardrobe inside the Model 0206"],
+        ["interior-kitchen.webp", "Fitted kitchen with cabinetry, oven and fridge inside the Model 0206"],
+        ["interior-living.webp", "Living area with sofa and double glass doors inside the Model 0206"],
+        ["interior-bedroom.webp", "Furnished bedroom with double bed and curtains inside the Model 0206"],
         ["interior-bathroom.webp", "Bathroom with shower, toilet and washing machine space in the Model 0206"],
+        ["white-front.webp", "Front elevation of the Model 0206 Classic White with both wings expanded and double doors open"],
       ],
     },
     features: [
@@ -104,8 +107,11 @@ export const products = [
       gallery: [
         ["black-backyard-angle.webp", "Model 0206 Black Edition timber-look cladding from the side, installed on a lawn"],
         ["interior-living.webp", "Living area with sofa inside the Model 0206"],
-        ["interior-bedroom.webp", "Bedroom with wardrobe inside the Model 0206"],
+        ["interior-kitchen.webp", "Fitted kitchen with cabinetry, oven and fridge inside the Model 0206"],
+        ["interior-dining.webp", "Dining and kitchen area with white cabinetry inside the Model 0206"],
+        ["interior-bedroom.webp", "Furnished bedroom with double bed and curtains inside the Model 0206"],
         ["interior-bathroom.webp", "Bathroom with shower and toilet in the Model 0206"],
+        ["black-factory-1.webp", "Model 0206 Black Edition expanded during factory pre-shipment inspection"],
       ],
     },
     features: [
