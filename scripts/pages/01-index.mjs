@@ -8,19 +8,35 @@ const HOME_FAQS = [
   ["What does 'expandable' mean?", `The home ships folded at road width, then unfolds on site into a full two-bedroom home. <a href="why-expandable-homes.html">See how it works</a>.`],
 ]
 
-const productCards = products
-  .map(
-    (p) => `
-          <a class="product-card" href="product-${p.slug}.html">
-            <div class="media"><span class="badge">${p.badge}</span><img src="assets/photos/${p.photos.card}" alt="${p.photos.cardAlt}" loading="lazy"></div>
-            <div class="body">
-              <h3>${p.name}</h3>
-              <p class="meta">${p.bedrooms} bed &middot; ${p.bathrooms} bath &middot; sleeps ${p.sleeps}</p>
-              <div class="price-row"><span class="price" style="font-size:var(--fs-400)">Delivered quote on request</span>${icons.arrow}</div>
+const EDITIONS = [
+  {
+    slug: "model-0206-two-bedroom-white",
+    photo: "white-factory-1.webp",
+    alt: "Model 0206 Classic White fully expanded, white panels with grid-design windows",
+    name: "Classic White",
+    line: "Crisp white panels, grid windows. Bright and timeless.",
+  },
+  {
+    slug: "model-0206-two-bedroom-black",
+    photo: "hero-backyard.webp",
+    alt: "Model 0206 Black Edition with timber-look cladding in a landscaped backyard",
+    name: "Black Edition",
+    line: "Matte black frame, timber-look feature cladding.",
+  },
+];
+
+const editionPanels = EDITIONS.map(
+  (e, i) => `
+          <a class="edition reveal reveal-d${i}" href="product-${e.slug}.html">
+            <img src="assets/photos/${e.photo}" alt="${e.alt}" loading="lazy">
+            <div class="edition-overlay">
+              <span class="edition-tag">Model 0206 &middot; Two bedrooms</span>
+              <h3>${e.name}</h3>
+              <p>${e.line}</p>
+              <span class="edition-cta">Explore this edition ${icons.arrow}</span>
             </div>
           </a>`
-  )
-  .join("");
+).join("");
 
 
 const body = `
@@ -200,22 +216,16 @@ const body = `
     </section>
 
     <section class="section section-white" aria-labelledby="range-h">
-      <div class="wrap" style="padding-inline:0">
-        <div class="wrap center reveal">
+      <div class="wrap">
+        <div class="center reveal">
           <span class="sec-num" aria-hidden="true">02</span>
           <span class="eyebrow eyebrow-center">The range</span>
           <h2 id="range-h">One home. Two editions. <em>Zero compromises.</em></h2>
-          <p class="lead center" style="margin-inline:auto">One layout. Classic White or feature-clad Black.</p>
+          <p class="lead center" style="margin-inline:auto">Same two-bedroom layout. Choose your exterior.</p>
         </div>
-        <div class="carousel" style="margin-top:2.5rem">
-          <div class="carousel-nav">
-            <button class="carousel-btn" data-dir="prev" aria-label="Previous products"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
-            <button class="carousel-btn" data-dir="next" aria-label="Next products"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          </div>
-          <div class="carousel-track">${productCards}
-          </div>
+        <div class="editions" style="margin-top:2.5rem">${editionPanels}
         </div>
-        <div class="wrap center"><a class="btn btn-navy" href="products.html">Explore the full range ${icons.arrow}</a></div>
+        <p class="center reveal" style="margin-top:1.75rem"><a class="text-link" href="products.html">Compare both editions side by side ${icons.arrow}</a></p>
       </div>
     </section>
 

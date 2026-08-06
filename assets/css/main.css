@@ -1185,6 +1185,88 @@ h1 em, h2 em, h3 em {
 .cta-banner { position: relative; overflow: hidden; }
 
 /* Bento grid */
+/* Edition showcase — two photo-led panels */
+.editions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+}
+.edition {
+  position: relative;
+  display: block;
+  min-height: clamp(420px, 52vh, 600px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+.edition img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease);
+}
+.edition:hover img,
+.edition:focus-visible img { transform: scale(1.045); }
+.edition-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: linear-gradient(180deg, rgba(20, 25, 14, 0) 0%, rgba(20, 25, 14, 0.62) 45%, rgba(20, 25, 14, 0.88) 100%);
+  color: #fff;
+}
+.edition-tag {
+  display: inline-block;
+  font-size: var(--fs-200);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.edition-overlay h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.35rem;
+}
+.edition-overlay p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--fs-400);
+  margin: 0 0 1rem;
+  max-width: 42ch;
+}
+.edition-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: var(--fs-300);
+  color: var(--gold);
+  transition: gap 0.3s var(--ease);
+}
+.edition:hover .edition-cta,
+.edition:focus-visible .edition-cta { gap: 0.85rem; }
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--gold-600);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(138, 106, 46, 0.35);
+  padding-bottom: 2px;
+  transition: gap 0.3s var(--ease), border-color 0.3s;
+}
+.text-link:hover { gap: 0.85rem; border-color: var(--gold-600); }
+@media (max-width: 780px) {
+  .editions { grid-template-columns: 1fr; }
+  .edition { min-height: 340px; }
+}
+
 .bento {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
