@@ -91,31 +91,132 @@
     if (next) next.addEventListener("click", function () { scrollBy(1); });
   });
 
-  /* Hero unfold demo — auto-plays on load, then user-toggleable */
-  var heroDemo = document.querySelector("[data-hero-demo]");
-  if (heroDemo) {
-    var heroBtn = heroDemo.querySelector(".demo-toggle");
-    var heroStatus = heroDemo.querySelector(".demo-status");
-    var setHeroOpen = function (open) {
-      heroDemo.classList.toggle("is-open", open);
-      if (heroBtn) {
-        heroBtn.textContent = open ? "Fold for transport" : "Expand on site";
-        heroBtn.setAttribute("aria-pressed", open ? "true" : "false");
+  /* Cinematic hero — delivery + unfold story, auto-plays then scrubbable.
+     A single progress value p (0..1) drives every element, so the timeline
+     slider and stage chips can scrub the whole sequence like a video. */
+  var cine = document.querySelector("[data-cinema]");
+  if (cine) {
+    var q = function (s) { return cine.querySelector(s); };
+    var truck = q(".cine-truck");
+    var homeG = q(".cine-home");
+    var wingL = q(".cine-wing-l");
+    var wingR = q(".cine-wing-r");
+    var roof = q(".cine-roof");
+    var deckEl = q(".cine-deck");
+    var flue = q(".cine-flue");
+    var spillEl = q(".cine-spill");
+    var litL = q(".lit-l");
+    var litC = q(".lit-core");
+    var litR = q(".lit-r");
+    var wheelEls = cine.querySelectorAll(".cine-wheel");
+    var scrubEl = q(".cinema-scrub");
+    var statusEl = q(".cinema-status");
+    var chipEls = cine.querySelectorAll(".cinema-chip");
+    var replayEl = q(".cinema-replay");
+
+    var clampN = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+    var segF = function (p, a, b) { return clampN((p - a) / (b - a), 0, 1); };
+    var eOut = function (t) { return 1 - Math.pow(1 - t, 3); };
+    var eIn = function (t) { return t * t * t; };
+    var eInOut = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+
+    var prog = 1;
+    var raf = null;
+
+    var render = function (p) {
+      prog = clampN(p, 0, 1);
+      var driveIn = eOut(segF(prog, 0, 0.3));
+      var settle = eInOut(segF(prog, 0.34, 0.46));
+      var exit = eIn(segF(prog, 0.42, 0.62));
+      var open = eInOut(segF(prog, 0.52, 0.84));
+
+      var truckX = -760 * (1 - driveIn) + 1000 * exit;
+      var homeX = -760 * (1 - driveIn);
+      var homeY = -44 * (1 - settle);
+      truck.setAttribute("transform", "translate(" + truckX + " 0)");
+      homeG.setAttribute("transform", "translate(" + homeX + " " + homeY + ")");
+
+      var deg = ((truckX % 151) / 151) * 360;
+      wheelEls.forEach(function (w) {
+        w.setAttribute("transform", "rotate(" + deg + " " + w.getAttribute("data-cx") + " " + w.getAttribute("data-cy") + ")");
+      });
+
+      wingL.setAttribute("transform", "translate(" + 175 * (1 - open) + " 0)");
+      wingR.setAttribute("transform", "translate(" + -175 * (1 - open) + " 0)");
+      var roofS = 0.36 + 0.64 * open;
+      var deckS = 0.34 + 0.66 * open;
+      roof.setAttribute("transform", "translate(800 0) scale(" + roofS + " 1) translate(-800 0)");
+      deckEl.setAttribute("transform", "translate(800 0) scale(" + deckS + " 1) translate(-800 0)");
+      deckEl.style.opacity = settle;
+      flue.style.opacity = segF(prog, 0.8, 0.9);
+
+      litL.style.opacity = 0.95 * segF(prog, 0.8, 0.88);
+      litC.style.opacity = segF(prog, 0.84, 0.92);
+      litR.style.opacity = 0.95 * segF(prog, 0.88, 0.96);
+      spillEl.style.opacity = segF(prog, 0.9, 1);
+
+      cine.classList.toggle("is-done", prog > 0.995);
+      if (scrubEl) {
+        scrubEl.value = Math.round(prog * 1000);
+        scrubEl.style.setProperty("--cine-fill", prog * 100 + "%");
       }
-      if (heroStatus) {
-        heroStatus.textContent = open
-          ? "Expanded on site — installed in a day"
-          : "Folded to standard road width";
+      if (statusEl) {
+        statusEl.textContent =
+          prog < 0.05 ? "One truck. One delivery." :
+          prog < 0.36 ? "Delivered on a single truck" :
+          prog < 0.56 ? "Set down on your site" :
+          prog < 0.92 ? "Wings unfold in hours" :
+          "Move-in ready. Lights on.";
       }
+      var active = prog < 0.45 ? 0 : prog < 0.94 ? 1 : 2;
+      chipEls.forEach(function (c, i) { c.classList.toggle("active", i === active); });
+      cine.classList.add("is-ready");
     };
-    setHeroOpen(false);
-    var reduceMotion =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.setTimeout(function () { setHeroOpen(true); }, reduceMotion ? 0 : 800);
-    if (heroBtn) {
-      heroBtn.addEventListener("click", function () {
-        setHeroOpen(!heroDemo.classList.contains("is-open"));
+
+    var stopAnim = function () {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+    };
+    var animateTo = function (target, ms) {
+      stopAnim();
+      var from = prog;
+      var start = null;
+      var step = function (ts) {
+        if (!start) start = ts;
+        var t = clampN((ts - start) / ms, 0, 1);
+        render(from + (target - from) * t);
+        if (t < 1) raf = requestAnimationFrame(step);
+        else raf = null;
+      };
+      raf = requestAnimationFrame(step);
+    };
+    var play = function () {
+      render(0);
+      animateTo(1, 5200);
+    };
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      render(1);
+    } else {
+      render(0);
+      window.setTimeout(play, 600);
+    }
+
+    if (scrubEl) {
+      scrubEl.addEventListener("input", function () {
+        stopAnim();
+        render(parseInt(scrubEl.value, 10) / 1000);
+      });
+    }
+    chipEls.forEach(function (c) {
+      c.addEventListener("click", function () {
+        animateTo(parseFloat(c.getAttribute("data-go")), reduce ? 0 : 900);
+      });
+    });
+    if (replayEl) {
+      replayEl.addEventListener("click", function () {
+        if (reduce) { render(1); return; }
+        play();
       });
     }
   }

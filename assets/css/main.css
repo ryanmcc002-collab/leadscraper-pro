@@ -903,57 +903,144 @@ ul, ol { padding-left: 1.25rem; }
 .included-list svg { color: var(--success); flex: none; margin-top: 0.2rem; }
 @media (max-width: 640px) { .included-list { grid-template-columns: 1fr; } }
 
-/* Hero unfold demo — plays on page load, toggleable.
-   Folded state only applies with JS available (html.js), so no-JS users
-   and crawlers see the expanded home. */
-.hero-demo { position: relative; }
-.hero-demo svg { display: block; width: 100%; height: auto; }
+/* ------------------------ Cinematic hero unfold -------------------------- */
+/* Full-bleed, scrubbable delivery + unfold sequence. All motion is driven by
+   JS setting inline transforms; the markup's resting state is the finished,
+   expanded home, so no-JS users and crawlers see the complete house.
+   Pre-animation hiding is gated behind html.js to avoid any flash. */
 
-.hero-demo .wing,
-.hero-demo .demo-roof,
-.hero-demo .demo-deck {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 1.15s var(--ease) 0.1s;
+.hero-cinema .hero-copy {
+  max-width: 880px;
+  margin-inline: auto;
+  text-align: center;
+  padding-block: clamp(3rem, 6vw, 5.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  position: relative;
 }
-.hero-demo .win-lit { transition: opacity 0.7s ease 1s; }
-.hero-demo .demo-spill { transition: opacity 0.9s ease 1.15s; }
+.hero-cinema .hero-copy .lead { margin-inline: auto; }
+.hero-cinema .hero-actions { justify-content: center; }
+.hero-cinema .hero-trust { justify-content: center; border-top: 0; padding-top: 0.5rem; }
 
-html.js .hero-demo:not(.is-open) .wing-l { transform: translateX(185px); }
-html.js .hero-demo:not(.is-open) .wing-r { transform: translateX(-185px); }
-html.js .hero-demo:not(.is-open) .demo-roof { transform: scaleX(0.36); }
-html.js .hero-demo:not(.is-open) .demo-deck { transform: scaleX(0.34); }
-html.js .hero-demo:not(.is-open) .win-lit,
-html.js .hero-demo:not(.is-open) .demo-spill { opacity: 0; transition-delay: 0s; }
+.cinema-stage { position: relative; overflow: hidden; }
+.cinema-stage svg {
+  display: block;
+  width: 100%;
+  height: clamp(420px, 60vh, 680px);
+}
 
-.hero-demo .demo-ui {
+/* Before JS positions them, keep the movable actors off-stage / unlit */
+html.js .cinema-stage:not(.is-ready) .cine-truck,
+html.js .cinema-stage:not(.is-ready) .cine-home { transform: translateX(-760px); }
+html.js .cinema-stage:not(.is-ready) .win-lit,
+html.js .cinema-stage:not(.is-ready) .cine-spill,
+html.js .cinema-stage:not(.is-ready) .cine-deck { opacity: 0; }
+
+/* Twinkling stars + drifting smoke once the home is complete */
+@keyframes cine-twinkle { 0%, 100% { opacity: 0.75; } 50% { opacity: 0.15; } }
+.cinema-stage .tw { animation: cine-twinkle 3.4s ease-in-out infinite; }
+.cinema-stage .tw2 { animation-delay: 1.1s; animation-duration: 4.1s; }
+.cinema-stage .tw3 { animation-delay: 2.2s; animation-duration: 5.2s; }
+
+@keyframes cine-smoke {
+  0% { transform: translateY(0) scale(0.7); opacity: 0; }
+  25% { opacity: 0.55; }
+  100% { transform: translateY(-84px) scale(1.5); opacity: 0; }
+}
+.cinema-stage .smoke { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.cinema-stage.is-done .smoke { animation: cine-smoke 4s ease-out infinite; }
+.cinema-stage.is-done .smoke2 { animation-delay: 1.4s; }
+.cinema-stage.is-done .smoke3 { animation-delay: 2.7s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-stage .tw, .cinema-stage.is-done .smoke { animation: none; }
+}
+
+/* Timeline controls */
+.cinema-ui {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-inline: 1.1rem;
-  pointer-events: none;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(0.9rem, 2.5vw, 1.75rem);
+  width: min(680px, calc(100% - 2rem));
+  display: grid;
+  gap: 0.6rem;
+  background: rgba(10, 27, 48, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-lg);
 }
-.hero-demo .demo-status {
-  background: rgba(13, 35, 63, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #E8EEF5;
-  border-radius: var(--radius-pill);
-  padding: 0.45rem 1rem;
+.cinema-chips { display: flex; gap: 0.4rem; justify-content: space-between; align-items: center; }
+.cinema-chip {
+  flex: 1;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.5rem;
+  font-family: inherit;
   font-size: var(--fs-200);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8FA5BE;
+  cursor: pointer;
+  transition: color 0.25s, background 0.25s;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-.hero-demo .demo-toggle { pointer-events: auto; flex: none; }
+.cinema-chip .n { color: var(--gold); margin-right: 0.35rem; }
+.cinema-chip.active { color: #fff; background: rgba(255, 255, 255, 0.08); }
+.cinema-chip:hover { color: #fff; }
+
+.cinema-scrub {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold) var(--cine-fill, 0%), rgba(255, 255, 255, 0.18) var(--cine-fill, 0%));
+  outline-offset: 4px;
+  cursor: pointer;
+}
+.cinema-scrub::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 3px solid #0A1B30;
+  box-shadow: 0 0 0 2px rgba(214, 175, 94, 0.6), var(--shadow-md);
+  cursor: grab;
+}
+.cinema-scrub::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 3px solid #0A1B30;
+  box-shadow: 0 0 0 2px rgba(214, 175, 94, 0.6), var(--shadow-md);
+  cursor: grab;
+}
+.cinema-hint { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.cinema-status { font-size: var(--fs-200); font-weight: 700; color: #D5DEE9; }
+.cinema-replay {
+  background: none;
+  border: 0;
+  color: var(--gold);
+  font-family: inherit;
+  font-size: var(--fs-200);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+.cinema-replay:hover { color: var(--gold-600); }
+
+@media (max-width: 640px) {
+  .cinema-chip { font-size: 0.62rem; padding-inline: 0.25rem; }
+  .cinema-stage svg { height: clamp(340px, 52vh, 460px); }
+}
 
 /* Expand animation concept */
 .expand-demo { position: relative; }
