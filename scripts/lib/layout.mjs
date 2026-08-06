@@ -49,7 +49,7 @@ function header(active) {
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html" aria-label="${SITE.name} — home">
+      <a class="brand" href="index.html">
         ${brandMark}
         <span>Go Tiny Homes<small>Go Tiny. Live Big.</small></span>
       </a>
@@ -59,7 +59,7 @@ function header(active) {
         </ul>
       </nav>
       <div class="nav-cta">
-        <a class="nav-phone" href="${SITE.phoneHref}">${icons.phone}<span>${SITE.phone}</span></a>
+        <a class="nav-phone" href="${SITE.phoneHref}" aria-label="Call ${SITE.phone}">${icons.phone}<span>${SITE.phone}</span></a>
         <a class="btn btn-gold btn-sm" href="quote.html">Get a Free Quote</a>
         <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -85,7 +85,7 @@ function footer() {
           </ul>
         </div>
         <div>
-          <h4>Products</h4>
+          <h3>Products</h3>
           <ul>
             <li><a href="products.html">The Range</a></li>
             <li><a href="product-model-0206-two-bedroom-white.html">Model 0206 — Classic White</a></li>
@@ -94,7 +94,7 @@ function footer() {
           </ul>
         </div>
         <div>
-          <h4>Company</h4>
+          <h3>Company</h3>
           <ul>
             <li><a href="about.html">About Us</a></li>
             <li><a href="why-expandable-homes.html">Why Expandable Homes</a></li>
@@ -104,7 +104,7 @@ function footer() {
           </ul>
         </div>
         <div>
-          <h4>Resources</h4>
+          <h3>Resources</h3>
           <ul>
             <li><a href="faq.html">FAQ</a></li>
             <li><a href="blog.html">Blog &amp; Guides</a></li>
@@ -184,7 +184,8 @@ export function layout(o) {
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;600;700;800&display=swap"></noscript>
   <link rel="stylesheet" href="assets/css/main.css">
   <script type="application/ld+json">${jsonld}</script>
 </head>

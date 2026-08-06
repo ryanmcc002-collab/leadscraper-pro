@@ -33,7 +33,7 @@ const body = `
         <p class="lead">One proven two-bedroom layout, two editions. Fixed delivered quotes with the factory spec sheet.</p>
         <div class="hero-actions" style="margin-top:2rem;margin-bottom:0">
           <a class="btn btn-gold" href="quote.html">Get a Free Quote ${icons.arrow}</a>
-          <a class="btn btn-ghost-light" href="quote.html?brochure=1">Download Full Brochure</a>
+          <a class="btn btn-ghost" href="quote.html?brochure=1">Download Full Brochure</a>
         </div>
       </div>
     </section>

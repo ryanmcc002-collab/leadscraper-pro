@@ -71,10 +71,10 @@ export function productPage(p) {
             <p class="lead" style="font-size:var(--fs-600);color:#DCE1CF;font-weight:600">${p.tagline}</p>
             <p class="lead">${p.intro}</p>
             <div class="price-tag"><span class="amount" style="font-size:var(--fs-600)">Delivered pricing on request</span></div>
-            <p style="color:#A8B294;font-size:var(--fs-300);margin-top:-1rem;margin-bottom:2rem">Fixed delivered quote for your postcode — including transport, customs and installation — within one business day.</p>
+            <p class="muted" style="font-size:var(--fs-300);margin-top:-1rem;margin-bottom:2rem">Fixed delivered quote for your postcode — including transport, customs and installation — within one business day.</p>
             <div class="hero-actions">
               <a class="btn btn-gold btn-lg" href="quote.html?model=${p.slug}">Get a Free Quote ${icons.arrow}</a>
-              <a class="btn btn-ghost-light btn-lg" href="quote.html?brochure=1">Download Brochure</a>
+              <a class="btn btn-ghost btn-lg" href="quote.html?brochure=1">Download Brochure</a>
             </div>
             <div class="quick-specs">
               <div><strong>${p.bedrooms}</strong><span>Bedrooms</span></div>
