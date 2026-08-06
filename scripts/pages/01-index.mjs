@@ -15,11 +15,12 @@ const body = `
     <section class="hero hero-cinema">
       <div class="wrap hero-top">
         <div class="hero-copy">
-          <h1>A real two-bedroom home, <em>delivered on one truck</em></h1>
-          <p class="lead">The Model 0206 expandable — 38&nbsp;m&sup2;, factory-built, one fixed delivered quote.</p>
+          <span class="eyebrow">Expandable homes &middot; delivered Australia-wide</span>
+          <h1 class="hero-title">Go tiny. <em>Live big.</em></h1>
+          <p class="lead">The Model 0206 is a real two-bedroom home — full kitchen, full bathroom, 38&nbsp;m&sup2; — that arrives folded on one truck and opens up in a day.</p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="#quote">Get a Free Quote ${icons.arrow}</a>
-            <a class="btn btn-ghost btn-lg" href="#quote">${icons.doc} Download Brochure</a>
+            <a class="btn btn-ghost btn-lg" href="#unfold">Watch it unfold &darr;</a>
           </div>
           <div class="hero-trust">
             <span class="item">${icons.shield} Australian owned &amp; supported</span>
@@ -28,11 +29,14 @@ const body = `
           </div>
         </div>
         <div class="hero-mascot">
+          <div class="m-bubble" aria-hidden="true">Two bedrooms.<br>One truck.</div>
           <img src="assets/img/mascot.webp" alt="Go Tiny Homes wombat mascot flexing his bicep" width="480" height="594" fetchpriority="high">
+          <div class="m-chip m-chip-a" aria-hidden="true">${icons.expand} 38 m&sup2; expanded</div>
+          <div class="m-chip m-chip-b" aria-hidden="true">${icons.clock} Installed in a day</div>
         </div>
       </div>
 
-      <div class="cinema-stage" data-cinema>
+      <div class="cinema-stage" id="unfold" data-cinema>
         <svg viewBox="0 0 1600 880" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Animated story of a Go Tiny Homes delivery: a truck arrives carrying the folded home, sets it down, and the home unfolds into a full two-bedroom house with lit windows">
           <defs>
             <linearGradient id="cn-sky" x1="0" y1="0" x2="0" y2="1">

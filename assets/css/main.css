@@ -918,12 +918,80 @@ ul, ol { padding-left: 1.25rem; }
   padding-block: clamp(2.5rem, 5vw, 4.5rem) clamp(1.25rem, 2.5vw, 2rem);
 }
 .hero-cinema .hero-trust { border-top: 0; padding-top: 0.5rem; }
-.hero-mascot { display: flex; justify-content: center; }
+.hero-cinema .hero-title {
+  font-size: clamp(3.1rem, 7.2vw, 5.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.hero-mascot { display: flex; justify-content: center; position: relative; }
+.hero-mascot::before {
+  content: "";
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  width: min(120%, 430px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(201, 155, 84, 0.26), rgba(201, 155, 84, 0));
+  pointer-events: none;
+}
 .hero-mascot img {
+  position: relative;
   width: min(100%, 340px);
   height: auto;
   filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.35));
 }
+.m-bubble {
+  position: absolute;
+  top: -2%;
+  left: 2%;
+  z-index: 2;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 18px 18px 18px 4px;
+  padding: 0.7rem 1.05rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  line-height: 1.25;
+  color: var(--navy);
+  box-shadow: var(--shadow-md);
+  transform: rotate(-4deg);
+}
+.m-chip {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 0.5rem 0.95rem;
+  font-weight: 700;
+  font-size: var(--fs-300);
+  color: var(--navy);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+}
+.m-chip svg { color: var(--gold-600); width: 18px; height: 18px; }
+.m-chip-a { right: -4%; top: 26%; }
+.m-chip-b { left: -6%; bottom: 10%; }
+html.js .m-bubble,
+html.js .m-chip {
+  opacity: 0;
+  animation: mascot-in 0.7s var(--ease) forwards, m-float 5.5s ease-in-out 1.6s infinite;
+}
+html.js .m-bubble { animation-delay: 0.9s, 1.8s; }
+html.js .m-chip-a { animation-delay: 1.1s, 2.1s; }
+html.js .m-chip-b { animation-delay: 1.3s, 2.6s; }
+@keyframes m-float {
+  0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+  50% { transform: translateY(-7px) rotate(var(--tilt, 0deg)); }
+}
+.m-bubble { --tilt: -4deg; }
 html.js .hero-mascot img {
   opacity: 0;
   transform: translateY(24px) scale(0.94);
@@ -935,9 +1003,12 @@ html.js .hero-mascot img {
   .hero-cinema .hero-actions, .hero-cinema .hero-trust { justify-content: center; }
   .hero-mascot { order: -1; }
   .hero-mascot img { width: min(52%, 220px); }
+  .m-chip { display: none; }
+  .m-bubble { top: 0; left: 8%; font-size: 0.95rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html.js .hero-mascot img { opacity: 1; transform: none; animation: none; }
+  html.js .m-bubble, html.js .m-chip { opacity: 1; animation: none; }
 }
 
 .cinema-stage { position: relative; overflow: hidden; }
