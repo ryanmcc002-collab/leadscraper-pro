@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" role="img" aria-label="Go Tiny Homes wombat mascot flexing his bicep">
+  <defs>
+    <style>
+      .fur { fill: #C08A4E; stroke: #3A2A16; stroke-width: 5; stroke-linejoin: round; }
+      .lt  { fill: #D9A968; stroke: #3A2A16; stroke-width: 5; stroke-linejoin: round; }
+      .sh  { fill: #DBC49C; stroke: #3A2A16; stroke-width: 5; stroke-linejoin: round; }
+      .ln  { fill: none; stroke: #3A2A16; stroke-width: 4; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <!-- ground shadow -->
+  <ellipse cx="150" cy="326" rx="92" ry="12" fill="#3A2A16" opacity="0.14"/>
+
+  <!-- legs + feet -->
+  <rect class="fur" x="90" y="244" width="42" height="66" rx="19"/>
+  <rect class="fur" x="168" y="244" width="42" height="66" rx="19"/>
+  <ellipse class="fur" cx="104" cy="316" rx="36" ry="15"/>
+  <ellipse class="fur" cx="196" cy="316" rx="36" ry="15"/>
+  <g class="ln" stroke-width="3">
+    <path d="M82 312 v8"/><path d="M94 314 v9"/><path d="M106 315 v9"/>
+    <path d="M174 312 v8"/><path d="M186 314 v9"/><path d="M198 315 v9"/>
+  </g>
+
+  <!-- hip arm (viewer right) -->
+  <path d="M186 126 C 222 132 240 154 230 182" fill="none" stroke="#3A2A16" stroke-width="30" stroke-linecap="round"/>
+  <path d="M186 126 C 222 132 240 154 230 182" fill="none" stroke="#C08A4E" stroke-width="22" stroke-linecap="round"/>
+  <ellipse class="fur" cx="222" cy="188" rx="17" ry="14"/>
+
+  <!-- torso -->
+  <path class="fur" d="M96 202 C 82 152 92 118 118 102 C 140 90 160 90 182 102 C 208 118 218 152 204 202 Z"/>
+  <!-- pec + ab lines -->
+  <g class="ln" opacity="0.85">
+    <path d="M116 140 Q 150 156 184 140"/>
+    <path d="M150 156 V 198"/>
+    <path d="M128 168 h18"/><path d="M154 168 h18"/>
+    <path d="M128 184 h18"/><path d="M154 184 h18"/>
+  </g>
+
+  <!-- flexing arm (viewer left) -->
+  <path d="M116 130 C 80 122 58 102 58 76" fill="none" stroke="#3A2A16" stroke-width="32" stroke-linecap="round"/>
+  <path d="M116 130 C 80 122 58 102 58 76" fill="none" stroke="#C08A4E" stroke-width="24" stroke-linecap="round"/>
+  <ellipse class="fur" cx="88" cy="106" rx="25" ry="18" transform="rotate(-28 88 106)"/>
+  <ellipse class="fur" cx="58" cy="62" rx="20" ry="18"/>
+  <path class="ln" d="M48 54 q6 -6 14 -4"/>
+
+  <!-- shorts -->
+  <path class="sh" d="M84 198 L216 198 L226 262 L160 262 L150 244 L140 262 L74 262 Z"/>
+  <rect class="sh" x="84" y="188" width="132" height="18" rx="9" fill="#E6D2AC"/>
+  <g class="ln" stroke-width="3">
+    <path d="M142 206 q-6 14 2 22"/><path d="M158 206 q6 14 -2 22"/>
+    <path d="M150 206 v10"/>
+    <path d="M96 214 q10 10 4 22"/><path d="M204 214 q-10 10 -4 22"/>
+  </g>
+
+  <!-- head -->
+  <circle class="fur" cx="96" cy="30" r="17"/>
+  <circle cx="96" cy="30" r="8" fill="#8A5D2E"/>
+  <circle class="fur" cx="204" cy="30" r="17"/>
+  <circle cx="204" cy="30" r="8" fill="#8A5D2E"/>
+  <ellipse class="fur" cx="150" cy="62" rx="64" ry="50"/>
+  <!-- cheek fluff -->
+  <g class="ln" stroke-width="3">
+    <path d="M88 76 l-8 4"/><path d="M90 86 l-8 2"/>
+    <path d="M212 76 l8 4"/><path d="M210 86 l8 2"/>
+  </g>
+  <!-- brows -->
+  <path class="ln" d="M116 42 q 12 -8 24 -2"/>
+  <path class="ln" d="M184 42 q -12 -8 -24 -2"/>
+  <!-- eyes -->
+  <ellipse cx="128" cy="56" rx="10" ry="12" fill="#fff" stroke="#3A2A16" stroke-width="3.5"/>
+  <ellipse cx="172" cy="56" rx="10" ry="12" fill="#fff" stroke="#3A2A16" stroke-width="3.5"/>
+  <circle cx="130" cy="58" r="5" fill="#1E140A"/><circle cx="132" cy="55" r="1.6" fill="#fff"/>
+  <circle cx="170" cy="58" r="5" fill="#1E140A"/><circle cx="172" cy="55" r="1.6" fill="#fff"/>
+  <!-- muzzle -->
+  <ellipse class="lt" cx="150" cy="86" rx="35" ry="26"/>
+  <ellipse cx="150" cy="72" rx="13" ry="9" fill="#5B3A1C"/>
+  <circle cx="146" cy="69" r="2.4" fill="#8A5D2E"/>
+  <!-- open smile with teeth -->
+  <path d="M128 92 Q 150 110 172 92 Q 167 106 150 108 Q 133 106 128 92 Z" fill="#4A2F16" stroke="#3A2A16" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="139" y="92" width="22" height="9" rx="2.5" fill="#fff" stroke="#3A2A16" stroke-width="2"/>
+  <!-- freckles -->
+  <g fill="#8A5D2E">
+    <circle cx="122" cy="84" r="1.6"/><circle cx="116" cy="90" r="1.6"/>
+    <circle cx="178" cy="84" r="1.6"/><circle cx="184" cy="90" r="1.6"/>
+  </g>
+</svg>

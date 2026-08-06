@@ -932,7 +932,13 @@ html.js .cinema-stage:not(.is-ready) .cine-truck,
 html.js .cinema-stage:not(.is-ready) .cine-home { transform: translateX(-760px); }
 html.js .cinema-stage:not(.is-ready) .win-lit,
 html.js .cinema-stage:not(.is-ready) .cine-spill,
+html.js .cinema-stage:not(.is-ready) .cine-mascot,
 html.js .cinema-stage:not(.is-ready) .cine-deck { opacity: 0; }
+
+@keyframes mascot-bob { 50% { transform: translateY(-8px); } }
+.cinema-stage .cine-mascot { transform-box: fill-box; transform-origin: 50% 100%; }
+.cinema-stage.is-done .cine-mascot { animation: mascot-bob 3.2s ease-in-out 1.2s infinite; }
+@media (prefers-reduced-motion: reduce) { .cinema-stage.is-done .cine-mascot { animation: none; } }
 
 /* Twinkling stars + drifting smoke once the home is complete */
 @keyframes cine-twinkle { 0%, 100% { opacity: 0.75; } 50% { opacity: 0.15; } }
