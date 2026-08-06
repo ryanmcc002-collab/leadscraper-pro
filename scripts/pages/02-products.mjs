@@ -90,7 +90,7 @@ export const page = {
   path: "products.html",
   html: layout({
     path: "products.html",
-    title: "Two-Bedroom Expandable Tiny Homes | Bondi Tiny Homes",
+    title: "Two-Bedroom Expandable Tiny Homes | Go Tiny Homes",
     description:
       "The Model 0206 two-bedroom expandable in Classic White and feature-clad Black Edition — factory specs, floor plans and fixed delivered quotes to any Australian postcode.",
     body,

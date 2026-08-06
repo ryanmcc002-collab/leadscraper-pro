@@ -19,8 +19,8 @@ export const page = {
   path: "404.html",
   html: layout({
     path: "404.html",
-    title: "Page Not Found | Bondi Tiny Homes",
-    description: "The page you're looking for isn't here. Explore Australia's premium expandable tiny homes from Bondi Tiny Homes.",
+    title: "Page Not Found | Go Tiny Homes",
+    description: "The page you're looking for isn't here. Explore Australia's premium expandable tiny homes from Go Tiny Homes.",
     body,
     active: null,
   }),

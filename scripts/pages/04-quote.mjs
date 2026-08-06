@@ -138,9 +138,9 @@ export const page = {
   path: "quote.html",
   html: layout({
     path: "quote.html",
-    title: "Get a Free Tiny Home Quote | Bondi Tiny Homes",
+    title: "Get a Free Tiny Home Quote | Go Tiny Homes",
     description:
-      "Free, no-obligation quote for any Bondi expandable tiny home: fixed delivered pricing to your postcode, lead times and finance estimates in one business day.",
+      "Free, no-obligation quote for any Go Tiny Homes expandable: fixed delivered pricing to your postcode, lead times and finance estimates in one business day.",
     body,
     active: null,
     schema: [

@@ -6,7 +6,7 @@ const body = `
         ${breadcrumbs([["Home", "index.html"], ["About", "about.html"]])}
         <span class="eyebrow">Our story</span>
         <h1>We started as sceptical customers</h1>
-        <p class="lead">Bondi Tiny Homes exists because our founders tried to buy an expandable home — and couldn't find a supplier they'd trust with their own money.</p>
+        <p class="lead">Go Tiny Homes exists because our founders tried to buy an expandable home — and couldn't find a supplier they'd trust with their own money.</p>
       </div>
     </section>
 
@@ -59,14 +59,14 @@ export const page = {
   path: "about.html",
   html: layout({
     path: "about.html",
-    title: "About Us | Our Story & Quality Process | Bondi Tiny Homes",
+    title: "About Us | Our Story & Quality Process | Go Tiny Homes",
     description:
-      "Direct factory relationships, three staged quality inspections per home, transparent delivered pricing and Sydney-based support. Meet Bondi Tiny Homes.",
+      "Direct factory relationships, three staged quality inspections per home, transparent delivered pricing and Sydney-based support. Meet Go Tiny Homes.",
     body,
     active: "about.html",
     schema: [
       breadcrumbSchema([["Home", ""], ["About", "about.html"]]),
-      { "@type": "AboutPage", "@id": `${SITE.url}/about.html`, name: "About Bondi Tiny Homes" },
+      { "@type": "AboutPage", "@id": `${SITE.url}/about.html`, name: "About Go Tiny Homes" },
     ],
   }),
 };

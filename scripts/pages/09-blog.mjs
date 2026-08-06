@@ -29,7 +29,7 @@ const ARTICLES = [
       <p>Budget for these regardless of who you buy from:</p>
       <ul>
         <li><strong>Site preparation:</strong> $1,500–$8,000 — levelling, pad or piers, access clearing.</li>
-        <li><strong>Delivery:</strong> $1,500–$8,000+ depending on distance and access (included as a fixed line in Bondi quotes).</li>
+        <li><strong>Delivery:</strong> $1,500–$8,000+ depending on distance and access (included as a fixed line in Go Tiny Homes quotes).</li>
         <li><strong>Crane (if needed):</strong> $1,200–$4,000 for tight or sloping sites.</li>
         <li><strong>Service connections:</strong> $2,000–$7,000 for a plumber and electrician to connect power, water and waste — more for long runs or new septic.</li>
         <li><strong>Approvals:</strong> $1,500–$6,000 for certifier/council fees, drawings and reports depending on state and pathway.</li>
@@ -84,7 +84,7 @@ const ARTICLES = [
         <li><strong>Rural land:</strong> farm stays, worker accommodation and family dwellings often enjoy specific provisions that suburban blocks don't.</li>
       </ul>
       <h2>What we provide for your application</h2>
-      <p>Every Bondi home ships with structural engineering drawings, specification sheets, electrical and waterproofing compliance documentation — the paperwork certifiers actually ask for. We'll also point you to certifiers and planners who have approved expandable homes before, so you're not paying someone to learn on your project.</p>
+      <p>Every Go Tiny Homes build ships with structural engineering drawings, specification sheets, electrical and waterproofing compliance documentation — the paperwork certifiers actually ask for. We'll also point you to certifiers and planners who have approved expandable homes before, so you're not paying someone to learn on your project.</p>
       <p>Two good next steps: read <a href="blog-can-i-put-a-tiny-home-in-my-backyard.html">Can I Put a Tiny Home in My Backyard?</a> for the suburban specifics, or <a href="quote.html">ask us about the approval pathway</a> for your postcode — we'll tell you honestly how hard or easy your site is.</p>`,
   },
   {
@@ -258,7 +258,7 @@ function articlePage(a) {
         ${breadcrumbs([["Home", "index.html"], ["Blog", "blog.html"], [a.tag, path]])}
         <span class="eyebrow">${a.tag}</span>
         <h1 style="max-width:26ch">${a.title}</h1>
-        <div class="post-meta" style="color:#93A5BB"><span>Bondi Tiny Homes Editorial</span><span>Updated ${new Date(a.date + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}</span><span>${a.minutes} min read</span></div>
+        <div class="post-meta" style="color:#93A5BB"><span>Go Tiny Homes Editorial</span><span>Updated ${new Date(a.date + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}</span><span>${a.minutes} min read</span></div>
       </div>
     </section>
     <section class="section section-white">
@@ -340,7 +340,7 @@ export const pages = [
     path: "blog.html",
     html: layout({
       path: "blog.html",
-      title: "Tiny Home Guides & Advice | Bondi Tiny Homes",
+      title: "Tiny Home Guides & Advice | Go Tiny Homes",
       description:
         "Straight-talking tiny home guides: 2026 costs, council approval by state, Airbnb returns, granny flat comparisons and expandable construction explained.",
       body: indexBody,
@@ -350,7 +350,7 @@ export const pages = [
         {
           "@type": "Blog",
           "@id": `${SITE.url}/blog.html#blog`,
-          name: "Bondi Tiny Homes Blog",
+          name: "Go Tiny Homes Blog",
           blogPost: ARTICLES.map((a) => ({ "@type": "BlogPosting", headline: a.title, url: `${SITE.url}/blog-${a.slug}.html` })),
         },
       ],

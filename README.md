@@ -1,6 +1,6 @@
-# Bondi Tiny Homes — Website
+# Go Tiny Homes — Website
 
-A premium, conversion-focused marketing website for **Bondi Tiny Homes**, Australia's premium supplier of expandable tiny homes. Built as a fast, dependency-free static site with a small Node-based generator.
+A premium, conversion-focused marketing website for **Go Tiny Homes**, Australia's premium supplier of expandable tiny homes. Built as a fast, dependency-free static site with a small Node-based generator.
 
 ## Quick start
 
@@ -33,7 +33,7 @@ To change site-wide details (phone, email, domain), edit `SITE` in `scripts/lib/
 
 ## Go-live checklist
 
-- [ ] **Domain**: update `SITE.url` in `scripts/lib/layout.mjs` (currently `https://www.bonditinyhomes.com.au`) and rebuild.
+- [ ] **Domain**: update `SITE.url` in `scripts/lib/layout.mjs` (currently `https://www.gotinyhomes.com.au`) and rebuild.
 - [ ] **Forms**: forms are front-end complete with validation, honeypot and success states. Wire each `form[data-enquiry]` `action` to your endpoint (Formspree, Netlify Forms, or a CRM webhook) and remove the `preventDefault` in `assets/js/main.js`.
 - [ ] **Photography**: illustrative SVG renders are used throughout. Replace hero/product/gallery images with real photography when available (keep the same filenames or update references). Also swap the `og:image` to a 1200×630 JPG/PNG for best social sharing.
 - [ ] **Business details**: replace placeholder ABN in the footer (`scripts/lib/layout.mjs`), confirm the phone number and email.

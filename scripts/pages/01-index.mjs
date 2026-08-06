@@ -32,7 +32,7 @@ const body = `
           <div>
             <span class="eyebrow">Australia's premium expandable homes</span>
             <h1>Premium Expandable Tiny Homes, <span class="gold-text">Delivered Australia-Wide</span></h1>
-            <p class="lead">Factory-direct pricing without the factory-direct gamble: every Bondi Tiny Home is independently quality-inspected, delivered to your site at a fixed price, and backed by a 10-year structural warranty and a real Australian support team.</p>
+            <p class="lead">Factory-direct pricing without the factory-direct gamble: every Go Tiny Homes build is independently quality-inspected, delivered to your site at a fixed price, and backed by a 10-year structural warranty and a real Australian support team.</p>
             <div class="hero-actions">
               <a class="btn btn-gold btn-lg" href="quote.html">Get a Free Quote ${icons.arrow}</a>
               <a class="btn btn-ghost-light btn-lg" href="quote.html?brochure=1">${icons.doc} Download Brochure</a>
@@ -51,7 +51,7 @@ const body = `
     <section class="section" aria-labelledby="why-h">
       <div class="wrap">
         <div class="center reveal">
-          <span class="eyebrow eyebrow-center">Why Bondi Tiny Homes</span>
+          <span class="eyebrow eyebrow-center">Why Go Tiny Homes</span>
           <h2 id="why-h">Everything a site build gives you.<br>Without the year of your life.</h2>
         </div>
         <div class="grid grid-3" style="margin-top:3rem">
@@ -176,7 +176,7 @@ const body = `
         <div class="table-scroll reveal" style="margin-top:2.5rem">
           <table class="compare">
             <thead>
-              <tr><th scope="col">Factor</th><th scope="col">Bondi Expandable</th><th scope="col">Traditional Build</th><th scope="col">Kit Granny Flat</th><th scope="col">Caravan / Trailer</th></tr>
+              <tr><th scope="col">Factor</th><th scope="col">Go Tiny Expandable</th><th scope="col">Traditional Build</th><th scope="col">Kit Granny Flat</th><th scope="col">Caravan / Trailer</th></tr>
             </thead>
             <tbody>
               <tr><th scope="row">Typical cost</th><td>One fixed delivered quote</td><td>$180,000+</td><td>$120,000+</td><td>$60,000–$150,000</td></tr>
@@ -241,7 +241,7 @@ export const page = {
   path: "index.html",
   html: layout({
     path: "index.html",
-    title: "Expandable Tiny Homes Australia | Bondi Tiny Homes",
+    title: "Expandable Tiny Homes Australia | Go Tiny Homes",
     description:
       "Premium two-bedroom expandable tiny homes, imported factory-direct and delivered Australia-wide. Fixed delivered quotes, Australian support. Free quotes in 1 business day.",
     body,

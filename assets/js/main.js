@@ -1,4 +1,4 @@
-/* Bondi Tiny Homes — site interactions */
+/* Go Tiny Homes — site interactions */
 (function () {
   "use strict";
 

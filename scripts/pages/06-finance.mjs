@@ -5,7 +5,7 @@ const FIN_FAQS = [
   ["What deposit do I need?", "Secured personal loans often require no deposit, though 10–20% reduces your rate and repayments. Using home equity can also mean no cash deposit. Business purchases through a chattel mortgage may finance the full amount and claim GST credits — ask your accountant."],
   ["What interest rates should I expect?", "As a guide, secured personal loans currently range from roughly 7% to 14% p.a. depending on your credit profile and term. Equity release against property tracks home loan rates. The calculator above lets you model any rate."],
   ["Can rental income cover the repayments?", "Frequently, yes. As a worked example, $50,000 financed over 7 years at 9% costs about $186/week — while granny flats in most capital cities rent for $300–$450/week. Short-stay returns can be higher again. Income isn't guaranteed; model your own local rents conservatively."],
-  ["Is the deposit to Bondi Tiny Homes protected?", "Your order deposit is held against a signed agreement with staged payments tied to build milestones you can verify through inspection photo reports. The balance is only payable when your home lands in Australia and passes final inspection."],
+  ["Is the deposit to Go Tiny Homes protected?", "Your order deposit is held against a signed agreement with staged payments tied to build milestones you can verify through inspection photo reports. The balance is only payable when your home lands in Australia and passes final inspection."],
 ];
 
 const body = `
@@ -104,7 +104,7 @@ export const page = {
   path: "finance.html",
   html: layout({
     path: "finance.html",
-    title: "Tiny Home Finance & Calculator | Bondi Tiny Homes",
+    title: "Tiny Home Finance & Calculator | Go Tiny Homes",
     description:
       "Finance an expandable tiny home: interactive repayment calculator, worked granny-flat and Airbnb examples, plus honest answers to Australia's common questions.",
     body,

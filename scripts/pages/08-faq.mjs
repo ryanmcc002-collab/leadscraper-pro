@@ -98,7 +98,7 @@ export const page = {
   path: "faq.html",
   html: layout({
     path: "faq.html",
-    title: "Tiny Home FAQs | Approvals, Prices & More | Bondi Tiny Homes",
+    title: "Tiny Home FAQs | Approvals, Prices & More | Go Tiny Homes",
     description:
       "Council approvals, foundations, insulation, cyclone ratings, warranty, pricing, lead times and finance — 40 detailed answers on Australian tiny homes.",
     body,

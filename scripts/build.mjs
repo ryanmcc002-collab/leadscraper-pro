@@ -1,4 +1,4 @@
-/* Bondi Tiny Homes — static site build.
+/* Go Tiny Homes — static site build.
    Usage: node scripts/build.mjs
    Generates product imagery (SVG), all HTML pages and sitemap.xml at the repo root. */
 

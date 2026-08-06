@@ -1,12 +1,12 @@
 /* Shared layout, navigation, footer, icons and SEO helpers for all pages. */
 
 export const SITE = {
-  name: "Bondi Tiny Homes",
-  url: "https://www.bonditinyhomes.com.au",
+  name: "Go Tiny Homes",
+  url: "https://www.gotinyhomes.com.au",
   phone: "1300 266 344",
   phoneHref: "tel:1300266344",
-  email: "hello@bonditinyhomes.com.au",
-  address: "Bondi Junction, Sydney NSW",
+  email: "hello@gotinyhomes.com.au",
+  address: "Sydney, NSW",
 };
 
 export const icons = {
@@ -51,7 +51,7 @@ function header(active) {
     <div class="wrap nav">
       <a class="brand" href="index.html" aria-label="${SITE.name} — home">
         ${brandMark}
-        <span>Bondi Tiny Homes<small>Expandable Living</small></span>
+        <span>Go Tiny Homes<small>Expandable Living</small></span>
       </a>
       <nav aria-label="Main navigation">
         <ul class="nav-links" id="nav-links">
@@ -75,7 +75,7 @@ function footer() {
     <div class="wrap">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a class="brand" href="index.html">${brandMark}<span>Bondi Tiny Homes<small>Expandable Living</small></span></a>
+          <a class="brand" href="index.html">${brandMark}<span>Go Tiny Homes<small>Expandable Living</small></span></a>
           <p>Australia's premium supplier of expandable tiny homes. Factory-direct pricing, obsessive quality control and genuine Australian support — delivered to every state and territory.</p>
           <ul>
             <li><a href="${SITE.phoneHref}">${SITE.phone}</a></li>
@@ -139,7 +139,7 @@ const ORG_SCHEMA = {
   email: SITE.email,
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Bondi Junction",
+    addressLocality: "Sydney",
     addressRegion: "NSW",
     addressCountry: "AU",
   },

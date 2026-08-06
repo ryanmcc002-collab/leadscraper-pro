@@ -68,7 +68,7 @@ export const page = {
   path: "delivery.html",
   html: layout({
     path: "delivery.html",
-    title: "Australia-Wide Tiny Home Delivery | Bondi Tiny Homes",
+    title: "Australia-Wide Tiny Home Delivery | Go Tiny Homes",
     description:
       "Factory inspections, shipping, customs, transport and one-day installation — fixed delivered pricing to metro, regional and remote sites Australia-wide.",
     body,

@@ -1,7 +1,7 @@
 import { SITE, icons, layout, breadcrumbs, breadcrumbSchema, ctaBanner } from "../lib/layout.mjs";
 
 const REASONS = [
-  ["truck", "Transport advantages", "An expandable home ships at standard road width — 2.5m — so it travels on a normal truck with no escort vehicles, no oversize permits and no special routes. That's why we can deliver to a Bondi backyard or a station 400km past Broken Hill for a fraction of the cost of moving a fixed modular home."],
+  ["truck", "Transport advantages", "An expandable home ships at standard road width — 2.5m — so it travels on a normal truck with no escort vehicles, no oversize permits and no special routes. That's why we can deliver to an inner-Sydney backyard or a station 400km past Broken Hill for a fraction of the cost of moving a fixed modular home."],
   ["clock", "Quick installation", "The wings fold out on engineered hinges and lock down weather-tight in hours. Where a site build needs 20+ trade visits over a year, an expandable home needs a level pad, a day of installation and a plumber and electrician for connections."],
   ["shield", "Modern construction", "Welded steel frames don't warp, rot or feed termites. Fire-resistant EPS insulated wall panels and double-glazed openings keep the home easy to heat and cool, and the whole structure is built indoors — never rained on, never sun-damaged mid-build."],
   ["tag", "Cost savings", "You skip the two biggest costs of conventional building: on-site labour and time. No months of trades, no builder's margin on every fitting, no rent paid while you wait. One fixed delivered quote for a complete home."],
@@ -78,7 +78,7 @@ export const page = {
   path: "why-expandable-homes.html",
   html: layout({
     path: "why-expandable-homes.html",
-    title: "Why Expandable Homes? | Bondi Tiny Homes",
+    title: "Why Expandable Homes? | Go Tiny Homes",
     description:
       "How expandable homes work, why they cost a fraction of a site build, and the honest trade-offs — speed, efficiency, durability and returns explained.",
     body,
