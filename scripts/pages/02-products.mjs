@@ -5,7 +5,7 @@ const cards = products
   .map(
     (p, i) => `
           <a class="product-card reveal reveal-d${i % 3}" href="product-${p.slug}.html">
-            <div class="media"><span class="badge">${p.badge}</span><img src="assets/img/scene-${p.slug}.svg" alt="${p.name} exterior illustration" loading="lazy" width="1200" height="800"></div>
+            <div class="media"><span class="badge">${p.badge}</span><img src="assets/photos/${p.photos.card}" alt="${p.photos.cardAlt}" loading="lazy"></div>
             <div class="body">
               <h3>${p.name}</h3>
               <p class="meta">${p.tagline}</p>

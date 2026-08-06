@@ -177,7 +177,7 @@ export function layout(o) {
   <meta property="og:title" content="${o.title}">
   <meta property="og:description" content="${o.description}">
   <meta property="og:url" content="${canonical}">
-  <meta property="og:image" content="${SITE.url}/assets/img/hero-home.svg">
+  <meta property="og:image" content="${SITE.url}/assets/photos/og-image.jpg">
   <meta property="og:locale" content="en_AU">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#333D26">

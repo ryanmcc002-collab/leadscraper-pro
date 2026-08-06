@@ -45,6 +45,17 @@ const body = `
       </div>
     </section>
 
+    <section class="section section-white" aria-label="Expanded interior">
+      <div class="wrap two-col">
+        <figure class="media-frame reveal" style="margin:0"><img src="assets/photos/interior-empty.webp" alt="Inside the Model 0206 with both wings expanded, before fit-out" loading="lazy"></figure>
+        <div class="reveal reveal-d1">
+          <span class="eyebrow">The result</span>
+          <h2>Real rooms. Real ceilings.</h2>
+          <p class="lead">Both wings deployed — one continuous space with full-height ceilings and timber-look floors, ready for walls and fit-out. Not a caravan interior.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="reasons-h">
       <div class="wrap">
         <div class="center reveal"><span class="eyebrow eyebrow-center">Eight honest reasons</span><h2 id="reasons-h">The case for expandable</h2></div>

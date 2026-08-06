@@ -25,6 +25,18 @@ export const products = [
     audience: ["Granny flats", "First home buyers", "Rural blocks", "Guest accommodation"],
     palette: "day",
     sceneWidth: 560,
+    photos: {
+      card: "white-cutout.webp",
+      cardAlt: "Model 0206 Classic White expandable home with grid-design windows",
+      hero: "white-cutout.webp",
+      heroAlt: "Model 0206 Classic White expandable home, expanded, with white grid-design windows and grey frame",
+      gallery: [
+        ["white-factory-1.webp", "Model 0206 Classic White fully expanded during factory inspection"],
+        ["interior-dining.webp", "Dining and kitchen area with white cabinetry inside the Model 0206"],
+        ["interior-bedroom.webp", "Bedroom with wardrobe inside the Model 0206"],
+        ["interior-bathroom.webp", "Bathroom with shower, toilet and washing machine space in the Model 0206"],
+      ],
+    },
     features: [
       ["Two real bedrooms", "Separate bedrooms with real walls and real doors — not lofts or fold-out beds. Room for a couple plus kids, guests or a home office."],
       ["Complete kitchen & bathroom", "Fitted kitchen cabinetry, plus a full bathroom with toilet, basin and shower — a complete, self-contained home as delivered."],
@@ -84,6 +96,18 @@ export const products = [
     audience: ["Airbnb & farm stays", "Premium granny flats", "Design-led buyers", "Guest accommodation"],
     palette: "dusk",
     sceneWidth: 580,
+    photos: {
+      card: "hero-backyard.webp",
+      cardAlt: "Model 0206 Black Edition with timber-look cladding installed in a backyard",
+      hero: "hero-backyard.webp",
+      heroAlt: "Model 0206 Black Edition expanded in a landscaped backyard with outdoor chairs",
+      gallery: [
+        ["black-backyard-angle.webp", "Model 0206 Black Edition timber-look cladding from the side, installed on a lawn"],
+        ["interior-living.webp", "Living area with sofa inside the Model 0206"],
+        ["interior-bedroom.webp", "Bedroom with wardrobe inside the Model 0206"],
+        ["interior-bathroom.webp", "Bathroom with shower and toilet in the Model 0206"],
+      ],
+    },
     features: [
       ["Feature-clad exterior", "50mm fire-resistant EPS panels finished with 20mm exterior feature cladding — the profile that makes guests and neighbours assume it's a site-built studio."],
       ["Thermal-break aluminium windows", "RAL 9011 black aluminium windows with thermal-break frames and fitted fly screens — better thermal performance and a sharper sightline."],

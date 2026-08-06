@@ -12,7 +12,7 @@ const productCards = products
   .map(
     (p) => `
           <a class="product-card" href="product-${p.slug}.html">
-            <div class="media"><span class="badge">${p.badge}</span><img src="assets/img/scene-${p.slug}.svg" alt="${p.name} exterior illustration" loading="lazy" width="1200" height="800"></div>
+            <div class="media"><span class="badge">${p.badge}</span><img src="assets/photos/${p.photos.card}" alt="${p.photos.cardAlt}" loading="lazy"></div>
             <div class="body">
               <h3>${p.name}</h3>
               <p class="meta">${p.bedrooms} bed &middot; ${p.bathrooms} bath &middot; sleeps ${p.sleeps}</p>
@@ -182,8 +182,8 @@ const body = `
             <a class="btn btn-sm" href="quote.html">Get yours free ${icons.arrow}</a>
           </article>
           <article class="bento-tile bento-wide bento-media">
-            <img src="assets/img/map-au.svg" alt="Australia-wide delivery map showing routes to every capital and regional centre" loading="lazy" width="900" height="720">
-            <div class="cap">Delivered Australia-wide, quoted to your postcode.</div>
+            <img src="assets/photos/black-backyard-angle.webp" alt="Model 0206 Black Edition installed in a backyard, timber-look cladding with black frame" loading="lazy">
+            <div class="cap">Installed. Delivered Australia-wide, quoted to your postcode.</div>
           </article>
           <article class="bento-tile">
             <div class="icon">${icons.home}</div>
@@ -222,6 +222,20 @@ const body = `
           </div>
         </div>
         <div class="wrap center"><a class="btn btn-navy" href="products.html">Explore the full range ${icons.arrow}</a></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="inside-h">
+      <div class="wrap">
+        <div class="center reveal">
+          <span class="eyebrow eyebrow-center">Step inside</span>
+          <h2 id="inside-h">Complete and liveable, <em>as delivered</em></h2>
+        </div>
+        <div class="grid grid-3 reveal" style="margin-top:2.5rem">
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-dining.webp" alt="Dining and kitchen area with white cabinetry inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-living.webp" alt="Living area with sofa inside the Model 0206" loading="lazy"></figure>
+          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bedroom.webp" alt="Bedroom with wardrobe inside the Model 0206" loading="lazy"></figure>
+        </div>
       </div>
     </section>
 

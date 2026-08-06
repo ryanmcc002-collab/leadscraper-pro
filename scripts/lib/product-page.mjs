@@ -33,7 +33,7 @@ export function productPage(p) {
     .map(
       (r) => `
           <a class="product-card reveal" href="product-${r.slug}.html" style="max-width:420px;margin-inline:auto">
-            <div class="media"><span class="badge">${r.badge}</span><img src="assets/img/scene-${r.slug}.svg" alt="${r.name} exterior illustration" loading="lazy" width="1200" height="800"></div>
+            <div class="media"><span class="badge">${r.badge}</span><img src="assets/photos/${r.photos.card}" alt="${r.photos.cardAlt}" loading="lazy"></div>
             <div class="body">
               <h3>${r.name}</h3>
               <p class="meta">${r.tagline}</p>
@@ -54,7 +54,7 @@ export function productPage(p) {
       "@id": `${SITE.url}/${path}#product`,
       name: p.name,
       description: p.intro,
-      image: `${SITE.url}/assets/img/scene-${p.slug}.svg`,
+      image: `${SITE.url}/assets/photos/${p.photos.hero}`,
       brand: { "@type": "Brand", name: SITE.name },
     },
     faqSchema(`${SITE.url}/${path}#faq`, p.faqs),
@@ -83,7 +83,7 @@ export function productPage(p) {
               <div><strong>Sleeps ${p.sleeps}</strong><span>Comfortably</span></div>
             </div>
           </div>
-          <div class="hero-media reveal"><img src="assets/img/scene-${p.slug}.svg" alt="${p.name} exterior at ${p.palette === "day" ? "midday" : "dusk"} with warm interior lighting" width="1200" height="800" fetchpriority="high"></div>
+          <div class="hero-media reveal"><img src="assets/photos/${p.photos.hero}" alt="${p.photos.heroAlt}" fetchpriority="high"></div>
         </div>
       </div>
     </section>
@@ -91,12 +91,9 @@ export function productPage(p) {
     <section class="section section-white" aria-label="Gallery">
       <div class="wrap">
         <div class="gallery reveal">
-          <figure><img src="assets/img/scene-${p.slug}.svg" alt="${p.name} — exterior view" loading="lazy" width="1200" height="800"></figure>
-          <figure><img src="assets/img/scene-${p.slug}-alt.svg" alt="${p.name} — alternate site setting" loading="lazy" width="1200" height="800"></figure>
-          <figure><img src="assets/img/floorplan-${p.slug}.svg" alt="${p.name} floor plan showing room layout" loading="lazy" width="1000" height="560"></figure>
-          <figure><img src="assets/img/hero-home.svg" alt="Expandable tiny home lifestyle setting at dusk" loading="lazy" width="1200" height="900"></figure>
+          ${p.photos.gallery.map(([f, alt]) => `<figure><img src="assets/photos/${f}" alt="${alt}" loading="lazy"></figure>`).join("\n          ")}
         </div>
-        <p class="muted center" style="margin-top:1rem;font-size:var(--fs-300)">Illustrative renders shown — request the brochure for factory photos of the current production version.</p>
+        <p class="muted center" style="margin-top:1rem;font-size:var(--fs-300)">Photographed in current production units — interiors shown are the shared two-bedroom layout.</p>
       </div>
     </section>
 
