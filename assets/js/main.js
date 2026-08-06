@@ -105,7 +105,6 @@
     var deckEl = q(".cine-deck");
     var flue = q(".cine-flue");
     var spillEl = q(".cine-spill");
-    var mascotEl = q(".cine-mascot");
     var litL = q(".lit-l");
     var litC = q(".lit-core");
     var litR = q(".lit-r");
@@ -155,11 +154,6 @@
       litC.style.opacity = segF(prog, 0.84, 0.92);
       litR.style.opacity = 0.95 * segF(prog, 0.88, 0.96);
       spillEl.style.opacity = segF(prog, 0.9, 1);
-      if (mascotEl) {
-        var mt = segF(prog, 0.9, 1);
-        mascotEl.style.opacity = mt;
-        mascotEl.setAttribute("transform", "translate(0 " + 16 * (1 - eOut(mt)) + ")");
-      }
 
       cine.classList.toggle("is-done", prog > 0.995);
       if (scrubEl) {

@@ -11,7 +11,7 @@ const body = `
         ${breadcrumbs([["Home", "index.html"], ["Get a Free Quote", "quote.html"]])}
         <span class="eyebrow">Free &middot; no obligation &middot; one business day</span>
         <h1>Get your delivered price</h1>
-        <p class="lead">Tell us a little about your plans and we'll send fixed delivered pricing for your postcode, current lead times, floor plans and finance estimates. One email or call — no pressure and no endless follow-up.</p>
+        <p class="lead">Postcode and plans in — delivered pricing, floor plans and lead times back within one business day.</p>
       </div>
     </section>
 

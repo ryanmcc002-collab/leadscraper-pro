@@ -73,7 +73,7 @@ const body = `
         ${breadcrumbs([["Home", "index.html"], ["FAQ", "faq.html"]])}
         <span class="eyebrow">${allFaqs.length} questions, answered properly</span>
         <h1>Everything people ask us</h1>
-        <p class="lead">No dodges, no "contact us for details" cop-outs. If your question isn't here, call ${SITE.phone} and a human in Sydney will answer it.</p>
+        <p class="lead">Straight answers. Anything missing — call ${SITE.phone}.</p>
       </div>
     </section>
 

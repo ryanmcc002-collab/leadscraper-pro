@@ -13,7 +13,7 @@ const body = `
         ${breadcrumbs([["Home", "index.html"], ["Delivery", "delivery.html"]])}
         <span class="eyebrow">Factory to front door</span>
         <h1>Delivery, handled end-to-end</h1>
-        <p class="lead">From the factory floor to keys in your hand, one team owns every step — and you can watch it happen through inspection photos and shipping updates.</p>
+        <p class="lead">Factory to keys in hand — one team owns every step.</p>
       </div>
     </section>
 

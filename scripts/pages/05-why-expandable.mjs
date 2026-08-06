@@ -17,7 +17,7 @@ const body = `
         ${breadcrumbs([["Home", "index.html"], ["Why Expandable Homes", "why-expandable-homes.html"]])}
         <span class="eyebrow">The smarter way to build</span>
         <h1>Why expandable homes are winning</h1>
-        <p class="lead">Understand exactly how expandable construction works, why it costs so much less than building, and where the trade-offs genuinely are — so you can decide with your eyes open.</p>
+        <p class="lead">How it works, what it saves, and the honest trade-offs.</p>
       </div>
     </section>
 

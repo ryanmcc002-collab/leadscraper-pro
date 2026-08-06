@@ -2,13 +2,11 @@ import { SITE, icons, layout, faqItem, faqSchema, ctaBanner } from "../lib/layou
 import { products } from "../lib/products-data.mjs";
 
 const HOME_FAQS = [
-  ["How much does an expandable tiny home cost in Australia?", `Every quote we issue is a fixed delivered price to your exact postcode — home, transport, customs and quality inspection included — so we price per order rather than publishing a one-size-fits-all number. For market context, see our <a href="blog-how-much-does-a-tiny-home-cost.html">full pricing guide</a>, then <a href="quote.html">request your delivered quote</a> — it's free and takes one business day.`],
-  ["Do tiny homes need council approval?", `It depends on how the home is used and where it's located. A home used as a permanent dwelling generally needs approval as a secondary dwelling or primary residence; some small structures and temporary uses have exemptions. We provide engineering documentation with every home and a state-by-state guide — read <a href="blog-do-tiny-homes-need-council-approval.html">our council approval guide</a>.`],
-  ["How long does delivery take?", `Lead times depend on the production schedule and shipping — your quote includes the current timeline. Installation and expansion is typically completed in a single day. The <a href="delivery.html">delivery page</a> walks through every step from factory to handover.`],
-  ["What does 'expandable' actually mean?", `The home transports as a standard shipping-width load, then hinged wing sections fold out on site to double or triple the floor area. You get real rooms and real ceilings — not a trailer, not a caravan. <a href="why-expandable-homes.html">Learn how expandable homes work</a>.`],
-  ["Is finance available?", `Yes — through Australian lenders offering personal, secured and business loans for tiny homes, with terms from 3 to 7 years. Use the <a href="finance.html">repayment calculator</a> to estimate weekly repayments.`],
-  ["What warranty do you offer?", `Warranty terms are set out in writing with your quote and order agreement — no verbal promises — and administered by our Australian team, not an overseas factory. That sits on top of the consumer guarantees that apply automatically under Australian Consumer Law.`],
-];
+  ["How much does a tiny home cost?", `We quote one fixed delivered price for your postcode — free, within a business day. <a href="quote.html">Request yours</a> or read the <a href="blog-how-much-does-a-tiny-home-cost.html">cost guide</a>.`],
+  ["Do I need council approval?", `Usually, if someone will live in it. We supply the documents your certifier needs — see the <a href="blog-do-tiny-homes-need-council-approval.html">state-by-state guide</a>.`],
+  ["How long does it take?", `Your quote includes the current factory and shipping timeline. Installation itself takes about a day — <a href="delivery.html">how delivery works</a>.`],
+  ["What does 'expandable' mean?", `The home ships folded at road width, then unfolds on site into a full two-bedroom home. <a href="why-expandable-homes.html">See how it works</a>.`],
+]
 
 const productCards = products
   .map(
@@ -17,7 +15,6 @@ const productCards = products
             <div class="media"><span class="badge">${p.badge}</span><img src="assets/img/scene-${p.slug}.svg" alt="${p.name} exterior illustration" loading="lazy" width="1200" height="800"></div>
             <div class="body">
               <h3>${p.name}</h3>
-              <p class="meta">${p.tagline}</p>
               <p class="meta">${p.bedrooms} bed &middot; ${p.bathrooms} bath &middot; sleeps ${p.sleeps}</p>
               <div class="price-row"><span class="price" style="font-size:var(--fs-400)">Delivered quote on request</span>${icons.arrow}</div>
             </div>
@@ -34,11 +31,10 @@ const marqueeBand = `
 
 const body = `
     <section class="hero hero-cinema">
-      <div class="wrap">
+      <div class="wrap hero-top">
         <div class="hero-copy">
-          <span class="eyebrow eyebrow-center">Australia's premium expandable homes</span>
           <h1 class="kinetic"><span class="kw" style="--d:0s"><span>Premium</span></span> <span class="kw" style="--d:0.07s"><span>Expandable</span></span> <span class="kw" style="--d:0.14s"><span>Tiny</span></span> <span class="kw" style="--d:0.21s"><span>Homes,</span></span><br><span class="kw" style="--d:0.32s"><span><em>delivered</em></span></span> <span class="kw" style="--d:0.4s"><span><em>Australia-wide</em></span></span></h1>
-          <p class="lead">Factory-direct pricing without the factory-direct gamble: every Go Tiny Homes build is independently quality-inspected, delivered to your site at a fixed price, and backed by staged factory inspections and a real Australian support team.</p>
+          <p class="lead">Two real bedrooms, factory-direct, one fixed delivered price.</p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="quote.html">Get a Free Quote ${icons.arrow}</a>
             <a class="btn btn-ghost-light btn-lg" href="quote.html?brochure=1">${icons.doc} Download Brochure</a>
@@ -48,6 +44,9 @@ const body = `
             <span class="item">${icons.check} 3 staged factory inspections</span>
             <span class="item">${icons.truck} Delivery to every state</span>
           </div>
+        </div>
+        <div class="hero-mascot">
+          <img src="assets/img/mascot.png" alt="Go Tiny Homes wombat mascot flexing his bicep" width="614" height="760" fetchpriority="high">
         </div>
       </div>
 
@@ -145,10 +144,6 @@ const body = `
             <path class="cine-spill" d="M725 653 L 875 653 L 940 722 L 660 722 Z" fill="url(#cn-warm)" fill-opacity="0.14"/>
           </g>
 
-          <g class="cine-mascot">
-            <image href="assets/img/mascot.svg" x="1085" y="424" width="210" height="238"/>
-          </g>
-
           <path d="M0 656 Q 400 640 800 652 T 1600 648 V 880 H 0 Z" fill="#232B19"/>
         </svg>
 
@@ -180,33 +175,33 @@ const body = `
           <article class="bento-tile bento-wide">
             <div class="icon">${icons.expand}</div>
             <h3>Expandable by design</h3>
-            <p>Transports at standard road width, then unfolds on site into a complete two-bedroom home. Real bedrooms, real walls, real doors — engineered hinged construction, not a caravan.</p>
+            <p>Ships at road width, unfolds into a real two-bedroom home — not a caravan.</p>
             <div class="bento-figure"><strong>2.5m</strong><span>on the truck</span><strong>&rarr;</strong><strong>2-bed</strong><span>home on site</span></div>
           </article>
           <article class="bento-tile">
             <div class="icon">${icons.clock}</div>
             <h3>Installed in a day</h3>
-            <p>Delivered finished and expanded on site in a day — not 12–18 months after a slab is poured.</p>
+            <p>Finished at the factory. Expanded on your site in a day.</p>
           </article>
           <article class="bento-tile">
             <div class="icon">${icons.gem}</div>
             <h3>Premium quality</h3>
-            <p>Welded steel frames, fire-resistant EPS panels, double glazing — with staged factory inspections photographed for you.</p>
+            <p>Steel frame, fire-resistant panels, double glazing — inspected three times before it ships.</p>
           </article>
           <article class="bento-tile bento-gold">
             <div class="icon" style="background:rgba(51,61,38,0.12);border-color:rgba(51,61,38,0.25);color:var(--navy)">${icons.tag}</div>
             <h3>One fixed delivered quote</h3>
-            <p>Factory-direct with no importer margin stacked in between. Transport, customs and installation included — GST too.</p>
+            <p>Home, transport, customs, installation, GST. One number.</p>
             <a class="btn btn-sm" href="quote.html">Get yours free ${icons.arrow}</a>
           </article>
           <article class="bento-tile bento-wide bento-media">
             <img src="assets/img/map-au.svg" alt="Australia-wide delivery map showing routes to every capital and regional centre" loading="lazy" width="900" height="720">
-            <div class="cap">Australia-wide delivery — metro, regional and remote, quoted to your postcode.</div>
+            <div class="cap">Delivered Australia-wide, quoted to your postcode.</div>
           </article>
           <article class="bento-tile">
             <div class="icon">${icons.home}</div>
             <h3>Complete as delivered</h3>
-            <p>Fitted kitchen, full bathroom with shower, toilet and basin, double-glazed openings — liveable from day one.</p>
+            <p>Kitchen and full bathroom fitted before it leaves the factory.</p>
           </article>
         </div>
       </div>
@@ -229,7 +224,7 @@ const body = `
           <span class="sec-num" aria-hidden="true">02</span>
           <span class="eyebrow eyebrow-center">The range</span>
           <h2 id="range-h">One home. Two editions. <em>Zero compromises.</em></h2>
-          <p class="lead center" style="margin-inline:auto">The Model 0206 two-bedroom expandable, in Classic White or the feature-clad Black Edition — same complete layout, two distinct characters.</p>
+          <p class="lead center" style="margin-inline:auto">One layout. Classic White or feature-clad Black.</p>
         </div>
         <div class="carousel" style="margin-top:2.5rem">
           <div class="carousel-nav">
@@ -243,49 +238,29 @@ const body = `
       </div>
     </section>
 
-    <section class="section" aria-labelledby="how-h">
-      <div class="wrap two-col">
-        <div class="reveal">
-          <span class="eyebrow">How it works</span>
-          <h2 id="how-h">From first call to front-door keys</h2>
-          <p class="lead">One dedicated Australian project manager guides your entire journey — you'll never be passed to an offshore call centre.</p>
-          <div class="steps" style="margin-top:2rem">
-            <div class="step"><div><h3>Free consultation &amp; site check</h3><p>We confirm access, approvals pathway and the right model for your block — before you spend a cent.</p></div></div>
-            <div class="step"><div><h3>Factory build &amp; inspection</h3><p>Your home is built and independently inspected at each stage, with photo reports sent to you.</p></div></div>
-            <div class="step"><div><h3>Delivery &amp; expansion</h3><p>Shipped, cleared through customs and installed on your site — usually expanded within a single day.</p></div></div>
-            <div class="step"><div><h3>Connection &amp; handover</h3><p>Licensed trades connect power, water and waste. We walk you through everything, then hand over the keys.</p></div></div>
-          </div>
-        </div>
-        <div class="reveal reveal-d1">
-          <div class="media-frame"><img src="assets/img/map-au.svg" alt="Map of Australia showing delivery routes to Sydney, Melbourne, Brisbane, Perth, Adelaide, Darwin, Hobart and regional areas" loading="lazy" width="900" height="720"></div>
-          <p class="muted center" style="margin-top:1rem;font-size:var(--fs-300)">Every state and territory. Metro, regional and remote.</p>
-        </div>
-      </div>
-    </section>
-
     <section class="section section-white" aria-labelledby="promise-h">
       <div class="wrap">
         <div class="center reveal">
           <span class="sec-num" aria-hidden="true">03</span>
           <span class="eyebrow eyebrow-center">Our commitments</span>
           <h2 id="promise-h">Promises we put <em>in writing</em></h2>
-          <p class="lead center" style="margin-inline:auto">No invented review scores, no stock-photo "happy customers". Just commitments you'll find in your contract — and can hold us to.</p>
+          <p class="lead center" style="margin-inline:auto">In your contract, not just on this page.</p>
         </div>
         <div class="grid grid-3" style="margin-top:2.5rem">
           <div class="card reveal">
             <div class="icon">${icons.doc}</div>
             <h3>The quote is the price</h3>
-            <p>Your delivered quote is itemised and fixed for 60 days — home, transport, customs and installation. Anything site-specific is a written line item before you commit, never a surprise after.</p>
+            <p>Itemised, fixed for 60 days. Site extras are written line items before you commit.</p>
           </div>
           <div class="card reveal reveal-d1">
             <div class="icon">${icons.shield}</div>
             <h3>Proof before payment</h3>
-            <p>Progress payments are tied to inspection milestones you can verify yourself — you receive the staged factory inspection photo reports of your own home as it's built.</p>
+            <p>Progress payments only after you've seen inspection photos of your own build.</p>
           </div>
           <div class="card reveal reveal-d2">
             <div class="icon">${icons.phone}</div>
             <h3>Support that answers</h3>
-            <p>A Sydney-based project manager owns your order from first call to handover, and aftercare is handled here in Australia — not by an overseas factory.</p>
+            <p>One Sydney-based project manager, first call to handover.</p>
           </div>
         </div>
       </div>
@@ -297,7 +272,6 @@ const body = `
           <span class="sec-num" aria-hidden="true">04</span>
           <span class="eyebrow eyebrow-center">The honest comparison</span>
           <h2 id="cmp-h">Expandable home <em>vs the alternatives</em></h2>
-          <p class="lead center" style="margin-inline:auto">We'd rather you make an informed decision than a fast one. Here's how the options genuinely stack up.</p>
         </div>
         <div class="table-scroll reveal" style="margin-top:2.5rem">
           <table class="compare">
@@ -332,37 +306,9 @@ const body = `
       </div>
     </section>
 
-    ${marqueeBand}
-
-    <section class="section" aria-labelledby="guide-h">
-      <div class="wrap">
-        <div class="cta-banner reveal" style="text-align:left;display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:center">
-          <div>
-            <span class="eyebrow">Free buyer's guide</span>
-            <h2 id="guide-h" style="margin-inline:0">The 2026 Australian Tiny Home Buyer's Guide</h2>
-            <p class="lead" style="margin-inline:0">Pricing benchmarks, council approval checklists for every state, site preparation costs and the 12 questions to ask any supplier (including us). No spam — one useful email, then you're done.</p>
-          </div>
-          <form class="glass-panel" data-enquiry novalidate aria-label="Download the free buyer's guide">
-            <div class="field" style="margin-bottom:1rem">
-              <label for="guide-name" style="color:#fff">First name</label>
-              <input id="guide-name" name="name" type="text" autocomplete="given-name" required>
-            </div>
-            <div class="field" style="margin-bottom:1.25rem">
-              <label for="guide-email" style="color:#fff">Email</label>
-              <input id="guide-email" name="email" type="email" autocomplete="email" required>
-            </div>
-            <p class="honeypot" aria-hidden="true"><input type="text" name="company_website" tabindex="-1" autocomplete="off"></p>
-            <button class="btn btn-gold" type="submit" style="width:100%">Send me the free guide</button>
-            <p class="form-success" role="status">Thanks! Your guide is on its way — check your inbox in the next few minutes.</p>
-            <p class="form-note" style="color:#AEB89A">${icons.lock} Your details stay with us. Unsubscribe anytime.</p>
-          </form>
-        </div>
-      </div>
-    </section>
-
     ${ctaBanner(
       "Get delivered pricing for your postcode",
-      "Free quote within one business day — including transport, current lead times and finance estimates. No pressure, no obligation, no call-centre follow-up."
+      "One number: home, transport, customs, installation. Free, within a business day."
     )}
 `;
 
