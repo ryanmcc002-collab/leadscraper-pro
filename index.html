@@ -56,15 +56,20 @@
   </header>
   <main id="main">
 
-    <section class="hero hero-cinema">
-      <div class="wrap hero-top">
+    <section class="hero-video" aria-label="Go Tiny Homes">
+      <video class="hero-bg" autoplay muted loop playsinline preload="metadata" poster="assets/photos/hero-backyard.webp" aria-hidden="true" data-ambient>
+        <source src="assets/video/hero.mp4" type="video/mp4">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_3GspmgM9yOaZVyqBW1UkUa2Xk0l/hf_20260809_042126_2ab31a83-ffd9-43f2-85cc-cc7667f6d07c.mp4" type="video/mp4">
+      </video>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="wrap hero-video-inner">
         <div class="hero-copy">
           <span class="eyebrow">Expandable homes &middot; delivered Australia-wide</span>
           <h1 class="hero-title">Go tiny. <em>Live big.</em></h1>
           <p class="lead">Two bedrooms, a bathroom and a full kitchen — delivered on the back of a truck. <strong>Easy.</strong></p>
           <div class="hero-actions">
             <a class="btn btn-gold btn-lg" href="#quote">Get a Free Quote <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a class="btn btn-ghost btn-lg" href="#unfold">Watch it unfold &darr;</a>
+            <a class="btn btn-ghost-light btn-lg" href="#unfold">Watch it unfold &darr;</a>
           </div>
           <div class="hero-trust">
             <span class="item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Australian owned &amp; supported</span>
@@ -76,7 +81,9 @@
           <img src="assets/img/mascot.webp" alt="Go Tiny Homes wombat mascot flexing his bicep" width="480" height="594" fetchpriority="high">
         </div>
       </div>
+    </section>
 
+    <section class="hero hero-cinema" aria-label="Watch the delivery unfold">
       <div class="cinema-stage" id="unfold" data-cinema>
         <svg viewBox="0 0 1600 880" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Animated story of a Go Tiny Homes delivery: a truck arrives carrying the folded home, sets it down, and the home unfolds into a full two-bedroom house with lit windows">
           <defs>
@@ -278,15 +285,19 @@
           <span class="sec-num" aria-hidden="true">03</span>
           <span class="eyebrow eyebrow-center">Step inside</span>
           <h2 id="inside-h">Complete and liveable, <em>as delivered</em></h2>
-          <p class="lead center" style="margin-inline:auto">Photographed in current production units.</p>
+          <p class="lead center" style="margin-inline:auto">Filmed and photographed in current production units.</p>
         </div>
-        <div class="grid grid-3 reveal" style="margin-top:2.5rem">
+        <figure class="media-frame video-feature reveal" style="margin:2.5rem 0 0">
+          <video autoplay muted loop playsinline preload="metadata" poster="assets/photos/interior-living.webp" aria-label="Slow glide through the Model 0206 living room" data-ambient>
+            <source src="assets/video/interior.mp4" type="video/mp4">
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_3GspmgM9yOaZVyqBW1UkUa2Xk0l/hf_20260809_042126_56003d34-bd9d-4cd2-8dd1-90c6ed83aba7.mp4" type="video/mp4">
+          </video>
+        </figure>
+        <div class="grid grid-4 reveal" style="margin-top:1.5rem">
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-dining.webp" alt="Dining area with table and chairs inside the Model 0206" loading="lazy"></figure>
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-kitchen.webp" alt="Fitted kitchen with cabinetry, oven and fridge inside the Model 0206" loading="lazy"></figure>
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-living.webp" alt="Living area with sofa and double glass doors inside the Model 0206" loading="lazy"></figure>
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bedroom.webp" alt="Furnished bedroom with double bed and curtains inside the Model 0206" loading="lazy"></figure>
           <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-bathroom.webp" alt="Bathroom with shower, vanity and toilet inside the Model 0206" loading="lazy"></figure>
-          <figure class="media-frame" style="margin:0"><img src="assets/photos/interior-dining-wide.webp" alt="Wide view of the dining area and windows inside the Model 0206" loading="lazy" style="height:100%;object-fit:cover"></figure>
         </div>
       </div>
     </section>

@@ -382,6 +382,28 @@
     go(0);
   });
 
+  /* Ambient videos: honour reduced motion, pause when off-screen */
+  var ambients = document.querySelectorAll("video[data-ambient]");
+  if (ambients.length) {
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    ambients.forEach(function (v) {
+      if (reduceMotion) {
+        v.removeAttribute("autoplay");
+        v.pause();
+        return;
+      }
+      if ("IntersectionObserver" in window) {
+        var vio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { v.play().catch(function () {}); }
+            else { v.pause(); }
+          });
+        }, { threshold: 0.15 });
+        vio.observe(v);
+      }
+    });
+  }
+
   /* Current year in footer */
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();
