@@ -330,8 +330,8 @@
     .hero-stage { width: calc(100% + 28mm); margin: 0 -14mm 0; padding: 0; }
     .hero-page .iso-container { margin: 0; }
     .hero-page .iso-container svg { max-height: 138mm; }
-    .hero-specs { display: flex; gap: 12mm; margin: 4mm 0 0; padding-top: 3mm; border-top: 0.25pt solid rgba(0,0,0,.18); }
-    .hero-spec .v { font-size: 24pt; font-weight: 600; letter-spacing: -0.02em; color: #111; line-height: 1.05; font-variant-numeric: tabular-nums lining-nums; }
+    .hero-specs { display: flex; gap: 9mm; margin: 4mm 0 0; padding-top: 3mm; border-top: 0.25pt solid rgba(0,0,0,.18); white-space: nowrap; }
+    .hero-spec .v { font-size: 22pt; font-weight: 600; letter-spacing: -0.02em; color: #111; line-height: 1.05; font-variant-numeric: tabular-nums lining-nums; }
     .hero-spec .l { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(0,0,0,.55); font-weight: 600; margin-top: 1.5mm; }
     .hero-key { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6mm 6mm; margin: 5mm 0 0; max-width: 176mm; }
     .hero-key div { font-size: 6.5pt; color: rgba(0,0,0,.65); font-weight: 500; display: flex; align-items: baseline; gap: 2mm; }
@@ -2372,9 +2372,9 @@ function updatePrintDoc(t, showFinance) {
   const eSpecs = document.getElementById('pHeroSpecs');
   if (eSpecs) {
     const spec = (v, l) => `<div class="hero-spec"><div class="v">${v}</div><div class="l">${l}</div></div>`;
-    const nWin = meta.windows.length + 1;   // plus the drawbar window
+    const nWin = meta.windows.length;
     eSpecs.innerHTML = meta.size
-      ? spec(`${meta.size}m`, 'Long') + spec('2.1m', 'Wide') + spec(meta.isDual ? 'Dual' : 'Single', 'Axle') + spec(String(nWin), `Serving window${nWin === 1 ? '' : 's'}`) + spec(meta.leadTime.replace(' weeks', ' wks'), 'Build time')
+      ? spec(`${meta.size}m`, 'Long') + spec('2.1m', 'Wide') + spec(meta.isDual ? 'Dual' : 'Single', 'Axle') + spec(String(nWin), `Serving window${nWin === 1 ? '' : 's'}`) + spec('1', 'Drawbar window') + spec(meta.leadTime.replace(' weeks', ' wks'), 'Build time')
       : '';
   }
   const eHeroCredit = document.getElementById('pHeroCredit');
@@ -3582,6 +3582,13 @@ function renderIsoView(d) {
   // The on-screen copy carries a small title; the PDF hero page has its own headline, so the print copy doesn't
   const build = (tag, full, night) => {
     let body = night ? nightUnder + g + nightOver : g;
+    if (!full) {   // cover: strip every label, pill and arrow so only the trailer and its number tags remain
+      body = body.replace(/<rect[^>]*fill="#16a34a"\/>/g, '')
+                 .replace(/<text[^>]*font-size="6\.2"[^>]*>[^<]*<\/text>/g, '')
+                 .replace(/<text(?![^>]*fill="white")[^>]*>[^<]*<\/text>/g, '')
+                 .replace(/stroke="#16a34a" stroke-width="1" stroke-linejoin="round"/g, 'stroke="rgba(255,255,255,0.55)" stroke-width="0.8" stroke-linejoin="round"')
+                 .replace(/stroke="#6b7280" stroke-width="2.2" stroke-linejoin="round"/g, 'stroke="#9aa3ad" stroke-width="1.4" stroke-linejoin="round"');
+    }
     if (night) body = body.replace(/fill="#(1a2e44|374151|6b7280|64748b)" font-family/g, 'fill="#f1e7d0" font-family').replace('fill="#16a34a" letter-spacing="1"', 'fill="#fbbf24" letter-spacing="1"');   // labels readable on the dark cover
     return (`<svg viewBox="0 0 ${W} ${full ? H : Hp}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${night ? defsNight : defs}
     ${full ? `<text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
