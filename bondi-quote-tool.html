@@ -317,41 +317,43 @@
     .page-two-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
     .print-page-note { font-size: 9px; color: #9ca3af; text-align: right; margin-top: 4px; }
     .page-plan-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
-    /* ── PAGE 1 HERO ── */
-    .hero-page { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 262mm; }
+    /* ── PAGE 1 HERO ──  (left-aligned, upper-third headline, product as the hero, one accent) */
+    .hero-page { position: relative; display: flex; flex-direction: column; align-items: stretch; text-align: left; min-height: 297mm; margin: -15mm -15mm 0; padding: 13mm 14mm 11mm; background: #fff; color: #111; font-family: "Helvetica Neue", "Segoe UI", "Arial Nova", Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .page-plan-container { break-before: page; page-break-before: always; }
-    .hero-kicker { font-size: 10.5px; letter-spacing: 3px; text-transform: uppercase; color: #f47c20; font-weight: 800; margin-bottom: 10px; }
-    .hero-credit { font-size: 9.5px; color: #9ca3af; margin: 12px 0 10px; }
-    /* Dusk cover: full-bleed twilight, warm light from the windows */
-    .hero-page.night { background: linear-gradient(180deg, #050c1f 0%, #0e1d42 46%, #2a2242 78%, #3b2716 100%); margin: -15mm -15mm 0; padding: 12mm 15mm 10mm; min-height: 297mm; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .hero-page.night .hero-top img { width: 210px; }
-    .hero-page.night .hero-title { color: #fff; }
-    .hero-page.night .hero-sub { color: #cbd5e1; }
-    .hero-page.night .hero-kicker { color: #fbbf24; }
-    .hero-page.night .hero-stage { background: none; }
-    .hero-page.night .hero-spec { border-left-color: rgba(255,255,255,.18); }
-    .hero-page.night .hero-spec .v { color: #fff; }
-    .hero-page.night .hero-spec .l { color: #94a3b8; }
-    .hero-page.night .hero-key div { color: #e5e7eb; }
-    .hero-page.night .hero-credit { color: #94a3b8; }
-    .hero-page.night .print-footer { border-top-color: rgba(255,255,255,.22); color: #cbd5e1; }
-    .hero-top { width: 100%; display: flex; justify-content: center; margin: 2px 0 26px; }
-    .hero-top img { width: 200px; }
-    .hero-title { font-size: 42px; font-weight: 800; letter-spacing: -1.6px; line-height: 1.04; color: #111; margin: 0 0 12px; max-width: 160mm; }
-    .hero-sub { font-size: 14px; color: #6b7280; font-weight: 500; margin: 0 0 10px; max-width: 150mm; line-height: 1.45; }
-    .hero-stage { width: calc(100% + 30mm); margin: 4px -15mm 2px; padding: 6px 0 0; border-radius: 0; background: radial-gradient(ellipse at 50% 60%, #f1f3f6 0%, #ffffff 66%); }
+    .hero-top { display: flex; justify-content: space-between; align-items: center; margin: 0 0 9mm; }
+    .hero-top img { width: 30mm; display: block; }
+    .hero-plate { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #f28c28; font-variant-numeric: tabular-nums; }
+    .hero-title { margin: 0 0 4mm; max-width: 170mm; }
+    .hero-name { display: block; font-size: 64pt; font-weight: 700; letter-spacing: -0.03em; line-height: 0.96; color: #111; }
+    .hero-line2 { display: block; font-size: 36pt; font-weight: 600; letter-spacing: -0.02em; line-height: 1.06; color: #333; margin-top: 1.5mm; }
+    .hero-sub { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 13pt; color: #6b7280; margin: 0 0 3mm; max-width: 150mm; line-height: 1.4; }
+    .hero-stage { width: calc(100% + 28mm); margin: 0 -14mm 0; padding: 0; }
     .hero-page .iso-container { margin: 0; }
-    .hero-page .iso-container svg { max-height: 158mm; }
-    .hero-specs { display: flex; justify-content: center; margin: 8px 0 12px; width: 100%; }
-    .hero-spec { padding: 2px 24px; border-left: 1px solid #e5e7eb; }
-    .hero-spec:first-child { border-left: none; }
-    .hero-spec .v { font-size: 21px; font-weight: 800; letter-spacing: -.7px; color: #111; line-height: 1.1; }
-    .hero-spec .l { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1.3px; color: #9ca3af; font-weight: 700; margin-top: 3px; }
-    .hero-key { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px 18px; width: 100%; max-width: 168mm; margin: 0 auto 4px; text-align: left; }
-    .hero-key div { font-size: 9.5px; color: #374151; font-weight: 600; display: flex; align-items: center; gap: 7px; }
-    .hero-key .n { width: 15px; height: 15px; border-radius: 50%; color: #fff; font-size: 8px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .hero-foot { font-size: 10px; color: #9ca3af; margin: 8px 0 10px; }
-    .hero-page .print-footer { width: 100%; }
+    .hero-page .iso-container svg { max-height: 138mm; }
+    .hero-specs { display: flex; gap: 12mm; margin: 4mm 0 0; padding-top: 3mm; border-top: 0.25pt solid rgba(0,0,0,.18); }
+    .hero-spec .v { font-size: 24pt; font-weight: 600; letter-spacing: -0.02em; color: #111; line-height: 1.05; font-variant-numeric: tabular-nums lining-nums; }
+    .hero-spec .l { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(0,0,0,.55); font-weight: 600; margin-top: 1.5mm; }
+    .hero-key { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6mm 6mm; margin: 5mm 0 0; max-width: 176mm; }
+    .hero-key div { font-size: 6.5pt; color: rgba(0,0,0,.65); font-weight: 500; display: flex; align-items: baseline; gap: 2mm; }
+    .hero-key .n { color: #f28c28; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3mm; }
+    .hero-key .more { color: rgba(0,0,0,.45); }
+    .hero-credit { font-size: 6.5pt; color: rgba(0,0,0,.45); margin: 4mm 0 0; line-height: 1.5; max-width: 140mm; }
+    .hero-stamp { position: absolute; right: 14mm; bottom: 21mm; width: 17mm; height: 17mm; }
+    .hero-stamp svg { width: 17mm; height: 17mm; display: block; }
+    .hero-footer { margin-top: auto; padding-top: 3mm; border-top: 0.25pt solid rgba(0,0,0,.18); display: flex; justify-content: space-between; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(0,0,0,.55); font-weight: 600; font-variant-numeric: tabular-nums; }
+    /* Dusk cover: two-stop dark ground, 90% white type, orange only where light lives */
+    .hero-page.night { background: linear-gradient(180deg, #0B1120 0%, #111827 42%, #171310 80%, #221812 100%); color: #e6e6e6; }
+    .hero-page.night .hero-name { color: #f4f4f5; }
+    .hero-page.night .hero-line2 { color: #d4d4d8; }
+    .hero-page.night .hero-sub { color: rgba(255,255,255,.72); }
+    .hero-page.night .hero-stage { background: radial-gradient(ellipse at 50% 72%, rgba(242,140,40,.16) 0%, rgba(242,140,40,0) 58%); }
+    .hero-page.night .hero-specs { border-top-color: rgba(255,255,255,.18); }
+    .hero-page.night .hero-spec .v { color: #f4f4f5; }
+    .hero-page.night .hero-spec .l { color: rgba(255,255,255,.55); }
+    .hero-page.night .hero-key div { color: rgba(255,255,255,.66); }
+    .hero-page.night .hero-key .more { color: rgba(255,255,255,.4); }
+    .hero-page.night .hero-credit { color: rgba(255,255,255,.42); }
+    .hero-page.night .hero-footer { border-top-color: rgba(255,255,255,.18); color: rgba(255,255,255,.55); }
     .page-two-container .print-header { margin-bottom: 10px; }
     .page-two-container .print-logo-block img { width: 160px; margin-bottom: 4px; }
     .page-two-container .print-to { margin-bottom: 12px; }
@@ -883,17 +885,21 @@
   <div class="print-doc">
 
     <div class="hero-page">
-      <div class="hero-top"><img id="pHeroLogo" alt="Bondi Food Trailers"></div>
-      <div class="hero-kicker">Your first service</div>
-      <h1 class="hero-title" id="pHeroTitle">Here's your new trailer.</h1>
+      <div class="hero-top">
+        <img id="pHeroLogo" alt="Bondi Food Trailers">
+        <div class="hero-plate" id="pHeroPlate"></div>
+      </div>
+      <h1 class="hero-title"><span class="hero-name" id="pHeroName">Steve,</span><span class="hero-line2" id="pHeroLine2">here's your new trailer.</span></h1>
       <div class="hero-sub" id="pHeroSub"></div>
       <div class="hero-stage"><div class="iso-container" id="pIsoView"></div></div>
       <div class="hero-specs" id="pHeroSpecs"></div>
       <div class="hero-key" id="pHeroKey"></div>
       <div class="hero-credit" id="pHeroCredit"></div>
-      <div class="print-footer" style="margin-top:auto;">
-        <strong style="color:#f47c20; font-size:12px; text-transform:uppercase;">bondi food trailers</strong>
-        <div id="pFooterDateH"></div>
+      <div class="hero-stamp"><svg viewBox="0 0 100 100" width="46" height="46"><defs><path id="stampArc" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><circle cx="50" cy="50" r="46" fill="none" stroke="#f28c28" stroke-width="1.2"/><circle cx="50" cy="50" r="28" fill="none" stroke="#f28c28" stroke-width="0.8"/><text font-size="9.5" font-weight="700" fill="#f28c28" letter-spacing="2.2" font-family="Helvetica Neue, Segoe UI, Arial, sans-serif"><textPath href="#stampArc" startOffset="0">BFT · CUSTOM BUILT · AUSTRALIA ·</textPath></text><text x="50" y="54" text-anchor="middle" font-size="13" font-weight="800" fill="#f28c28" font-family="Helvetica Neue, Segoe UI, Arial, sans-serif">BFT</text></svg></div>
+      <div class="hero-footer">
+        <span>Bondi Food Trailers</span>
+        <span id="pFooterDateH"></span>
+        <span class="folio">01 / 04</span>
       </div>
     </div>
 
@@ -2345,30 +2351,36 @@ function updatePrintDoc(t, showFinance) {
   const eValid = document.getElementById('pQuoteValid');
   if (eValid) eValid.textContent = 'Valid until ' + meta.validUntilStr;
 
-  // Page 1 hero: their name, one line, and the trailer
+  // Page 1 hero: build plate, their name, one line, and the trailer
   const firstName = (document.getElementById('custName').value || '').trim().split(' ')[0];
   const trailerName = ((document.getElementById('custTrailerName') || {}).value || '').trim();
-  const eHeroTitle = document.getElementById('pHeroTitle');
-  if (eHeroTitle) eHeroTitle.textContent = trailerName
-    ? (firstName ? `${firstName}, meet ${trailerName}.` : `Meet ${trailerName}.`)
-    : (firstName ? `${firstName}, here's your new trailer.` : "Here's your new trailer.");
-  const eHeroCredit = document.getElementById('pHeroCredit');
-  if (eHeroCredit) eHeroCredit.textContent = `Designed with Ryan${dateStr ? ' on ' + dateStr : ''}${quoteNum ? '  ·  Build ref ' + quoteNum : ''}. Drawn to scale. Nothing is built until you've signed off the 3D render.`;
-  const heroPage = document.querySelector('.hero-page');
-  if (heroPage) heroPage.classList.toggle('night', state.heroStyle !== 'day');
+  const monthYear = dateVal ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-AU', { month: 'long', year: 'numeric' }) : '';
+  const ePlate = document.getElementById('pHeroPlate');
+  if (ePlate) ePlate.textContent = ['Custom build', quoteNum ? 'No. ' + quoteNum : '', monthYear].filter(Boolean).join('  ·  ');
+  const eName = document.getElementById('pHeroName'), eLine2 = document.getElementById('pHeroLine2');
+  if (eName && eLine2) {
+    eName.textContent = firstName ? `${firstName},` : '';
+    eName.style.display = firstName ? 'block' : 'none';
+    eLine2.textContent = trailerName ? (firstName ? `meet ${trailerName}.` : `Meet ${trailerName}.`) : (firstName ? "here's your new trailer." : "Here's your new trailer.");
+  }
   const eHeroSub = document.getElementById('pHeroSub');
   if (eHeroSub) {
     const what = meta.size ? `A ${meta.size}m custom food trailer` : (desc ? `A ${desc.replace(/^a /i, '')}` : 'A custom food trailer');
-    eHeroSub.textContent = concept ? `${what}, built around ${concept}.` : `${what}, built around your menu.`;
+    const place = (location || '').trim();
+    eHeroSub.textContent = (concept ? `${what}, built around ${concept}.` : `${what}, built around your menu.`) + (place ? ` Bound for ${place}.` : '');
   }
   const eSpecs = document.getElementById('pHeroSpecs');
   if (eSpecs) {
     const spec = (v, l) => `<div class="hero-spec"><div class="v">${v}</div><div class="l">${l}</div></div>`;
     const nWin = meta.windows.length + 1;   // plus the drawbar window
     eSpecs.innerHTML = meta.size
-      ? spec(`${meta.size}m`, 'Long') + spec('2.1m', 'Wide') + spec(meta.isDual ? 'Dual' : 'Single', 'Axle') + spec(String(nWin), `Serving window${nWin === 1 ? '' : 's'}`)
+      ? spec(`${meta.size}m`, 'Long') + spec('2.1m', 'Wide') + spec(meta.isDual ? 'Dual' : 'Single', 'Axle') + spec(String(nWin), `Serving window${nWin === 1 ? '' : 's'}`) + spec(meta.leadTime.replace(' weeks', ' wks'), 'Build time')
       : '';
   }
+  const eHeroCredit = document.getElementById('pHeroCredit');
+  if (eHeroCredit) eHeroCredit.textContent = [`Designed with Ryan${dateStr ? ', ' + dateStr : ''}`, trailerName && firstName ? `Named by ${firstName}` : '', 'Drawn to scale', 'Everything on this page can still change before we cut steel'].filter(Boolean).join('  ·  ') + '.';
+  const heroPage = document.querySelector('.hero-page');
+  if (heroPage) heroPage.classList.toggle('night', state.heroStyle !== 'day');
   const eHeroLogo = document.getElementById('pHeroLogo'), srcLogo = document.querySelector('.print-logo-block img');
   if (eHeroLogo && srcLogo) {
     const want = (state.heroStyle !== 'day' && KNOCKOUT_LOGO) ? KNOCKOUT_LOGO : srcLogo.src;
@@ -3546,7 +3558,11 @@ function renderIsoView(d) {
   if (el) { el.style.display = 'block'; el.innerHTML = build('isoS', true, false); }
   if (pEl) pEl.innerHTML = build('isoP', false, state.heroStyle !== 'day');
   const keyEl = document.getElementById('pHeroKey');
-  if (keyEl) keyEl.innerHTML = keyRows.map((r, i) => `<div><span class="n" style="background:${r.item.isCashDrawer ? '#ef4444' : planColor(r.item)}">${i + 1}</span>${esc(r.item.name || r.item.label)}${r.count > 1 ? ` ×${r.count}` : ''}</div>`).join('');
+  if (keyEl) {
+    const shown = keyRows.slice(0, 8);
+    keyEl.innerHTML = shown.map((r, i) => `<div><span class="n">${String(i + 1).padStart(2, '0')}</span>${esc(r.item.name || r.item.label)}${r.count > 1 ? ` ×${r.count}` : ''}</div>`).join('')
+      + (keyRows.length > 8 ? `<div class="more">+ ${keyRows.length - 8} more on page 2</div>` : '');
+  }
 }
 
 // ── FOLLOW-UP DASHBOARD ──
