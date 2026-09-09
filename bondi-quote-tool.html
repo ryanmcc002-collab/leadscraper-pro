@@ -2082,7 +2082,9 @@ const CASH_DRAWER_ITEM = { id: 'cash_drawer', mm: 450, col: '#ef4444', label: 'C
 
 // Which bench an item sits on: user override first, then the item's own default bench,
 // otherwise fridges go front and cooking goes back
-function benchOf(item) {
+// (instId lets a single unit of a quantity item, e.g. the second of two fridges, be placed on its own)
+function benchOf(item, instId) {
+  if (state.benchAssign && instId && state.benchAssign[instId]) return state.benchAssign[instId];
   if (state.benchAssign && state.benchAssign[item.id]) return state.benchAssign[item.id];
   if (item.bench) return item.bench;
   return item.type === 'fridge' ? 'front' : 'back';
@@ -2138,7 +2140,9 @@ function layoutDragEnd(e) {
 
   const finalX = dragInitialStartX + (svgCoords.x - dragStartX);
   const instId = dragInstId;
-  const item = instId === 'cash_drawer' ? CASH_DRAWER_ITEM : getAllItems().find(x => x.id === instId);
+  // Units of a quantity item are dragged one at a time: their ids look like "workbench_fridge#1"
+  const baseId = instId.split('#')[0];
+  const item = instId === 'cash_drawer' ? CASH_DRAWER_ITEM : getAllItems().find(x => x.id === baseId);
 
   const intMM = ({3:3000,3.5:3500,4:4000,4.5:4500,5:5000,5.5:5500,6:6000})[state.trailerSize] || 4000;
   const TL = 54, TR = 680 - 5, TW = TR - TL;
@@ -2172,8 +2176,8 @@ function layoutDragEnd(e) {
   // Free placement: the item stays exactly where it was dropped, clamped inside the bench
   const SINK_MM = state.addons['sink_3_1'] ? 1200 : 960;
   const zone = targetBench === 'back' ? { start: 0, end: intMM - SINK_MM } : { start: 200, end: intMM };
-  const qty = (item && item.isQty) ? (state.addons[instId] || 1) : 1;
-  const wMM = ((item && item.mm) || 0) * qty;
+  // Each dragged block is a single unit, so it only needs its own width
+  const wMM = (item && item.mm) || 0;
   const posMM = (finalX - TL) / sc;
   state.benchPos[instId] = Math.max(zone.start, Math.min(posMM, Math.max(zone.start, zone.end - wMM)));
 
@@ -2295,14 +2299,22 @@ function renderFloorPlan() {
     const zone = zones[bench];
     const blocks = [];
     if (benchOf(CASH_DRAWER_ITEM) === bench) blocks.push({ id: 'cash_drawer', item: CASH_DRAWER_ITEM, wMM: 450, qty: 1 });
-    selectedItems.filter(a => a.mm && a.id !== 'range_hood' && benchOf(a) === bench).forEach(a => {
+    // Quantity items become one block per unit (ids "item#0", "item#1", ...) so each unit
+    // can be dragged and placed on its own; a single unit keeps the plain item id
+    selectedItems.filter(a => a.mm && a.id !== 'range_hood').forEach(a => {
       const qty = a.isQty ? (state.addons[a.id] || 1) : 1;
-      blocks.push({ id: a.id, item: a, wMM: a.mm * qty, qty });
+      for (let i = 0; i < qty; i++) {
+        const uid = qty > 1 ? `${a.id}#${i}` : a.id;
+        if (benchOf(a, uid) !== bench) continue;
+        blocks.push({ id: uid, item: a, wMM: a.mm, qty: 1, unit: i });
+      }
     });
 
     const placed = [];
     blocks.forEach(b => {
-      const p = state.benchPos[b.id];
+      let p = state.benchPos[b.id];
+      // Units not yet moved on their own follow the group position saved for the item (older quotes)
+      if (p === undefined && b.id !== b.item.id && state.benchPos[b.item.id] !== undefined) p = state.benchPos[b.item.id] + b.unit * b.wMM;
       if (p !== undefined) {
         b.x = Math.max(zone.start, Math.min(p, Math.max(zone.start, zone.end - b.wMM)));
         placed.push(b);
