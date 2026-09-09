@@ -3003,7 +3003,8 @@ function renderFloorPlan() {
   const drawbarBox = state.addons['gen_box'] || state.addons['generator'] ? 'Gen box' : (state.addons['gas_box'] ? 'Gas box' : '');
   renderIsoView({ intMM, size, isU, EB_MM, frontStartMM: FRONT_START_MM, bbEndMM: BB_END_MM, sinkMM: SINK_MM, hasBigSink: !!hasBigSink,
     frontBlocks: frontLayout.blocks, backBlocks: backLayout.blocks, windows: winPlaced, rhMM: hasRangeHood ? Math.min(rhMM, BB_COOK_MM) : 0,
-    hasAircon: !!hasAircon, upperCabs: parseInt(state.addons['upper_cab']) || 0, hasDrawbarBox: !!drawbarBox, drawbarBoxLabel: drawbarBox });
+    hasAircon: !!hasAircon, upperCabs: parseInt(state.addons['upper_cab']) || 0, hasDrawbarBox: !!drawbarBox, drawbarBoxLabel: drawbarBox,
+    hasCanopy: !!hasCanopy, hasLogoBox: !!state.addons['led_logo'], hasMenuScreen: !!(state.addons['menu_tv'] || state.addons['ad_screen']) });
 }
 
 // ── 3D CUTAWAY VIEW ──
@@ -3051,6 +3052,7 @@ function isoDims(item) {
   return { kind, d, h: Math.min(h, 2000), mount };
 }
 function isoShade(hex, f) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex)) return hex;
   const n = parseInt(hex.slice(1), 16); let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
   const mix = c => f >= 1 ? Math.round(c + (255 - c) * (f - 1)) : Math.round(c * f);
   return '#' + [mix(r), mix(g), mix(b)].map(c => Math.max(0, Math.min(255, c)).toString(16).padStart(2, '0')).join('');
@@ -3059,7 +3061,8 @@ function renderIsoView(d) {
   const el = document.getElementById('isoContainer'), pEl = document.getElementById('pIsoView');
   if (!el && !pEl) return;
   const L = d.intMM, WD = 2100, HW = 2150, BH = 850;
-  const SILL = 1150, HEAD = 1800;                     // window opening, from the photos
+  const SILL = 1050, HEAD = 1750;                     // window opening, from the photos
+  const GROUND = -630;                                // ground level below the trailer floor
   const SKIRT = 300;                                  // tread-plate skirt around the base
   const CA = 0.94, SA = 0.342;                       // flattened dimetric (20°) so the view is wide
   const k = 690 / ((L + 2650) * CA);
@@ -3072,14 +3075,23 @@ function renderIsoView(d) {
   const line3 = (a, b, attr) => `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" ${attr}/>`;
   const circleTop = (cu, cv, r, z, attr) => { const a = []; for (let i = 0; i < 16; i++) { const t = i / 16 * Math.PI * 2; a.push(P(cu + r * Math.cos(t), cv + r * Math.sin(t), z)); } return poly(a, attr); };
   const circleFront = (cu, v, cz, r, attr) => { const a = []; for (let i = 0; i < 16; i++) { const t = i / 16 * Math.PI * 2; a.push(P(cu + r * Math.cos(t), v, cz + r * Math.sin(t))); } return poly(a, attr); };
+  // A material is either a plain colour (shaded per face) or a name that maps to gradient fills in <defs>
+  const MATS = { steel: ['#c3c9d1', 'url(#I_stF)', 'url(#I_stT)', 'url(#I_stS)'], fridge: ['#a7bdd2', 'url(#I_frF)', 'url(#I_frT)', 'url(#I_frS)'], white: ['#f1f3f6', 'url(#I_whF)', 'url(#I_whT)', 'url(#I_whS)'] };
   const box = (u0, u1, v0, v1, z0, z1, col, o) => {
     const op = o != null ? ` opacity="${o}"` : '';
-    const st = `stroke="${isoShade(col, 0.6)}" stroke-width="0.45" stroke-linejoin="round"${op}`;
-    return poly([P(u1, v0, z0), P(u1, v1, z0), P(u1, v1, z1), P(u1, v0, z1)], `fill="${isoShade(col, 0.74)}" ${st}`)
-         + poly([P(u0, v1, z0), P(u1, v1, z0), P(u1, v1, z1), P(u0, v1, z1)], `fill="${col}" ${st}`)
-         + poly([P(u0, v0, z1), P(u1, v0, z1), P(u1, v1, z1), P(u0, v1, z1)], `fill="${isoShade(col, 1.2)}" ${st}`);
+    const m = MATS[col];
+    const base = m ? m[0] : col;
+    const st = `stroke="${isoShade(base, 0.62)}" stroke-width="0.45" stroke-linejoin="round"${op}`;
+    const fS = m ? m[3] : isoShade(base, 0.74), fF = m ? m[1] : base, fT = m ? m[2] : isoShade(base, 1.2);
+    let out = poly([P(u1, v0, z0), P(u1, v1, z0), P(u1, v1, z1), P(u1, v0, z1)], `fill="${fS}" ${st}`)
+            + poly([P(u0, v1, z0), P(u1, v1, z0), P(u1, v1, z1), P(u0, v1, z1)], `fill="${fF}" ${st}`)
+            + poly([P(u0, v0, z1), P(u1, v0, z1), P(u1, v1, z1), P(u0, v1, z1)], `fill="${fT}" ${st}`);
+    if (m && (z1 - z0) > 60) out += line3(P(u0, v1, z1), P(u1, v1, z1), `stroke="rgba(255,255,255,0.8)" stroke-width="0.8"${op}`);   // specular edge
+    return out;
   };
-  const STEEL = '#c3c9d1', FRIDGE = '#a7bdd2', DARK = '#3f3f46', GLASS = 'rgba(191,227,247,0.72)';
+  // Soft contact shadow on the floor (or a bench top) under a unit
+  const contact = (u0, u1, v0, v1, z, k2) => hpoly([[u0 + 20, v0 + 20], [u1 + 90, v0 + 20], [u1 + 90, v1 + 70], [u0 + 20, v1 + 70]], z + 0.5, `fill="rgba(15,23,42,${k2 || 0.16})"`);
+  const STEEL = 'steel', FRIDGE = 'fridge', DARK = '#3f3f46', GLASS = 'rgba(191,227,247,0.72)';
   let g = '';
   // Tread-plate look: a grey band with fine diagonal hatching, on the face at v (or at u when uFace is set)
   const tread = (u0, u1, vOrU, z0, z1, step, uFace) => {
@@ -3090,9 +3102,11 @@ function renderIsoView(d) {
   };
 
   // ── Ground shadow, floor, chassis, drawbar ──
-  g += hpoly([[-150, 150], [L + 150, 150], [L + 150, WD + 250], [-150, WD + 250]], -640, 'fill="rgba(15,23,42,0.08)"');
+  g += hpoly([[-700, -300], [L + 700, -300], [L + 700, WD + 700], [-700, WD + 700]], -640, 'fill="url(#I_ground)"');
   g += box(0, L, 0, WD, -110, 0, '#7c8590');                                   // chassis / floor slab
-  g += hpoly([[0, 0], [L, 0], [L, WD], [0, WD]], 0, 'fill="#c9ced5" stroke="#9ca3af" stroke-width="0.5"');
+  g += hpoly([[0, 0], [L, 0], [L, WD], [0, WD]], 0, 'fill="url(#I_floor)" stroke="#9ca3af" stroke-width="0.5"');
+  g += hpoly([[0, 0], [L, 0], [L, 140], [0, 140]], 1, 'fill="rgba(15,23,42,0.14)"');     // ambient shadow at the wall foot
+  g += hpoly([[0, 0], [140, 0], [140, WD], [0, WD]], 1, 'fill="rgba(15,23,42,0.12)"');
   for (let u = -WD; u < L; u += 220) { const a = Math.max(0, u), b = Math.min(L, u + WD); if (b > a) g += line3(P(a, a - u, 0), P(b, b - u, 0), 'stroke="rgba(255,255,255,0.45)" stroke-width="0.4"'); }   // tread-plate floor
   for (let u = 0; u < L + WD; u += 220) { const a = Math.max(0, u - WD), b = Math.min(L, u); if (b > a) g += line3(P(a, u - a, 0), P(b, u - b, 0), 'stroke="rgba(255,255,255,0.45)" stroke-width="0.4"'); }
   const hitch = P(-1050, WD / 2, -60);
@@ -3108,9 +3122,9 @@ function renderIsoView(d) {
   g += `<text x="${dbLbl[0]}" y="${dbLbl[1] - 12}" text-anchor="middle" font-size="7" font-weight="700" fill="#6b7280" font-family="sans-serif">Drawbar</text>`;
 
   // ── Far walls: drawbar end (u = 0) and kitchen wall (v = 0), with splashback, hood and windows ──
-  const wallAttr = 'fill="#f4f5f7" stroke="#9aa3af" stroke-width="0.7" stroke-linejoin="round"';
-  g += poly([P(0, 0, 0), P(0, WD, 0), P(0, WD, HW), P(0, 0, HW)], wallAttr);
-  g += poly([P(0, 0, 0), P(L, 0, 0), P(L, 0, HW), P(0, 0, HW)], wallAttr);
+  const wallAttr = 'stroke="#9aa3af" stroke-width="0.7" stroke-linejoin="round"';
+  g += poly([P(0, 0, 0), P(0, WD, 0), P(0, WD, HW), P(0, 0, HW)], 'fill="url(#I_wallL)" ' + wallAttr);
+  g += poly([P(0, 0, 0), P(L, 0, 0), P(L, 0, HW), P(0, 0, HW)], 'fill="url(#I_wallB)" ' + wallAttr);
   for (let u = 1200; u < L; u += 1200) g += line3(P(u, 0, 0), P(u, 0, HW), 'stroke="#dfe3e8" stroke-width="0.5"');   // panel joins
   const eb = d.isU ? d.EB_MM : 0;
   g += poly([P(eb, 0, BH), P(d.bbEndMM, 0, BH), P(d.bbEndMM, 0, SILL), P(eb, 0, SILL)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');   // stainless splashback to sill height
@@ -3189,6 +3203,7 @@ function renderIsoView(d) {
     switch (kind) {
       case 'fryer': {
         const top = 880;
+        g += contact(u0, u1, v0, v1, 0);
         g += box(u0, u1, v0, v1, 0, top, STEEL);
         g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 80), P(u0, v1, 80)], 'fill="#374151"');
         g += box(u0, u1, v0, v0 + 45, top, Math.max(h, 1150), isoShade(STEEL, 1.05));               // splashback
@@ -3197,7 +3212,9 @@ function renderIsoView(d) {
           const a = u0 + 30 + i * (wu + 30);
           g += hpoly([[a, v0 + 80], [a + wu, v0 + 80], [a + wu, v1 - 150], [a, v1 - 150]], top + 1, 'fill="#27272a"');
           g += hpoly([[a + 18, v0 + 98], [a + wu - 18, v0 + 98], [a + wu - 18, v1 - 168], [a + 18, v1 - 168]], top + 2, 'fill="#52525b"');
-          g += line3(P(a + wu / 2, v1 - 150, top + 70), P(a + wu / 2, v1 + 130, top + 150), 'stroke="#111827" stroke-width="2" stroke-linecap="round"');   // basket handle
+          g += box(a + 30, a + wu - 30, v0 + 110, v1 - 180, top + 2, top + 120, '#9ca3af', 0.85);                                                   // basket
+          for (let m2 = 1; m2 < 4; m2++) g += line3(P(a + 30 + (wu - 60) * m2 / 4, v1 - 180, top + 2), P(a + 30 + (wu - 60) * m2 / 4, v1 - 180, top + 120), 'stroke="rgba(0,0,0,0.25)" stroke-width="0.5"');
+          g += line3(P(a + wu / 2, v1 - 180, top + 110), P(a + wu / 2, v1 + 120, top + 170), 'stroke="#111827" stroke-width="2.2" stroke-linecap="round"');   // basket handle
         }
         g += poly([P(u0 + 20, v1, top - 160), P(u1 - 20, v1, top - 160), P(u1 - 20, v1, top - 80), P(u0 + 20, v1, top - 80)], 'fill="#6b7280"');
         knobs(u0 + 20, u1 - 20, v1, top - 120, n, 20);
@@ -3220,16 +3237,26 @@ function renderIsoView(d) {
         const glassy = /glass|beverage|display|cake|cooler/.test(name);
         if (o.mount === 'under') {
           g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
+          for (let i = 0; i < Math.max(1, Math.round(w / 600)); i++) { const uu = u0 + (u1 - u0) * (i + 0.5) / Math.max(1, Math.round(w / 600)); g += circleFront(uu + 130, v1, BH - 400, 18, 'fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"'); }
           g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
           doors(u0, u1, v1, 110, BH - 30, Math.max(1, Math.round(w / 600)), false);
         } else if (o.mount === 'floor') {
+          g += contact(u0, u1, v0, v1, 0);
           g += box(u0, u1, v0, v1, 0, h, FRIDGE);
           g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
-          if (glassy) { g += poly([P(u0 + 30, v1, 130), P(u1 - 30, v1, 130), P(u1 - 30, v1, h - 60), P(u0 + 30, v1, h - 60)], `fill="${GLASS}" stroke="#0369a1" stroke-width="0.6"`); for (let i = 1; i <= 3; i++) g += line3(P(u0 + 40, v1, 130 + (h - 190) * i / 4), P(u1 - 40, v1, 130 + (h - 190) * i / 4), 'stroke="rgba(3,105,161,0.45)" stroke-width="0.6"'); }
+          if (glassy) {
+            g += poly([P(u0 + 30, v1, 130), P(u1 - 30, v1, 130), P(u1 - 30, v1, h - 60), P(u0 + 30, v1, h - 60)], 'fill="rgba(226,240,250,0.9)" stroke="#0369a1" stroke-width="0.6"');
+            const cols2 = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+            for (let i = 0; i < 4; i++) { const zs = 130 + (h - 190) * i / 4; g += line3(P(u0 + 40, v1, zs), P(u1 - 40, v1, zs), 'stroke="rgba(3,105,161,0.45)" stroke-width="0.6"'); if (i < 3) for (let bu = u0 + 90; bu < u1 - 70; bu += 95) g += poly([P(bu - 28, v1 - 1, zs + 6), P(bu + 28, v1 - 1, zs + 6), P(bu + 28, v1 - 1, zs + 150), P(bu - 28, v1 - 1, zs + 150)], `fill="${cols2[(Math.round(bu / 95) + i) % 5]}" opacity="0.8"`); }
+            g += poly([P(u0 + 30, v1, 130), P(u1 - 30, v1, 130), P(u1 - 30, v1, h - 60), P(u0 + 30, v1, h - 60)], `fill="${GLASS}" stroke="#0369a1" stroke-width="0.6"`);
+          }
           else doors(u0, u1, v1, 100, h - 60, Math.max(1, Math.round(w / 650)), true);
-        } else {
-          g += box(u0, u1, v0, v1, BH, BH + h, FRIDGE);
-          g += poly([P(u0 + 20, v1, BH + 60), P(u1 - 20, v1, BH + 60), P(u1 - 20, v1, BH + h - 30), P(u0 + 20, v1, BH + h - 30)], `fill="${GLASS}" stroke="#0369a1" stroke-width="0.6"`);
+        } else {   // benchtop display / salad bar: pans under a glass hood
+          g += contact(u0, u1, v0, v1, BH, 0.12);
+          g += box(u0, u1, v0, v1, BH, BH + h * 0.45, STEEL);
+          const pans = Math.max(2, Math.min(6, Math.round(w / 330))), pw = (w - 40 - (pans - 1) * 15) / pans, pc = ['#84cc16', '#ef4444', '#facc15', '#22c55e', '#fb923c', '#a3e635'];
+          for (let i = 0; i < pans; i++) { const a = u0 + 20 + i * (pw + 15); g += hpoly([[a, v0 + 40], [a + pw, v0 + 40], [a + pw, v1 - 40], [a, v1 - 40]], BH + h * 0.45 + 1, `fill="${pc[i % 6]}" stroke="#9ca3af" stroke-width="0.5"`); }
+          g += box(u0 + 10, u1 - 10, v0 + 10, v1 - 10, BH + h * 0.45, BH + h, '#bfe3f7', 0.5);
         }
         break; }
       case 'oven': {
@@ -3312,9 +3339,14 @@ function renderIsoView(d) {
   }
   backUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
   if (d.rhMM > 0) {   // canopy range hood over the cookline
-    g += box(eb, eb + d.rhMM, 0, 680, 1600, 1880, '#d5dae1');
-    g += poly([P(eb + 40, 680, 1605), P(eb + d.rhMM - 40, 680, 1605), P(eb + d.rhMM - 40, 680, 1690), P(eb + 40, 680, 1690)], 'fill="#6b7280"');
-    const c = P(eb + d.rhMM / 2, 680, 1800);
+    const h0 = eb, h1 = eb + d.rhMM;
+    g += poly([P(h1, 0, 1560), P(h1, 720, 1560), P(h1, 480, 1900), P(h1, 0, 1900)], 'fill="url(#I_stS)" stroke="#8f98a3" stroke-width="0.5"');           // end
+    g += poly([P(h0, 720, 1560), P(h1, 720, 1560), P(h1, 480, 1900), P(h0, 480, 1900)], 'fill="url(#I_stF)" stroke="#8f98a3" stroke-width="0.5"');       // sloped front
+    g += poly([P(h0, 0, 1900), P(h1, 0, 1900), P(h1, 480, 1900), P(h0, 480, 1900)], 'fill="url(#I_stT)" stroke="#8f98a3" stroke-width="0.5"');           // top
+    g += poly([P(h0 + 60, 700, 1562), P(h1 - 60, 700, 1562), P(h1 - 60, 560, 1758), P(h0 + 60, 560, 1758)], 'fill="#4b5563"');                             // filter bank
+    for (let uu = h0 + 120; uu < h1 - 60; uu += 130) g += line3(P(uu, 690, 1570), P(uu, 570, 1745), 'stroke="#9ca3af" stroke-width="0.5"');
+    g += line3(P(h0, 720, 1560), P(h1, 720, 1560), 'stroke="rgba(255,255,255,0.8)" stroke-width="0.8"');
+    const c = P(eb + d.rhMM / 2, 480, 1960);
     g += `<text x="${c[0]}" y="${c[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#374151" font-family="sans-serif">Range hood ${(d.rhMM / 1000)}m</text>`;
   }
   if (d.upperCabs > 0) {   // overhead cupboards on the kitchen wall past the hood
@@ -3327,8 +3359,8 @@ function renderIsoView(d) {
   frontUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
 
   // ── Near walls: white panel skin drawn see-through, tread-plate skirt, windows with flaps and shelves ──
-  const skinLow = 'fill="rgba(248,250,252,0.5)" stroke="#9aa3af" stroke-width="0.8" stroke-linejoin="round"';
-  const skinUp = 'fill="rgba(255,255,255,0.3)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
+  const skinLow = 'fill="url(#I_skinLow)" stroke="#9aa3af" stroke-width="0.8" stroke-linejoin="round"';
+  const skinUp = 'fill="url(#I_skinUp)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
   g += poly([P(0, WD, SKIRT), P(L, WD, SKIRT), P(L, WD, SILL), P(0, WD, SILL)], skinLow);
   const fw = d.windows.filter(w => w.side === 'front').map(w => ({ u0: Math.max(0, w.posMM), u1: Math.min(L, w.posMM + w.mm), mm: w.mm })).sort((a, b) => a.u0 - b.u0);
   let cur = 0;
@@ -3346,6 +3378,8 @@ function renderIsoView(d) {
   for (let z = 120; z < 420; z += 60) g += line3(P(L, 1600, z), P(L, 1950, z), 'stroke="#9ca3af" stroke-width="0.7"');   // vent grille
   const dr = P(L + 40, 1050, 500);
   g += `<text x="${dr[0] + 4}" y="${dr[1]}" font-size="7" font-weight="700" fill="#374151" font-family="sans-serif">Door</text>`;
+  [[180, '#dc2626'], [WD - 180, '#dc2626']].forEach(([vv, col]) => { g += circleFront(L + 1, vv, 420, 70, `fill="${col}" stroke="#7f1d1d" stroke-width="0.5"`); });   // tail lights (shown on the door end for the view)
+  g += circleFront(L + 1, WD - 180, 420, 30, 'fill="#fca5a5"'); g += circleFront(L + 1, 180, 420, 30, 'fill="#fca5a5"');
   // Aluminium edge trims
   g += line3(P(0, WD, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
   g += line3(P(L, 0, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
@@ -3365,12 +3399,42 @@ function renderIsoView(d) {
     g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${lbl}</text>`;
   });
 
+  // Exterior add-ons the customer is paying for
+  if (d.hasCanopy) {   // fold-down canopy / awning over the serving side
+    g += poly([P(-60, WD, HW + 40), P(L + 60, WD, HW + 40), P(L + 60, WD + 1700, HW - 260), P(-60, WD + 1700, HW - 260)], 'fill="rgba(241,245,249,0.5)" stroke="#6b7280" stroke-width="1" stroke-linejoin="round"');
+    for (let uu = 300; uu < L; uu += 1500) g += line3(P(uu, WD, HW - 700), P(uu, WD + 1500, HW - 235), 'stroke="#6b7280" stroke-width="1"');
+    const cl2 = P(L / 2, WD + 850, HW - 80);
+    g += `<text x="${cl2[0]}" y="${cl2[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#374151" font-family="sans-serif">Fold-down canopy</text>`;
+  }
+  if (d.hasLogoBox && fw.length) {   // LED logo light box above the serving windows
+    const b0 = fw[0].u0, b1 = fw[fw.length - 1].u1;
+    g += box(b0, b1, WD, WD + 80, HW - 300, HW - 60, '#fde68a');
+    const lb = P((b0 + b1) / 2, WD + 80, HW - 170);
+    g += `<text x="${lb[0]}" y="${lb[1]}" text-anchor="middle" font-size="6" font-weight="800" fill="#92400e" letter-spacing="1" font-family="sans-serif">LOGO LIGHT BOX</text>`;
+  }
+  if (d.hasMenuScreen && fw.length) {   // menu screen beside the first window
+    const m0 = Math.max(60, fw[0].u0 - 620), m1 = fw[0].u0 - 120;
+    if (m1 - m0 > 300) { g += box(m0, m1, WD, WD + 50, SILL + 80, HEAD - 40, '#111827'); g += poly([P(m0 + 25, WD + 51, SILL + 105), P(m1 - 25, WD + 51, SILL + 105), P(m1 - 25, WD + 51, HEAD - 65), P(m0 + 25, WD + 51, HEAD - 65)], 'fill="#1e3a5f"'); const ml = P((m0 + m1) / 2, WD + 52, (SILL + HEAD) / 2 + 20); g += `<text x="${ml[0]}" y="${ml[1]}" text-anchor="middle" font-size="6" font-weight="800" fill="#93c5fd" font-family="sans-serif">MENU</text>`; }
+  }
+  // A customer at the first window, for scale
+  if (fw.length) {
+    const cu = (fw[0].u0 + fw[0].u1) / 2 + 150, cv = WD + 950;
+    g += hpoly([[cu - 260, cv - 160], [cu + 260, cv - 160], [cu + 260, cv + 160], [cu - 260, cv + 160]], GROUND + 1, 'fill="rgba(15,23,42,0.14)"');
+    const fig = 'fill="rgba(71,85,105,0.62)"', G = GROUND;
+    g += poly([P(cu - 110, cv, G), P(cu - 30, cv, G), P(cu - 30, cv, G + 800), P(cu - 110, cv, G + 800)], fig);
+    g += poly([P(cu + 30, cv, G), P(cu + 110, cv, G), P(cu + 110, cv, G + 800), P(cu + 30, cv, G + 800)], fig);
+    g += poly([P(cu - 230, cv, G + 780), P(cu + 230, cv, G + 780), P(cu + 230, cv, G + 1380), P(cu + 150, cv, G + 1480), P(cu - 150, cv, G + 1480), P(cu - 230, cv, G + 1380)], fig);
+    g += circleFront(cu, cv, G + 1620, 125, fig);
+  }
+
   // ── Wheels under the skirt (dual axle from 3.5m) ──
   const axles = d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5];
   axles.forEach(cu => {
     g += circleFront(cu, WD + 60, -400, 300, 'fill="#1f2937"');
-    g += circleFront(cu, WD + 60, -400, 170, 'fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.6"');
-    g += circleFront(cu, WD + 60, -400, 45, 'fill="#6b7280"');
+    g += circleFront(cu, WD + 60, -400, 245, 'fill="none" stroke="#374151" stroke-width="1"');
+    g += circleFront(cu, WD + 60, -400, 170, 'fill="url(#I_rim)" stroke="#9ca3af" stroke-width="0.6"');
+    for (let i = 0; i < 5; i++) { const t = i / 5 * Math.PI * 2; g += circleFront(cu + 105 * Math.cos(t), WD + 60, -400 + 105 * Math.sin(t), 16, 'fill="#9ca3af"'); }
+    g += circleFront(cu, WD + 60, -400, 40, 'fill="#6b7280"');
   });
 
   // ── Numbers on every unit, then dimensions and orientation ──
@@ -3399,12 +3463,22 @@ function renderIsoView(d) {
       key += `<text x="${x + 14}" y="${y}" font-size="7.2" fill="#334155" font-weight="600" font-family="sans-serif">${esc(r.item.name || r.item.label)}${r.count > 1 ? ` ×${r.count}` : ''}</text>`;
     });
   }
-  const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">
+  const lin = (id, a, b, x2, y2) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2 == null ? 0 : x2}" y2="${y2 == null ? 1 : y2}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+  const defs = `<defs>
+    ${lin('I_stF', '#dfe3e8', '#aeb5be')}${lin('I_stT', '#f3f5f7', '#d3d8de', 1, 1)}${lin('I_stS', '#b5bcc5', '#8a929c')}
+    ${lin('I_frF', '#c4d3e2', '#93a9c0')}${lin('I_frT', '#e2ebf3', '#c0d0df', 1, 1)}${lin('I_frS', '#9fb3c8', '#7b91a8')}
+    ${lin('I_whF', '#ffffff', '#e5e8ec')}${lin('I_whT', '#ffffff', '#eceff3', 1, 1)}${lin('I_whS', '#e5e8ec', '#c9ced5')}
+    ${lin('I_wallL', '#ffffff', '#e6e9ee', 1, 0)}${lin('I_wallB', '#fbfbfc', '#e9ecf0')}${lin('I_floor', '#d6dae0', '#b9bfc7', 1, 1)}
+    ${lin('I_skinLow', 'rgba(255,255,255,0.75)', 'rgba(226,230,235,0.55)')}${lin('I_skinUp', 'rgba(255,255,255,0.45)', 'rgba(255,255,255,0.22)')}
+    <radialGradient id="I_ground" cx="0.5" cy="0.5" r="0.55"><stop offset="0" stop-color="rgba(15,23,42,0.16)"/><stop offset="1" stop-color="rgba(15,23,42,0)"/></radialGradient>
+    <radialGradient id="I_rim" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c4c9d1"/></radialGradient>
+  </defs>`;
+  const build = tag => (`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${defs}
     <text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
     <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall panels made see-through · equipment drawn to scale</text>
-    ${g}${key}</svg>`;
-  if (el) { el.style.display = 'block'; el.innerHTML = svg; }
-  if (pEl) pEl.innerHTML = svg;
+    ${g}${key}</svg>`).replace(/I_/g, tag + '_');
+  if (el) { el.style.display = 'block'; el.innerHTML = build('isoS'); }
+  if (pEl) pEl.innerHTML = build('isoP');
 }
 
 // ── FOLLOW-UP DASHBOARD ──
