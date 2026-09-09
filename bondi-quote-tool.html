@@ -315,6 +315,10 @@
     .page-break { page-break-after: always; break-after: page; display: block; height: 0; margin: 0; padding: 0; border: none; }
     .page-two-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
     .print-page-note { font-size: 9px; color: #9ca3af; text-align: right; margin-top: 4px; }
+    .page-plan-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
+    .iso-container { display: flex; justify-content: center; margin-bottom: 6px; break-inside: avoid; }
+    .iso-container svg { width: auto !important; max-width: 100%; max-height: 112mm; }
+    .blueprint-container svg { max-height: 100mm !important; }
 
     .print-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; border-radius: 8px; overflow: hidden; }
     .print-table th { background: #111; color: white; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; }
@@ -349,6 +353,9 @@
     .compliance-note { font-size: 9px; color: #9ca3af; line-height: 1.5; margin-top: 14px; }
     .page-three-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
   }
+
+  #isoContainer { margin-top: 14px; border: 1.5px solid var(--grey-mid); border-radius: 10px; background: #fff; padding: 8px 10px 4px; }
+  #isoContainer svg { width: 100%; display: block; }
 
   /* Let finger-drags move floor-plan items instead of scrolling the page */
   .draggable { touch-action: none; }
@@ -686,6 +693,7 @@
               Select a trailer size to preview the floor plan
             </div>
           </div>
+          <div id="isoContainer" style="display:none;"></div>
           <div style="margin-top:12px;font-size:10px;color:var(--grey-text);text-align:center;font-weight:700;letter-spacing:0.5px;">
             INDICATIVE LAYOUT ONLY — FINAL CONFIGURATION CONFIRMED DURING BUILD CONSULTATION
           </div>
@@ -858,16 +866,16 @@
     <div class="glance" id="pGlance"></div>
     <div class="print-notes" id="pNotes" style="display:none;"></div>
 
-    <div class="print-section-title" id="pFloorPlanTitle" style="margin-top:0;">Your Kitchen Layout</div>
-    
-    <div class="blueprint-container" id="pFloorPlan">
-      </div>
+    <div class="print-section-title" id="pIsoTitle" style="margin-top:0;">Your Trailer, Inside <span style="font-weight:600; text-transform:none; color:#6b7280; font-size:11px;">— cutaway view, kitchen wall and roof removed</span></div>
+    <div class="iso-container" id="pIsoView"></div>
 
-    <div class="print-page-note">Continued on the next page: standard inclusions, itemised pricing and what happens next &rarr;</div>
+    <div class="print-page-note">Next page: the technical floor plan and everything that comes standard &rarr;</div>
 
     <div class="page-break"></div>
 
-    <div class="page-two-container">
+    <div class="page-plan-container" id="pPlanPage">
+      <div class="print-section-title" id="pFloorPlanTitle" style="margin-top:0;">Your Kitchen Layout <span style="font-weight:600; text-transform:none; color:#6b7280; font-size:11px;">— technical floor plan, to scale</span></div>
+      <div class="blueprint-container" id="pFloorPlan"></div>
       <div class="print-section-title" style="margin-top:0;">Standard Inclusions — Every Bondi Food Trailer</div>
     <div class="print-includes">
       <div class="include-item"><span class="check">✓</span> Stainless Steel Workbench with Sliding Doors</div>
@@ -887,8 +895,16 @@
       <div class="include-item"><span class="check">✓</span> 12V Water Pump (Hot & Cold)</div>
       <div class="include-item"><span class="check">✓</span> Custom Trailer Colour of Choice</div>
     </div>
+      <div class="print-footer" style="margin-top:auto;">
+        <strong style="color:#f47c20; font-size:12px; text-transform:uppercase;">bondi food trailers</strong>
+        <div id="pFooterDate0"></div>
+      </div>
+    </div>
 
-      <div class="print-section-title">Your Quote — Itemised</div>
+    <div class="page-break"></div>
+
+    <div class="page-two-container">
+      <div class="print-section-title" style="margin-top:0;">Your Quote — Itemised</div>
       <table class="print-table">
         <thead><tr><th style="width:55%">Description</th><th style="width:25%">Details</th><th>Amount (ex-GST)</th></tr></thead>
         <tbody id="pTableBody"></tbody>
@@ -2318,13 +2334,20 @@ function updatePrintDoc(t, showFinance) {
   const pFloorPlanTitle = document.getElementById('pFloorPlanTitle');
   const pFloorPlan = document.getElementById('pFloorPlan');
   
+  const pIsoTitle = document.getElementById('pIsoTitle'), pIsoView = document.getElementById('pIsoView');
   if (showFloorPlan) {
     if (pFloorPlanTitle) pFloorPlanTitle.style.display = 'block';
     if (pFloorPlan) pFloorPlan.style.display = 'flex';
+    if (pIsoTitle) pIsoTitle.style.display = 'block';
+    if (pIsoView) pIsoView.style.display = 'flex';
   } else {
     if (pFloorPlanTitle) pFloorPlanTitle.style.display = 'none';
     if (pFloorPlan) pFloorPlan.style.display = 'none';
+    if (pIsoTitle) pIsoTitle.style.display = 'none';
+    if (pIsoView) pIsoView.style.display = 'none';
   }
+  const eFooterDate0 = document.getElementById('pFooterDate0');
+  if (eFooterDate0) eFooterDate0.textContent = dateStr;
 
   let rows = '';
   if (t.base > 0) {
@@ -2489,6 +2512,54 @@ function layoutDragEnd(e) {
 
 // Harmonised, professional colour families by equipment category (instead of a rainbow).
 // Cooking = warm terracotta, refrigeration = steel blue, everything else = slate.
+// Recognisable plan symbols drawn inside each equipment block (fryer baskets, burners, fridge doors...)
+function planSymbol(item, x, y, w, h) {
+  if (w < 14 || h < 14) return '';
+  const key = (item.id + ' ' + (item.name || '') + ' ' + (item.label || '')).toLowerCase().replace(/\n/g, ' ');
+  const S = 'fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.9"';
+  const F = 'fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" stroke-width="0.8"';
+  const pad = Math.min(4, w * 0.15, h * 0.15);
+  const iw = w - pad * 2, ih = h - pad * 2, x0 = x + pad, y0 = y + pad, cx = x + w / 2, cy = y + h / 2;
+  let g = '';
+  if (item.isCashDrawer) return '';
+  if (/fryer/.test(key)) {
+    const n = w > 40 ? 2 : 1, bw = (iw - (n - 1) * 2) / n;
+    for (let i = 0; i < n; i++) g += `<rect x="${x0 + i * (bw + 2)}" y="${y0}" width="${bw}" height="${ih * 0.6}" rx="2" ${F}/>`;
+    g += `<rect x="${x0}" y="${y0 + ih * 0.7}" width="${iw}" height="${ih * 0.3}" rx="1.5" ${S}/>`;
+  } else if (/chargrill|char grill|smokeless|kebab/.test(key)) {
+    g += `<rect x="${x0}" y="${y0}" width="${iw}" height="${ih}" rx="1.5" ${S}/>`;
+    for (let i = 1; i < 5; i++) g += `<line x1="${x0 + iw * i / 5}" y1="${y0}" x2="${x0 + iw * i / 5}" y2="${y0 + ih}" ${S}/>`;
+    for (let i = 1; i < 4; i++) g += `<line x1="${x0}" y1="${y0 + ih * i / 4}" x2="${x0 + iw}" y2="${y0 + ih * i / 4}" ${S}/>`;
+  } else if (/griddle|hot plate|hotplate|crepe|panini|sandwich|waffle|crisp/.test(key)) {
+    g += `<rect x="${x0}" y="${y0}" width="${iw}" height="${ih}" rx="1.5" ${F}/>`;
+    g += `<line x1="${x0 + 2}" y1="${y0 + ih - 3}" x2="${x0 + iw - 2}" y2="${y0 + ih - 3}" ${S}/>`;
+  } else if (/stove|gasmax|burner|wok|rice/.test(key)) {
+    const n = /4/.test(key) ? 4 : 2, cols = 2, rows = n === 4 ? 2 : 1, r = Math.min(iw / (cols * 2.4), ih / (rows * 2.4));
+    for (let i = 0; i < n; i++) { const c = i % cols, rr = Math.floor(i / cols), px = x0 + iw * (c + 0.5) / cols, py = y0 + ih * (rr + 0.5) / rows; g += `<circle cx="${px}" cy="${py}" r="${r}" ${S}/><circle cx="${px}" cy="${py}" r="${r * 0.35}" ${S}/>`; }
+  } else if (/oven|pizza|churros|donut|muffin/.test(key)) {
+    g += `<rect x="${x0}" y="${y0}" width="${iw}" height="${ih}" rx="2" ${S}/>`;
+    g += `<path d="M${x0 + iw * 0.2} ${y0 + ih * 0.85} V${y0 + ih * 0.5} A${iw * 0.3} ${ih * 0.32} 0 0 1 ${x0 + iw * 0.8} ${y0 + ih * 0.5} V${y0 + ih * 0.85} Z" ${F}/>`;
+  } else if (/coffee|espresso/.test(key)) {
+    g += `<rect x="${x0}" y="${y0}" width="${iw}" height="${ih}" rx="2" ${S}/>`;
+    const n = w > 36 ? 2 : 1; for (let i = 0; i < n; i++) g += `<circle cx="${x0 + iw * (i + 0.5) / n}" cy="${cy}" r="${Math.min(iw / (n * 3), ih / 3)}" ${F}/>`;
+  } else if (/bain|warmer|soup|hot dog|hotdog/.test(key)) {
+    const cols = Math.max(1, Math.min(4, Math.round(w / 12))), rows = h > 30 ? 2 : 1, cw = (iw - (cols - 1) * 1.5) / cols, ch = (ih - (rows - 1) * 1.5) / rows;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) g += `<rect x="${x0 + c * (cw + 1.5)}" y="${y0 + r * (ch + 1.5)}" width="${cw}" height="${ch}" rx="1" ${F}/>`;
+  } else if (/keg|beer|slush|juice|soft serve|ice cream|milkshake|snow|dispenser|fountain|sealer/.test(key)) {
+    const n = /3/.test(key) ? 3 : 2; for (let i = 0; i < n; i++) g += `<circle cx="${x0 + iw * (i + 0.5) / n}" cy="${cy}" r="${Math.min(iw / (n * 2.6), ih / 2.6)}" ${F}/>`;
+  } else if (/fridge|freezer|cooler|display|beverage|cake|chiller|ice/.test(key)) {
+    const doors = Math.max(1, Math.min(4, Math.round(w / 28)));
+    for (let i = 1; i < doors; i++) g += `<line x1="${x0 + iw * i / doors}" y1="${y0}" x2="${x0 + iw * i / doors}" y2="${y0 + ih}" ${S}/>`;
+    for (let i = 0; i < doors; i++) g += `<line x1="${x0 + iw * (i + 0.5) / doors - 3}" y1="${y0 + 2.5}" x2="${x0 + iw * (i + 0.5) / doors + 3}" y2="${y0 + 2.5}" stroke="rgba(255,255,255,0.7)" stroke-width="1.6" stroke-linecap="round"/>`;
+    g += `<rect x="${x0}" y="${y0}" width="${iw}" height="${ih}" rx="1.5" ${S}/>`;
+  } else if (/sink/.test(key)) {
+    const n = w > 40 ? 2 : 1, bw = (iw - (n - 1) * 2) / n; for (let i = 0; i < n; i++) g += `<rect x="${x0 + i * (bw + 2)}" y="${y0}" width="${bw}" height="${ih}" rx="3" ${F}/>`;
+  } else if (/mixer|mincer|cutter|blender|slicer|dumpling/.test(key)) {
+    g += `<circle cx="${cx}" cy="${cy}" r="${Math.min(iw, ih) / 2.6}" ${S}/><circle cx="${cx}" cy="${cy}" r="${Math.min(iw, ih) / 7}" ${F}/>`;
+  }
+  return g ? `<g pointer-events="none">${g}</g>` : '';
+}
+
 function planColor(item) {
   if (item.isCustomApp)       return '#6d28d9';
   if (item.type === 'fridge') return '#2f6f9f';
@@ -2546,6 +2617,8 @@ function renderFloorPlan() {
     el.innerHTML = `<div style="height:240px;display:flex;align-items:center;justify-content:center;color:var(--grey-text);font-size:13px;font-weight:700;">Select a trailer size to preview layout</div>`;
     const pEl = document.getElementById('pFloorPlan');
     if (pEl) pEl.innerHTML = '<div style="color:#6b7280; font-size:12px; font-weight: 500; height: 100px; display:flex; align-items:center;">Layout will be generated once a size is selected.</div>';
+    const isoEl = document.getElementById('isoContainer'); if (isoEl) { isoEl.style.display = 'none'; isoEl.innerHTML = ''; }
+    const pIso = document.getElementById('pIsoView'); if (pIso) pIso.innerHTML = '';
     return;
   }
 
@@ -2698,6 +2771,7 @@ function renderFloorPlan() {
     for (let i = 0; i < b.qty; i++) {
       const ih = b.item.isCustomApp ? Math.max(16, Math.min(bkH, Math.round((b.item.depth/600)*bkH))) : bkH;
       s += `<rect x="${bx + i*unitW + 1}" y="${bkY}" width="${unitW-2}" height="${ih}" fill="${planColor(b.item)}" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" rx="4"/>`;
+      s += planSymbol(b.item, bx + i*unitW + 1, bkY, unitW-2, ih);
       const backLbl = b.item.isCustomApp ? `${b.item.label}\n${b.item.mm}×${b.item.depth}mm` : (b.item.label || b.item.name);
       s += mtext(bx + i*unitW + unitW/2, bkY+ih/2+2, backLbl, `text-anchor="middle" font-size="6.5" font-weight="700" fill="white" font-family="sans-serif"`);
     }
@@ -2784,6 +2858,7 @@ function renderFloorPlan() {
         const ih = b.item.isCustomApp ? Math.max(16, Math.min(FB_H-6, Math.round((b.item.depth/600)*(FB_H-6)))) : (FB_H-6);
         const iy = FB_Y + 3 + ((FB_H-6) - ih); // custom boxes sit against the front (window) wall
         s += `<rect x="${bx + i*unitW}" y="${iy}" width="${unitW-2}" height="${ih}" fill="${planColor(b.item)}" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" rx="3"/>`;
+        s += planSymbol(b.item, bx + i*unitW, iy, unitW-2, ih);
         const frontLbl = b.item.isCustomApp ? `${b.item.label}\n${b.item.mm}×${b.item.depth}mm` : (b.item.label || b.item.name);
         s += mtext(bx + i*unitW + unitW/2, iy+ih/2+1, frontLbl, `text-anchor="middle" font-size="6.5" font-weight="700" fill="white" font-family="sans-serif"`);
       }
@@ -2800,6 +2875,7 @@ function renderFloorPlan() {
   // ── SERVING WINDOWS: any number, on either long wall, each draggable along its wall ──
   const SWX = TL + 4, SWW = fbW - 8, SWH = 20, WIN_GAP = 4;
   const allWins = getWindows();
+  const winPlaced = [];
   ['front', 'back'].forEach(side => {
     const list = allWins.filter(w => w.side === side);
     if (!list.length) return;
@@ -2815,6 +2891,7 @@ function renderFloorPlan() {
       if (w.posMM == null) cursor += wpx + WIN_GAP;
       x = Math.max(SWX, Math.min(x, SWX + SWW - wpx));
       const lbl = wpx >= 96 ? `Serving Window ${w.mm}mm` : `${w.mm}mm`;
+      winPlaced.push({ side, mm: w.mm, posMM: (x - TL) / sc });
       s += `<g class="draggable" data-inst-id="win_${w.id}" data-bench="${side}" data-start-x="${x}" onpointerdown="window.startLayoutDrag(event, this)" style="cursor:grab;">`;
       s += `<rect x="${x}" y="${wy}" width="${wpx}" height="${SWH}" fill="#16a34a" rx="5"/>`;
       s += `<text x="${x + wpx/2}" y="${wy + SWH*0.68}" text-anchor="middle" font-size="9" font-weight="800" fill="white" font-family="sans-serif">${lbl}</text>`;
@@ -2922,6 +2999,171 @@ function renderFloorPlan() {
     p += `</g></svg>`;
     pEl.innerHTML = p;
   }
+
+  renderIsoView({ intMM, size, isU, EB_MM, frontStartMM: FRONT_START_MM, bbEndMM: BB_END_MM, sinkMM: SINK_MM, hasBigSink: !!hasBigSink,
+    frontBlocks: frontLayout.blocks, backBlocks: backLayout.blocks, windows: winPlaced, rhMM: hasRangeHood ? Math.min(rhMM, BB_COOK_MM) : 0 });
+}
+
+// ── 3D CUTAWAY VIEW ──
+// Same data as the plan, drawn as an isometric cutaway: floor, the two far walls (customer side and
+// drawbar end) with the windows cut in, benches and every appliance as a solid block at true scale.
+// The kitchen wall and roof are removed so the customer can see straight into their layout.
+function isoDims(item) {
+  const desc = String(item.desc || '');
+  const m = desc.match(/(\d{2,4})\s*[x×*]\s*(\d{2,4})\s*[x×*]\s*(\d{2,4})\s*(mm|cm)?/i);
+  let w = item.mm || 600, d = 600, h = 0;
+  if (m) { let b = +m[2], c = +m[3]; if ((m[4] || '').toLowerCase() === 'cm') { b *= 10; c *= 10; } d = b; h = c; }
+  if (item.isCustomApp) { d = item.depth || 600; h = 0; }
+  if (item.isCashDrawer) { d = 450; h = 120; }
+  if (!h) h = item.type === 'fridge' ? 800 : (item.type === 'cook' ? 400 : 450);
+  d = Math.max(250, Math.min(d, 700));
+  const under = item.type === 'fridge' && h >= 700 && h <= 1000 && d >= 550;   // bench-height cabinet (workbench fridge etc.)
+  const floor = !under && (h > 1000 || (item.type === 'fridge' && h >= 700 && d >= 450));
+  return { w, d, h: Math.min(h, 2000), floor, under };
+}
+function isoShade(hex, f) {
+  const n = parseInt(hex.slice(1), 16); let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const mix = c => f >= 1 ? Math.round(c + (255 - c) * (f - 1)) : Math.round(c * f);
+  return '#' + [mix(r), mix(g), mix(b)].map(c => Math.max(0, Math.min(255, c)).toString(16).padStart(2, '0')).join('');
+}
+function renderIsoView(d) {
+  const el = document.getElementById('isoContainer'), pEl = document.getElementById('pIsoView');
+  if (!el && !pEl) return;
+  const L = d.intMM, WD = 2100, HW = 1950, BH = 900;
+  const k = 640 / ((L + 3000) * 0.866);
+  const ox = 3000 * 0.866 * k + 12, oy = HW * k + 30;
+  const P = (u, v, z) => [ox + (u - v) * 0.866 * k, oy + (u + v) * 0.5 * k - z * k];
+  const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const poly = (a, attr) => `<polygon points="${pts(a)}" ${attr}/>`;
+  const box = (u0, u1, v0, v1, z0, z1, col, o) => {
+    const op = o != null ? ` opacity="${o}"` : '';
+    const st = `stroke="${isoShade(col, 0.55)}" stroke-width="0.5" stroke-linejoin="round"${op}`;
+    return poly([P(u1, v0, z0), P(u1, v1, z0), P(u1, v1, z1), P(u1, v0, z1)], `fill="${isoShade(col, 0.72)}" ${st}`)
+         + poly([P(u0, v1, z0), P(u1, v1, z0), P(u1, v1, z1), P(u0, v1, z1)], `fill="${col}" ${st}`)
+         + poly([P(u0, v0, z1), P(u1, v0, z1), P(u1, v1, z1), P(u0, v1, z1)], `fill="${isoShade(col, 1.22)}" ${st}`);
+  };
+  let g = '';
+
+  // Floor slab with a thin edge, and the drawbar A-frame out past the far-left wall
+  g += box(0, L, 0, WD, -70, 0, '#c4c9d2');
+  g += poly([P(0, 0, 0), P(L, 0, 0), P(L, WD, 0), P(0, WD, 0)], 'fill="#d8dce3" stroke="#9ca3af" stroke-width="0.6"');
+  for (let u = 500; u < L; u += 500) g += `<line x1="${P(u, 0, 0)[0]}" y1="${P(u, 0, 0)[1]}" x2="${P(u, WD, 0)[0]}" y2="${P(u, WD, 0)[1]}" stroke="#cbd0d8" stroke-width="0.4"/>`;
+  const hitch = P(-950, WD / 2, -35);
+  [700, 1400].forEach(v => { const a = P(0, v, -35); g += `<line x1="${a[0]}" y1="${a[1]}" x2="${hitch[0]}" y2="${hitch[1]}" stroke="#9ca3af" stroke-width="3.2" stroke-linecap="round"/>`; });
+  g += `<circle cx="${hitch[0]}" cy="${hitch[1]}" r="3.4" fill="#4b5563"/>`;
+  const dbLbl = P(-520, WD / 2, -35);
+  g += `<text x="${dbLbl[0]}" y="${dbLbl[1] + 12}" text-anchor="middle" font-size="7" font-weight="700" fill="#6b7280" font-family="sans-serif">Drawbar</text>`;
+
+  // Far walls: customer side (v = 0) and drawbar end (u = 0), with the windows cut in
+  const wallAttr = 'fill="#eef1f5" stroke="#94a3b8" stroke-width="0.7" stroke-linejoin="round"';
+  g += poly([P(0, 0, 0), P(0, WD, 0), P(0, WD, HW), P(0, 0, HW)], wallAttr);
+  g += poly([P(0, 0, 0), P(L, 0, 0), P(L, 0, HW), P(0, 0, HW)], wallAttr);
+  const glass = 'fill="#bfe3f7" stroke="#0369a1" stroke-width="0.8" stroke-linejoin="round"';
+  const win = (a, label) => {
+    g += poly(a, glass);
+    const c = [(a[0][0] + a[2][0]) / 2, (a[0][1] + a[2][1]) / 2];
+    g += `<line x1="${a[3][0]}" y1="${a[3][1]}" x2="${a[1][0]}" y2="${a[1][1]}" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>`;
+    if (label) { const lw = label.length * 3.6 + 10; g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${label}</text>`; }
+  };
+  win([P(0, 600, BH), P(0, 1500, BH), P(0, 1500, 1500), P(0, 600, 1500)], 'Drawbar window');
+  d.windows.filter(w => w.side === 'front').forEach(w => {
+    const u0 = Math.max(0, w.posMM), u1 = Math.min(L, w.posMM + w.mm);
+    win([P(u0, 0, BH), P(u1, 0, BH), P(u1, 0, 1500), P(u0, 0, 1500)], `Serving window ${w.mm}mm`);
+  });
+
+  // Benches (900mm high, 600mm deep), then the sinks
+  const BENCH = '#2f4a6b';
+  const eb = d.isU ? d.EB_MM : 0;
+  if (d.isU) g += box(0, d.EB_MM, 0, WD, 0, BH, BENCH);
+  g += box(d.frontStartMM, L, 0, 600, 0, BH, BENCH);
+  g += box(eb, d.bbEndMM, WD - 600, WD, 0, BH, BENCH);
+  const basin = (u0, u1, v0, v1) => { g += poly([P(u0, v0, BH + 1), P(u1, v0, BH + 1), P(u1, v1, BH + 1), P(u0, v1, BH + 1)], 'fill="#9aa3ad" stroke="#4b5563" stroke-width="0.5"'); g += poly([P(u0 + 40, v0 + 40, BH + 1), P(u1 - 40, v0 + 40, BH + 1), P(u1 - 40, v1 - 40, BH + 1), P(u0 + 40, v1 - 40, BH + 1)], 'fill="#cfd5dc"'); };
+  if (d.isU) {
+    g += box(0, d.EB_MM, 600, 1500, 0, BH, '#6b7280');
+    for (let i = 0; i < 3; i++) basin(60, d.EB_MM - 60, 620 + i * 300, 880 + i * 300);
+  } else {
+    g += box(d.bbEndMM, L, WD - 600, WD, 0, BH, '#6b7280');
+    const bw = (L - d.bbEndMM) / 3;
+    for (let i = 0; i < 3; i++) basin(d.bbEndMM + i * bw + 40, d.bbEndMM + (i + 1) * bw - 40, WD - 540, WD - 60);
+  }
+
+  // Equipment as true-scale blocks, drawn far to near, numbered for the key
+  const blocks = [];
+  d.frontBlocks.forEach(b => blocks.push({ b, bench: 'front' }));
+  d.backBlocks.forEach(b => blocks.push({ b, bench: 'back' }));
+  const keyIds = [], keyRows = [];
+  const solids = blocks.map(({ b, bench }) => {
+    const dm = isoDims(b.item);
+    const depth = Math.min(dm.d, 580);
+    const u0 = Math.max(0, b.x), u1 = Math.min(L, b.x + b.wMM);
+    const v0 = bench === 'front' ? 20 : WD - 20 - depth, v1 = bench === 'front' ? 20 + depth : WD - 20;
+    const z0 = (dm.floor || dm.under) ? 0 : BH, z1 = dm.under ? BH : (dm.floor ? dm.h : BH + dm.h);
+    let n = keyIds.indexOf(b.item.id);
+    if (n < 0) { keyIds.push(b.item.id); keyRows.push({ item: b.item, count: 1 }); n = keyIds.length - 1; } else keyRows[n].count++;
+    return { u0, u1, v0, v1, z0, z1, col: b.item.isCashDrawer ? '#ef4444' : planColor(b.item), n: n + 1, depthKey: u0 + v0 };
+  }).sort((a, b) => a.depthKey - b.depthKey);
+  solids.forEach(o => {
+    g += box(o.u0, o.u1, o.v0, o.v1, o.z0, o.z1, o.col);
+    if (o.z1 - o.z0 >= 500 && o.u1 - o.u0 >= 500) { // door / drawer line on the front face of big units
+      const m0 = P((o.u0 + o.u1) / 2, o.v1, o.z0 + 40), m1 = P((o.u0 + o.u1) / 2, o.v1, o.z1 - 40);
+      g += `<line x1="${m0[0]}" y1="${m0[1]}" x2="${m1[0]}" y2="${m1[1]}" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>`;
+    }
+  });
+  // Ghost outlines for kitchen-side windows (that wall is cut away)
+  d.windows.filter(w => w.side === 'back').forEach(w => {
+    const u0 = Math.max(0, w.posMM), u1 = Math.min(L, w.posMM + w.mm);
+    g += poly([P(u0, WD, BH), P(u1, WD, BH), P(u1, WD, 1500), P(u0, WD, 1500)], 'fill="rgba(191,227,247,0.45)" stroke="#0369a1" stroke-width="0.8" stroke-dasharray="3,2"');
+    const c = P((u0 + u1) / 2, WD, 1200);
+    g += `<rect x="${c[0] - 40}" y="${c[1] - 6}" width="80" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">Kitchen-side window ${w.mm}mm</text>`;
+  });
+  // Range hood floating over the cookline (translucent so it doesn't hide the gear)
+  if (d.rhMM > 0) {
+    g += box(eb, eb + d.rhMM, WD - 650, WD, 1650, 1900, '#16a34a', 0.42);
+    const c = P(eb + d.rhMM / 2, WD, 1780);
+    g += `<text x="${c[0]}" y="${c[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#166534" font-family="sans-serif">Range hood ${(d.rhMM / 1000)}m</text>`;
+  }
+  // Cut-away near walls as low stubs, with the door opening shown in the end wall
+  const stub = 'fill="#d5dae2" stroke="#94a3b8" stroke-width="0.6" stroke-linejoin="round"';
+  g += poly([P(0, WD, 0), P(L, WD, 0), P(L, WD, 110), P(0, WD, 110)], stub);
+  g += poly([P(L, 0, 0), P(L, 750, 0), P(L, 750, 110), P(L, 0, 110)], stub);
+  g += poly([P(L, 1350, 0), P(L, WD, 0), P(L, WD, 110), P(L, 1350, 110)], stub);
+  const dr = P(L + 60, 1050, 0);
+  g += `<text x="${dr[0] + 6}" y="${dr[1] + 3}" font-size="7" font-weight="700" fill="#374151" font-family="sans-serif">Door</text>`;
+  // Number tags (after everything, so they always sit on top)
+  solids.forEach(o => {
+    const c = P((o.u0 + o.u1) / 2, o.v1, o.z1 + 40);
+    g += `<circle cx="${c[0]}" cy="${c[1] - 6}" r="6.2" fill="#111" stroke="white" stroke-width="1.2"/><text x="${c[0]}" y="${c[1] - 3.7}" text-anchor="middle" font-size="7" font-weight="800" fill="white" font-family="sans-serif">${o.n}</text>`;
+  });
+  // Dimensions along the near edges
+  const dl = P(L / 2, WD + 260, -70), dw = P(L + 300, WD / 2, -70);
+  g += `<text x="${dl[0]}" y="${dl[1] + 8}" text-anchor="middle" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">${L}mm long</text>`;
+  g += `<text x="${dw[0] + 4}" y="${dw[1] + 4}" text-anchor="start" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">2100mm wide</text>`;
+  const custLbl = P(L / 2, -520, 1500);
+  g += `<text x="${custLbl[0]}" y="${custLbl[1]}" text-anchor="middle" font-size="7.5" font-weight="800" fill="#16a34a" letter-spacing="1" font-family="sans-serif">▲ CUSTOMERS THIS SIDE</text>`;
+
+  // Frame + key
+  const drawBottom = P(L, WD, -70)[1] + 26;
+  const W = 760;
+  const cols = keyRows.length > 8 ? 3 : 2, colW = (W - 24) / cols, rowH = 11;
+  const keyTop = drawBottom + 4;
+  const keyH = keyRows.length ? Math.ceil(keyRows.length / cols) * rowH + 18 : 0;
+  const H = keyTop + keyH + 6;
+  let key = '';
+  if (keyRows.length) {
+    key += `<text x="12" y="${keyTop + 8}" font-size="7.5" font-weight="800" fill="#1a2e44" letter-spacing="1" font-family="sans-serif">WHAT'S INSIDE</text>`;
+    keyRows.forEach((r, i) => {
+      const c = i % cols, rr = Math.floor(i / cols), x = 12 + c * colW, y = keyTop + 20 + rr * rowH;
+      const col = r.item.isCashDrawer ? '#ef4444' : planColor(r.item);
+      key += `<circle cx="${x + 5}" cy="${y - 3}" r="5" fill="${col}"/><text x="${x + 5}" y="${y - 0.8}" text-anchor="middle" font-size="6" font-weight="800" fill="white" font-family="sans-serif">${i + 1}</text>`;
+      key += `<text x="${x + 14}" y="${y}" font-size="7.2" fill="#334155" font-weight="600" font-family="sans-serif">${esc(r.item.name || r.item.label)}${r.count > 1 ? ` ×${r.count}` : ''}</text>`;
+    });
+  }
+  const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">
+    <text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
+    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Cutaway view · kitchen wall and roof removed · equipment drawn to scale</text>
+    ${g}${key}</svg>`;
+  if (el) { el.style.display = 'block'; el.innerHTML = svg; }
+  if (pEl) pEl.innerHTML = svg;
 }
 
 // ── FOLLOW-UP DASHBOARD ──
