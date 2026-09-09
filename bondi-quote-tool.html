@@ -3029,10 +3029,12 @@ function isoShade(hex, f) {
 function renderIsoView(d) {
   const el = document.getElementById('isoContainer'), pEl = document.getElementById('pIsoView');
   if (!el && !pEl) return;
-  const L = d.intMM, WD = 2100, HW = 1950, BH = 900;
-  const k = 640 / ((L + 3000) * 0.866);
-  const ox = 3000 * 0.866 * k + 12, oy = HW * k + 30;
-  const P = (u, v, z) => [ox + (u - v) * 0.866 * k, oy + (u + v) * 0.5 * k - z * k];
+  const L = d.intMM, WD = 2100, HW = 1650, BH = 900;
+  // Flattened dimetric projection (20°) so the view is wide rather than tall and fills the page
+  const CA = 0.94, SA = 0.342;
+  const k = 736 / ((L + 2150) * CA);
+  const ox = 2150 * CA * k + 12, oy = HW * k + 30;
+  const P = (u, v, z) => [ox + (u - v) * CA * k, oy + (u + v) * SA * k - z * k];
   const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
   const poly = (a, attr) => `<polygon points="${pts(a)}" ${attr}/>`;
   const box = (u0, u1, v0, v1, z0, z1, col, o) => {
