@@ -3381,15 +3381,13 @@ function renderIsoView(d) {
   // Far (kitchen) bench first, then its units left to right; sinks at the door end or on the U end bench
   if (d.isU) {
     benchSeg(0, d.EB_MM, 0, WD, BH);
-    for (let i = 0; i < 3; i++) bowl(60, d.EB_MM - 60, 620 + i * 300, 880 + i * 300);
-    tap(d.EB_MM / 2, 1500);
+    for (let i = 0; i < 3; i++) { bowl(60, d.EB_MM - 60, 620 + i * 300, 880 + i * 300); tap(40, 750 + i * 300); }
   }
   benchRun(eb, d.bbEndMM, 0, 600, cutsOf(backUnits));
   if (!d.isU) {
     benchSeg(d.bbEndMM, L, 0, 600, BH);
     const bw = (L - d.bbEndMM - 80) / 3;
-    for (let i = 0; i < 3; i++) bowl(d.bbEndMM + 40 + i * bw + 15, d.bbEndMM + 40 + (i + 1) * bw - 15, 60, 540);
-    tap(d.bbEndMM + (L - d.bbEndMM) / 2, 30);
+    for (let i = 0; i < 3; i++) { bowl(d.bbEndMM + 40 + i * bw + 15, d.bbEndMM + 40 + (i + 1) * bw - 15, 60, 540); tap(d.bbEndMM + 40 + (i + 0.5) * bw, 30); }
   }
   backUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
   if (d.rhMM > 0) {   // canopy range hood over the cookline
