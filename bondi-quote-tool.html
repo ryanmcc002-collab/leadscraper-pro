@@ -3000,8 +3000,10 @@ function renderFloorPlan() {
     pEl.innerHTML = p;
   }
 
+  const drawbarBox = state.addons['gen_box'] || state.addons['generator'] ? 'Gen box' : (state.addons['gas_box'] ? 'Gas box' : '');
   renderIsoView({ intMM, size, isU, EB_MM, frontStartMM: FRONT_START_MM, bbEndMM: BB_END_MM, sinkMM: SINK_MM, hasBigSink: !!hasBigSink,
-    frontBlocks: frontLayout.blocks, backBlocks: backLayout.blocks, windows: winPlaced, rhMM: hasRangeHood ? Math.min(rhMM, BB_COOK_MM) : 0 });
+    frontBlocks: frontLayout.blocks, backBlocks: backLayout.blocks, windows: winPlaced, rhMM: hasRangeHood ? Math.min(rhMM, BB_COOK_MM) : 0,
+    hasAircon: !!hasAircon, upperCabs: parseInt(state.addons['upper_cab']) || 0, hasDrawbarBox: !!drawbarBox, drawbarBoxLabel: drawbarBox });
 }
 
 // ── 3D CUTAWAY VIEW ──
@@ -3056,7 +3058,9 @@ function isoShade(hex, f) {
 function renderIsoView(d) {
   const el = document.getElementById('isoContainer'), pEl = document.getElementById('pIsoView');
   if (!el && !pEl) return;
-  const L = d.intMM, WD = 2100, HW = 1850, BH = 850;
+  const L = d.intMM, WD = 2100, HW = 2150, BH = 850;
+  const SILL = 1150, HEAD = 1800;                     // window opening, from the photos
+  const SKIRT = 300;                                  // tread-plate skirt around the base
   const CA = 0.94, SA = 0.342;                       // flattened dimetric (20°) so the view is wide
   const k = 690 / ((L + 2650) * CA);
   const ox = 2650 * CA * k + 10, oy = HW * k + 34;
@@ -3077,39 +3081,56 @@ function renderIsoView(d) {
   };
   const STEEL = '#c3c9d1', FRIDGE = '#a7bdd2', DARK = '#3f3f46', GLASS = 'rgba(191,227,247,0.72)';
   let g = '';
+  // Tread-plate look: a grey band with fine diagonal hatching, on the face at v (or at u when uFace is set)
+  const tread = (u0, u1, vOrU, z0, z1, step, uFace) => {
+    const Q = uFace ? ((a, z) => P(vOrU, a, z)) : ((a, z) => P(a, vOrU, z));
+    g += poly([Q(u0, z0), Q(u1, z0), Q(u1, z1), Q(u0, z1)], 'fill="#b4bcc6" stroke="#6b7280" stroke-width="0.6" stroke-linejoin="round"');
+    const h = z1 - z0;
+    for (let a = u0 - h; a < u1; a += step) { const a0 = Math.max(u0, a), a1 = Math.min(u1, a + h); if (a1 > a0) g += line3(Q(a0, z0 + (a0 - a)), Q(a1, z0 + (a1 - a)), 'stroke="rgba(255,255,255,0.55)" stroke-width="0.5"'); }
+  };
 
   // ── Ground shadow, floor, chassis, drawbar ──
   g += hpoly([[-150, 150], [L + 150, 150], [L + 150, WD + 250], [-150, WD + 250]], -640, 'fill="rgba(15,23,42,0.08)"');
-  g += box(0, L, 0, WD, -110, 0, '#8e959f');                                   // chassis / floor slab
-  g += hpoly([[0, 0], [L, 0], [L, WD], [0, WD]], 0, 'fill="#d4d8de" stroke="#9ca3af" stroke-width="0.5"');
-  for (let u = 500; u < L; u += 500) g += line3(P(u, 0, 0), P(u, WD, 0), 'stroke="#c3c8cf" stroke-width="0.4"');
-  for (let v = 500; v < WD; v += 500) g += line3(P(0, v, 0), P(L, v, 0), 'stroke="#c3c8cf" stroke-width="0.4"');
-  const hitch = P(-1000, WD / 2, -60);
-  [650, WD - 650].forEach(v => g += line3(P(0, v, -60), hitch, 'stroke="#6b7280" stroke-width="3.4" stroke-linecap="round"'));
-  g += line3(P(-450, 720, -60), P(-450, WD - 720, -60), 'stroke="#6b7280" stroke-width="2.4"');
-  g += `<circle cx="${hitch[0]}" cy="${hitch[1]}" r="3.6" fill="#374151"/>`;
-  g += line3(P(-420, WD / 2 + 300, -60), P(-420, WD / 2 + 300, -420), 'stroke="#6b7280" stroke-width="2"');   // jockey wheel
-  g += circleFront(-420, WD / 2 + 300, -520, 110, 'fill="#1f2937"');
-  const dbLbl = P(-700, WD / 2, -60);
-  g += `<text x="${dbLbl[0]}" y="${dbLbl[1] - 10}" text-anchor="middle" font-size="7" font-weight="700" fill="#6b7280" font-family="sans-serif">Drawbar</text>`;
+  g += box(0, L, 0, WD, -110, 0, '#7c8590');                                   // chassis / floor slab
+  g += hpoly([[0, 0], [L, 0], [L, WD], [0, WD]], 0, 'fill="#c9ced5" stroke="#9ca3af" stroke-width="0.5"');
+  for (let u = -WD; u < L; u += 220) { const a = Math.max(0, u), b = Math.min(L, u + WD); if (b > a) g += line3(P(a, a - u, 0), P(b, b - u, 0), 'stroke="rgba(255,255,255,0.45)" stroke-width="0.4"'); }   // tread-plate floor
+  for (let u = 0; u < L + WD; u += 220) { const a = Math.max(0, u - WD), b = Math.min(L, u); if (b > a) g += line3(P(a, u - a, 0), P(b, u - b, 0), 'stroke="rgba(255,255,255,0.45)" stroke-width="0.4"'); }
+  const hitch = P(-1050, WD / 2, -60);
+  [650, WD - 650].forEach(v => g += line3(P(0, v, -60), hitch, 'stroke="#9aa3ad" stroke-width="4" stroke-linecap="round"'));
+  [650, WD - 650].forEach(v => g += line3(P(0, v, -60), hitch, 'stroke="#d1d5db" stroke-width="1.4" stroke-linecap="round"'));
+  g += line3(P(-450, 740, -60), P(-450, WD - 740, -60), 'stroke="#9aa3ad" stroke-width="2.6"');
+  g += box(-1150, -1000, WD / 2 - 60, WD / 2 + 60, -110, 10, '#4b5563');                                     // coupling
+  const ch = []; for (let i = 0; i <= 8; i++) ch.push(P(-900 - i * 40, WD / 2 + 120 + i * 45, -80 - Math.abs(4 - i) * 30)); g += `<polyline points="${pts(ch)}" fill="none" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="2,1.5"/>`;   // safety chain
+  g += line3(P(-520, WD / 2 + 340, -40), P(-520, WD / 2 + 340, -400), 'stroke="#9aa3ad" stroke-width="2.2"');   // jockey wheel
+  g += circleFront(-520, WD / 2 + 340, -500, 105, 'fill="#1f2937"'); g += circleFront(-520, WD / 2 + 340, -500, 45, 'fill="#e5e7eb"');
+  if (d.hasDrawbarBox) { g += box(-900, -120, WD / 2 - 420, WD / 2 + 420, -50, 620, '#9ca3af'); tread(-900, -120, WD / 2 + 420, -50, 620, 200); const bl = P(-510, WD / 2 + 420, 300); g += `<text x="${bl[0]}" y="${bl[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#374151" font-family="sans-serif">${esc(d.drawbarBoxLabel)}</text>`; }
+  const dbLbl = P(-820, WD / 2 - 150, -60);
+  g += `<text x="${dbLbl[0]}" y="${dbLbl[1] - 12}" text-anchor="middle" font-size="7" font-weight="700" fill="#6b7280" font-family="sans-serif">Drawbar</text>`;
 
   // ── Far walls: drawbar end (u = 0) and kitchen wall (v = 0), with splashback, hood and windows ──
-  const wallAttr = 'fill="#f1f3f6" stroke="#9aa3af" stroke-width="0.7" stroke-linejoin="round"';
+  const wallAttr = 'fill="#f4f5f7" stroke="#9aa3af" stroke-width="0.7" stroke-linejoin="round"';
   g += poly([P(0, 0, 0), P(0, WD, 0), P(0, WD, HW), P(0, 0, HW)], wallAttr);
   g += poly([P(0, 0, 0), P(L, 0, 0), P(L, 0, HW), P(0, 0, HW)], wallAttr);
+  for (let u = 1200; u < L; u += 1200) g += line3(P(u, 0, 0), P(u, 0, HW), 'stroke="#dfe3e8" stroke-width="0.5"');   // panel joins
   const eb = d.isU ? d.EB_MM : 0;
-  g += poly([P(eb, 0, BH), P(d.bbEndMM, 0, BH), P(d.bbEndMM, 0, 1550), P(eb, 0, 1550)], 'fill="#dde2e8" stroke="#b6bec8" stroke-width="0.5"');   // stainless splashback
-  g += line3(P(0, WD, HW), P(0, 0, HW), 'stroke="#4b5563" stroke-width="1.4"');
-  g += line3(P(0, 0, HW), P(L, 0, HW), 'stroke="#4b5563" stroke-width="1.4"');
+  g += poly([P(eb, 0, BH), P(d.bbEndMM, 0, BH), P(d.bbEndMM, 0, SILL), P(eb, 0, SILL)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');   // stainless splashback to sill height
+  if (d.rhMM > 0) g += poly([P(eb, 0, BH), P(eb + d.rhMM, 0, BH), P(eb + d.rhMM, 0, HW), P(eb, 0, HW)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');   // full-height stainless behind the hood
+  g += poly([P(0, 600, BH), P(0, WD, BH), P(0, WD, SILL), P(0, 600, SILL)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');
+  g += line3(P(0, WD, HW), P(0, 0, HW), 'stroke="#4b5563" stroke-width="1.6"');
+  g += line3(P(0, 0, HW), P(L, 0, HW), 'stroke="#4b5563" stroke-width="1.6"');
+  g += line3(P(0, 0, 0), P(0, 0, HW), 'stroke="#6b7280" stroke-width="1.2"');
+  // Switchboard by the door and a ceiling LED light
+  g += poly([P(L - 30, 200, 1500), P(L - 30, 520, 1500), P(L - 30, 520, 1720), P(L - 30, 200, 1720)], 'fill="#ffffff" stroke="#9ca3af" stroke-width="0.6"');
+  { const n = Math.max(1, Math.round(L / 1500)); for (let i = 0; i < n; i++) g += circleTop(L * (i + 0.5) / n, WD / 2, 140, HW - 5, 'fill="#fefce8" stroke="#d1d5db" stroke-width="0.6"'); }
   const glassWin = (a, label) => {
     g += poly(a, 'fill="' + GLASS + '" stroke="#0369a1" stroke-width="0.8" stroke-linejoin="round"');
     g += line3(a[3], a[1], 'stroke="rgba(255,255,255,0.75)" stroke-width="1"');
     if (label) { const c = [(a[0][0] + a[2][0]) / 2, (a[0][1] + a[2][1]) / 2], lw = label.length * 3.5 + 10; g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${label}</text>`; }
   };
-  glassWin([P(0, 600, BH), P(0, 1500, BH), P(0, 1500, 1500), P(0, 600, 1500)], 'Drawbar window');
+  glassWin([P(0, 600, SILL), P(0, 1500, SILL), P(0, 1500, HEAD), P(0, 600, HEAD)], 'Drawbar window');
   d.windows.filter(w => w.side === 'back').forEach(w => {
     const u0 = Math.max(0, w.posMM), u1 = Math.min(L, w.posMM + w.mm);
-    glassWin([P(u0, 0, BH), P(u1, 0, BH), P(u1, 0, 1500), P(u0, 0, 1500)], `Kitchen-side window ${w.mm}mm`);
+    glassWin([P(u0, 0, SILL), P(u1, 0, SILL), P(u1, 0, HEAD), P(u0, 0, HEAD)], `Kitchen-side window ${w.mm}mm`);
   });
 
   // ── Benches (850mm stainless with plinth and sliding doors), cut around built-in units ──
@@ -3291,50 +3312,65 @@ function renderIsoView(d) {
   }
   backUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
   if (d.rhMM > 0) {   // canopy range hood over the cookline
-    g += box(eb, eb + d.rhMM, 0, 680, 1520, 1780, '#d5dae1');
-    g += poly([P(eb + 40, 680, 1525), P(eb + d.rhMM - 40, 680, 1525), P(eb + d.rhMM - 40, 680, 1600), P(eb + 40, 680, 1600)], 'fill="#6b7280"');
-    const c = P(eb + d.rhMM / 2, 680, 1700);
+    g += box(eb, eb + d.rhMM, 0, 680, 1600, 1880, '#d5dae1');
+    g += poly([P(eb + 40, 680, 1605), P(eb + d.rhMM - 40, 680, 1605), P(eb + d.rhMM - 40, 680, 1690), P(eb + 40, 680, 1690)], 'fill="#6b7280"');
+    const c = P(eb + d.rhMM / 2, 680, 1800);
     g += `<text x="${c[0]}" y="${c[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#374151" font-family="sans-serif">Range hood ${(d.rhMM / 1000)}m</text>`;
   }
+  if (d.upperCabs > 0) {   // overhead cupboards on the kitchen wall past the hood
+    const c0 = eb + d.rhMM + 40, c1 = Math.min(d.bbEndMM - 40, c0 + d.upperCabs * 900);
+    if (c1 - c0 > 300) { g += box(c0, c1, 0, 350, 1550, 1980, STEEL); const n = Math.max(1, Math.round((c1 - c0) / 600)); for (let i = 1; i < n; i++) g += line3(P(c0 + (c1 - c0) * i / n, 350, 1560), P(c0 + (c1 - c0) * i / n, 350, 1970), 'stroke="rgba(0,0,0,0.25)" stroke-width="0.7"'); for (let i = 0; i < n; i++) { const uu = c0 + (c1 - c0) * (i + 0.5) / n; g += line3(P(uu - 60, 350, 1620), P(uu + 60, 350, 1620), 'stroke="#374151" stroke-width="1.3" stroke-linecap="round"'); } }
+  }
+  if (d.hasAircon) { g += box(L * 0.5 - 380, L * 0.5 + 380, WD / 2 - 380, WD / 2 + 380, HW, HW + 280, '#eef0f3'); const ac = P(L * 0.5, WD / 2 + 380, HW + 140); g += `<text x="${ac[0]}" y="${ac[1] + 2}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#1d4ed8" font-family="sans-serif">Air con</text>`; }
   // Near (customer) bench and its units
   benchRun(d.frontStartMM, L, WD - 600, WD, cutsOf(frontUnits));
   frontUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
 
-  // ── Near walls: the serving wall is low and open at the windows; upper skin drawn see-through ──
-  const skinLow = 'fill="rgba(248,250,252,0.55)" stroke="#94a3b8" stroke-width="0.8" stroke-linejoin="round"';
-  const skinUp = 'fill="rgba(255,255,255,0.28)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
-  g += poly([P(0, WD, 0), P(L, WD, 0), P(L, WD, BH), P(0, WD, BH)], skinLow);
+  // ── Near walls: white panel skin drawn see-through, tread-plate skirt, windows with flaps and shelves ──
+  const skinLow = 'fill="rgba(248,250,252,0.5)" stroke="#9aa3af" stroke-width="0.8" stroke-linejoin="round"';
+  const skinUp = 'fill="rgba(255,255,255,0.3)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
+  g += poly([P(0, WD, SKIRT), P(L, WD, SKIRT), P(L, WD, SILL), P(0, WD, SILL)], skinLow);
   const fw = d.windows.filter(w => w.side === 'front').map(w => ({ u0: Math.max(0, w.posMM), u1: Math.min(L, w.posMM + w.mm), mm: w.mm })).sort((a, b) => a.u0 - b.u0);
   let cur = 0;
-  fw.forEach(w => { if (w.u0 > cur) g += poly([P(cur, WD, BH), P(w.u0, WD, BH), P(w.u0, WD, HW), P(cur, WD, HW)], skinUp); cur = Math.max(cur, w.u1); });
-  if (cur < L) g += poly([P(cur, WD, BH), P(L, WD, BH), P(L, WD, HW), P(cur, WD, HW)], skinUp);
-  g += poly([P(L, 0, 0), P(L, 750, 0), P(L, 750, BH), P(L, 0, BH)], skinLow);           // door-end wall with the doorway gap
-  g += poly([P(L, 1350, 0), P(L, WD, 0), P(L, WD, BH), P(L, 1350, BH)], skinLow);
-  g += poly([P(L, 0, BH), P(L, WD, BH), P(L, WD, HW), P(L, 0, HW)], skinUp);
-  g += poly([P(L, 750, 0), P(L, 1350, 0), P(L, 1350, 1950 > HW ? HW : 1950), P(L, 750, HW)], 'fill="none" stroke="#374151" stroke-width="0.9" stroke-dasharray="3,2"');
-  const dr = P(L + 40, 1050, 400);
+  fw.forEach(w => { if (w.u0 > cur) g += poly([P(cur, WD, SILL), P(w.u0, WD, SILL), P(w.u0, WD, HW), P(cur, WD, HW)], skinUp); cur = Math.max(cur, w.u1); });
+  if (cur < L) g += poly([P(cur, WD, SILL), P(L, WD, SILL), P(L, WD, HW), P(cur, WD, HW)], skinUp);
+  fw.forEach(w => g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, WD, HW), P(w.u0, WD, HW)], skinUp));
+  for (let u = 1200; u < L; u += 1200) g += line3(P(u, WD, SKIRT), P(u, WD, HW), 'stroke="rgba(107,114,128,0.35)" stroke-width="0.5"');   // panel joins
+  tread(0, L, WD, -110, SKIRT, 160);
+  // Door-end wall: doorway gap, dashed door outline, fold-down step, vent grille
+  g += poly([P(L, 0, SKIRT), P(L, 750, SKIRT), P(L, 750, HW), P(L, 0, HW)], skinLow);
+  g += poly([P(L, 1350, SKIRT), P(L, WD, SKIRT), P(L, WD, HW), P(L, 1350, HW)], skinLow);
+  tread(0, 750, L, -110, SKIRT, 160, true); tread(1350, WD, L, -110, SKIRT, 160, true);
+  g += poly([P(L, 750, 0), P(L, 1350, 0), P(L, 1350, 1950), P(L, 750, 1950)], 'fill="none" stroke="#374151" stroke-width="0.9" stroke-dasharray="3,2"');
+  g += box(L, L + 260, 820, 1280, -420, -350, '#9ca3af');                                                     // fold-down step
+  for (let z = 120; z < 420; z += 60) g += line3(P(L, 1600, z), P(L, 1950, z), 'stroke="#9ca3af" stroke-width="0.7"');   // vent grille
+  const dr = P(L + 40, 1050, 500);
   g += `<text x="${dr[0] + 4}" y="${dr[1]}" font-size="7" font-weight="700" fill="#374151" font-family="sans-serif">Door</text>`;
-  g += line3(P(0, WD, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.2"');
-  g += line3(P(L, 0, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.2"');
-  g += line3(P(L, WD, 0), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.2"');
-  fw.forEach(w => {   // window frame, fold-up flap and serving shelf
-    g += poly([P(w.u0, WD, BH), P(w.u1, WD, BH), P(w.u1, WD, 1500), P(w.u0, WD, 1500)], 'fill="none" stroke="#16a34a" stroke-width="1.6" stroke-linejoin="round"');
-    g += poly([P(w.u0, WD, 1500), P(w.u1, WD, 1500), P(w.u1, WD + 520, 1500 + 330), P(w.u0, WD + 520, 1500 + 330)], 'fill="#e5e9ee" stroke="#6b7280" stroke-width="0.8" stroke-linejoin="round"');
-    g += line3(P(w.u0 + 60, WD + 520, 1500 + 330), P(w.u0 + 60, WD + 40, 1500 + 20), 'stroke="#9ca3af" stroke-width="1"');
-    g += line3(P(w.u1 - 60, WD + 520, 1500 + 330), P(w.u1 - 60, WD + 40, 1500 + 20), 'stroke="#9ca3af" stroke-width="1"');
-    g += box(w.u0, w.u1, WD, WD + 260, BH - 40, BH, STEEL);
-    const c = P((w.u0 + w.u1) / 2, WD, 1180), lbl = `Serving window ${w.mm}mm`, lw = lbl.length * 3.5 + 10;
+  // Aluminium edge trims
+  g += line3(P(0, WD, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
+  g += line3(P(L, 0, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
+  g += line3(P(L, WD, -110), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
+  g += line3(P(0, WD, -110), P(0, WD, HW), 'stroke="#6b7280" stroke-width="1.2"');
+  g += line3(P(L, 0, -110), P(L, 0, HW), 'stroke="#6b7280" stroke-width="1.2"');
+  fw.forEach(w => {   // aluminium frame, flap lifted on gas struts, fold-down serving shelf
+    g += poly([P(w.u0, WD, SILL), P(w.u1, WD, SILL), P(w.u1, WD, HEAD), P(w.u0, WD, HEAD)], 'fill="none" stroke="#6b7280" stroke-width="2.2" stroke-linejoin="round"');
+    g += poly([P(w.u0, WD, SILL), P(w.u1, WD, SILL), P(w.u1, WD, HEAD), P(w.u0, WD, HEAD)], 'fill="none" stroke="#16a34a" stroke-width="1" stroke-linejoin="round"');
+    const fh = HEAD - SILL, ang = 78 * Math.PI / 180, fv = WD + fh * Math.sin(ang), fz = HEAD + fh * Math.cos(ang);
+    g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, fv, fz), P(w.u0, fv, fz)], 'fill="rgba(236,239,243,0.42)" stroke="#6b7280" stroke-width="0.9" stroke-linejoin="round"');
+    g += poly([P(w.u0 - 30, WD - 10, HEAD - 20), P(w.u1 + 30, WD - 10, HEAD - 20), P(w.u1 + 30, WD + 60, HEAD + 40), P(w.u0 - 30, WD + 60, HEAD + 40)], 'fill="#9ca3af" stroke="#4b5563" stroke-width="0.5"');   // hinge rail
+    [w.u0 + 70, w.u1 - 70].forEach(uu => g += line3(P(uu, WD, SILL + 80), P(uu, fv - 120, fz - 40), 'stroke="#374151" stroke-width="1.1"'));   // gas struts
+    g += box(w.u0, w.u1, WD, WD + 300, SILL - 40, SILL, STEEL);                                                    // serving shelf
+    [w.u0 + 90, w.u1 - 90].forEach(uu => g += line3(P(uu, WD + 290, SILL - 45), P(uu, WD, SILL - 330), 'stroke="#6b7280" stroke-width="0.9"'));
+    const c = P((w.u0 + w.u1) / 2, WD, SILL + fh * 0.5), lbl = `Serving window ${w.mm}mm`, lw = lbl.length * 3.5 + 10;
     g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${lbl}</text>`;
   });
 
-  // ── Wheels and mudguards under the near edge (dual axle from 3.5m) ──
+  // ── Wheels under the skirt (dual axle from 3.5m) ──
   const axles = d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5];
   axles.forEach(cu => {
-    const arc = []; for (let i = 0; i <= 10; i++) { const t = Math.PI * (1 - i / 10); arc.push(P(cu + 400 * Math.cos(t), WD + 120, -300 + 400 * Math.sin(t))); }
-    g += poly(arc, 'fill="#b0b7c1" stroke="#6b7280" stroke-width="0.7"');
-    g += circleFront(cu, WD + 160, -330, 300, 'fill="#1f2937"');
-    g += circleFront(cu, WD + 160, -330, 150, 'fill="#9ca3af"');
-    g += circleFront(cu, WD + 160, -330, 40, 'fill="#4b5563"');
+    g += circleFront(cu, WD + 60, -400, 300, 'fill="#1f2937"');
+    g += circleFront(cu, WD + 60, -400, 170, 'fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.6"');
+    g += circleFront(cu, WD + 60, -400, 45, 'fill="#6b7280"');
   });
 
   // ── Numbers on every unit, then dimensions and orientation ──
@@ -3343,7 +3379,7 @@ function renderIsoView(d) {
     const c = P((o.u0 + o.u1) / 2, o.v1, zt + 60);
     g += `<circle cx="${c[0]}" cy="${c[1] - 6}" r="6.2" fill="#111" stroke="white" stroke-width="1.2"/><text x="${c[0]}" y="${c[1] - 3.7}" text-anchor="middle" font-size="7" font-weight="800" fill="white" font-family="sans-serif">${o.n}</text>`;
   });
-  const cl = P(L / 2, WD + 300, -760), dl = P(L / 2, WD + 300, -930), dw = P(L + 260, WD / 2, -250);
+  const cl = P(L / 2, WD + 300, -800), dl = P(L / 2, WD + 300, -970), dw = P(L + 330, WD / 2, -250);
   g += `<text x="${cl[0]}" y="${cl[1]}" text-anchor="middle" font-size="7.5" font-weight="800" fill="#16a34a" letter-spacing="1" font-family="sans-serif">◀ CUSTOMERS THIS SIDE ▶</text>`;
   g += `<text x="${dl[0]}" y="${dl[1]}" text-anchor="middle" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">${L}mm long</text>`;
   g += `<text x="${dw[0]}" y="${dw[1]}" text-anchor="start" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">2100mm wide</text>`;
@@ -3365,7 +3401,7 @@ function renderIsoView(d) {
   }
   const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">
     <text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
-    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall skin made see-through · equipment drawn to scale</text>
+    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall panels made see-through · equipment drawn to scale</text>
     ${g}${key}</svg>`;
   if (el) { el.style.display = 'block'; el.innerHTML = svg; }
   if (pEl) pEl.innerHTML = svg;
