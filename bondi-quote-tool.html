@@ -3422,14 +3422,18 @@ function renderIsoView(d) {
   (d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5]).forEach(wheel);
 
   // ── Near walls: white panel skin drawn see-through, tread-plate skirt, windows with flaps and shelves ──
-  const skinLow = 'fill="url(#I_skinLow)" stroke="#9aa3af" stroke-width="0.8" stroke-linejoin="round"';
-  const skinUp = 'fill="url(#I_skinUp)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
-  g += poly([P(0, WD, SKIRT), P(L, WD, SKIRT), P(L, WD, SILL), P(0, WD, SILL)], skinLow);
+  // One continuous see-through sheet with the windows cut out (a single tint, so no false edges)
+  const skin = 'fill="url(#I_skinUp)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
+  const skinLow = skin;
   const fw = d.windows.filter(w => w.side === 'front').map(w => ({ u0: Math.max(0, w.posMM), u1: Math.min(L, w.posMM + w.mm), mm: w.mm })).sort((a, b) => a.u0 - b.u0);
   let cur = 0;
-  fw.forEach(w => { if (w.u0 > cur) g += poly([P(cur, WD, SILL), P(w.u0, WD, SILL), P(w.u0, WD, HW), P(cur, WD, HW)], skinUp); cur = Math.max(cur, w.u1); });
-  if (cur < L) g += poly([P(cur, WD, SILL), P(L, WD, SILL), P(L, WD, HW), P(cur, WD, HW)], skinUp);
-  fw.forEach(w => g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, WD, HW), P(w.u0, WD, HW)], skinUp));
+  fw.forEach(w => {
+    if (w.u0 > cur) g += poly([P(cur, WD, SKIRT), P(w.u0, WD, SKIRT), P(w.u0, WD, HW), P(cur, WD, HW)], skin);
+    g += poly([P(w.u0, WD, SKIRT), P(w.u1, WD, SKIRT), P(w.u1, WD, SILL), P(w.u0, WD, SILL)], skin);   // below the window
+    g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, WD, HW), P(w.u0, WD, HW)], skin);         // above the window
+    cur = Math.max(cur, w.u1);
+  });
+  if (cur < L) g += poly([P(cur, WD, SKIRT), P(L, WD, SKIRT), P(L, WD, HW), P(cur, WD, HW)], skin);
   for (let u = 1200; u < L; u += 1200) g += line3(P(u, WD, SKIRT), P(u, WD, HW), 'stroke="rgba(107,114,128,0.35)" stroke-width="0.5"');   // panel joins
   {   // deep skirt with a wheel arch cut out over the wheels (straight top, chamfered corners)
     const ax = d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5];
@@ -3570,12 +3574,6 @@ function renderIsoView(d) {
                  .replace(/<text(?![^>]*fill="white")[^>]*>[^<]*<\/text>/g, '')
                  .replace(/stroke="#16a34a" stroke-width="1" stroke-linejoin="round"/g, 'stroke="rgba(255,255,255,0.55)" stroke-width="0.8" stroke-linejoin="round"')
                  .replace(/stroke="#6b7280" stroke-width="2.2" stroke-linejoin="round"/g, 'stroke="#9aa3ad" stroke-width="1.4" stroke-linejoin="round"');
-      // Rendered, not drawn: solid surfaces lose their outlines and rely on shading; the see-through
-      // skin, glass and window frames keep a soft edge so the box still reads
-      body = body.replace(/<polygon([^>]*)>/g, (m, attrs) => {
-        if (/_skin(Low|Up)\)|rgba\(191,227,247|rgba\(236,239,243|stroke-dasharray|stroke="rgba\(255,255,255,0\.55\)"/.test(attrs)) return m;
-        return '<polygon' + attrs.replace(/\s(stroke|stroke-width|stroke-linejoin)="[^"]*"/g, '') + '>';
-      }).replace(/<line[^>]*stroke="(#dfe3e8|rgba\(107,114,128,0\.35\))"[^>]*\/>/g, '');   // panel joins
     }
     if (night) body = body.replace(/fill="#(1a2e44|374151|6b7280|64748b)" font-family/g, 'fill="#f1e7d0" font-family').replace('fill="#16a34a" letter-spacing="1"', 'fill="#fbbf24" letter-spacing="1"');   // labels readable on the dark cover
     return (`<svg viewBox="0 0 ${W} ${full ? H : Hp}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${night ? defsNight : defs}
