@@ -3416,12 +3416,13 @@ function renderIsoView(d) {
     <radialGradient id="I_ground" cx="0.5" cy="0.5" r="0.55"><stop offset="0" stop-color="rgba(15,23,42,0.16)"/><stop offset="1" stop-color="rgba(15,23,42,0)"/></radialGradient>
     <radialGradient id="I_rim" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c4c9d1"/></radialGradient>
   </defs>`;
-  const build = tag => (`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${defs}
-    <text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
-    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall panels made see-through · equipment drawn to scale</text>
+  // The on-screen copy carries a small title; the PDF hero page has its own headline, so the print copy doesn't
+  const build = (tag, withTitle) => (`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${defs}
+    ${withTitle ? `<text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
+    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall panels made see-through · equipment drawn to scale</text>` : ''}
     ${g}${key}</svg>`).replace(/I_/g, tag + '_');
-  if (el) { el.style.display = 'block'; el.innerHTML = build('isoS'); }
-  if (pEl) pEl.innerHTML = build('isoP');
+  if (el) { el.style.display = 'block'; el.innerHTML = build('isoS', true); }
+  if (pEl) pEl.innerHTML = build('isoP', false);
 }
 
 // ── FOLLOW-UP DASHBOARD ──
