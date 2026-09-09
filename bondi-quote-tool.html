@@ -222,6 +222,7 @@
   .quote-settings .qs-field { display: flex; align-items: center; gap: 6px; }
   .quote-settings .qs-field input { width: 100%; padding: 7px 10px; border: 1.5px solid var(--grey-mid); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--white); }
   .quote-settings .qs-field input[type="number"] { width: 70px; }
+  .quote-settings .qs-field select { width: 100%; padding: 7px 10px; border: 1.5px solid var(--grey-mid); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--white); }
   .quote-settings .qs-field span { font-size: 12px; color: var(--grey-text); font-weight: 600; }
   .quote-settings .qs-field input:focus { outline: none; border-color: var(--orange); }
 
@@ -318,13 +319,29 @@
     .page-plan-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
     /* ── PAGE 1 HERO ── */
     .hero-page { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 262mm; }
+    .page-plan-container { break-before: page; page-break-before: always; }
+    .hero-kicker { font-size: 10.5px; letter-spacing: 3px; text-transform: uppercase; color: #f47c20; font-weight: 800; margin-bottom: 10px; }
+    .hero-credit { font-size: 9.5px; color: #9ca3af; margin: 12px 0 10px; }
+    /* Dusk cover: full-bleed twilight, warm light from the windows */
+    .hero-page.night { background: linear-gradient(180deg, #050c1f 0%, #0e1d42 46%, #2a2242 78%, #3b2716 100%); margin: -15mm -15mm 0; padding: 12mm 15mm 10mm; min-height: 297mm; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero-page.night .hero-top img { background: #fff; padding: 7px 14px; border-radius: 14px; }
+    .hero-page.night .hero-title { color: #fff; }
+    .hero-page.night .hero-sub { color: #cbd5e1; }
+    .hero-page.night .hero-kicker { color: #fbbf24; }
+    .hero-page.night .hero-stage { background: none; }
+    .hero-page.night .hero-spec { border-left-color: rgba(255,255,255,.18); }
+    .hero-page.night .hero-spec .v { color: #fff; }
+    .hero-page.night .hero-spec .l { color: #94a3b8; }
+    .hero-page.night .hero-key div { color: #e5e7eb; }
+    .hero-page.night .hero-credit { color: #94a3b8; }
+    .hero-page.night .print-footer { border-top-color: rgba(255,255,255,.22); color: #cbd5e1; }
     .hero-top { width: 100%; display: flex; justify-content: center; margin: 2px 0 26px; }
     .hero-top img { width: 200px; }
     .hero-title { font-size: 42px; font-weight: 800; letter-spacing: -1.6px; line-height: 1.04; color: #111; margin: 0 0 12px; max-width: 160mm; }
     .hero-sub { font-size: 14px; color: #6b7280; font-weight: 500; margin: 0 0 10px; max-width: 150mm; line-height: 1.45; }
-    .hero-stage { width: calc(100% + 22mm); margin: 4px -11mm 2px; padding: 6px 0 0; border-radius: 20px; background: radial-gradient(ellipse at 50% 60%, #f1f3f6 0%, #ffffff 66%); }
+    .hero-stage { width: calc(100% + 30mm); margin: 4px -15mm 2px; padding: 6px 0 0; border-radius: 0; background: radial-gradient(ellipse at 50% 60%, #f1f3f6 0%, #ffffff 66%); }
     .hero-page .iso-container { margin: 0; }
-    .hero-page .iso-container svg { max-height: 150mm; }
+    .hero-page .iso-container svg { max-height: 158mm; }
     .hero-specs { display: flex; justify-content: center; margin: 8px 0 12px; width: 100%; }
     .hero-spec { padding: 2px 24px; border-left: 1px solid #e5e7eb; }
     .hero-spec:first-child { border-left: none; }
@@ -645,6 +662,12 @@
               <input type="date" id="quoteDate" oninput="updatePreview()">
             </div>
           </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Trailer Name <span style="text-transform:none; letter-spacing:0; font-weight:600; color:var(--grey-text);">— optional, ask on the call ("what are you going to call it?")</span></label>
+              <input type="text" id="custTrailerName" placeholder="e.g. The Patty Wagon" oninput="updatePreview()">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -829,6 +852,10 @@
               <label>Lead time</label>
               <div class="qs-field"><input type="text" id="leadTime" value="10–12 weeks" placeholder="e.g. 10–12 weeks" oninput="updateQuoteSettings()"></div>
             </div>
+            <div class="qs-row">
+              <label>Cover</label>
+              <div class="qs-field"><select id="heroStyle" onchange="updateQuoteSettings()"><option value="dusk">Dusk, lights on</option><option value="day">Daylight</option></select></div>
+            </div>
           </div>
 
           <div class="finance-toggle-box" onclick="document.getElementById('toggleFinance').click()">
@@ -857,19 +884,18 @@
 
     <div class="hero-page">
       <div class="hero-top"><img id="pHeroLogo" alt="Bondi Food Trailers"></div>
+      <div class="hero-kicker">Your first service</div>
       <h1 class="hero-title" id="pHeroTitle">Here's your new trailer.</h1>
       <div class="hero-sub" id="pHeroSub"></div>
       <div class="hero-stage"><div class="iso-container" id="pIsoView"></div></div>
       <div class="hero-specs" id="pHeroSpecs"></div>
       <div class="hero-key" id="pHeroKey"></div>
-      <div class="hero-foot">Drawn to scale from what we talked about. Nothing is locked in until you've signed off the drawings.</div>
+      <div class="hero-credit" id="pHeroCredit"></div>
       <div class="print-footer" style="margin-top:auto;">
         <strong style="color:#f47c20; font-size:12px; text-transform:uppercase;">bondi food trailers</strong>
         <div id="pFooterDateH"></div>
       </div>
     </div>
-
-    <div class="page-break"></div>
 
     <div class="page-plan-container" id="pPlanPage">
       <div class="print-section-title" id="pFloorPlanTitle" style="margin-top:0;">Your Kitchen Layout <span style="font-weight:600; text-transform:none; color:#6b7280; font-size:11px;">— technical floor plan, to scale</span></div>
@@ -1008,6 +1034,7 @@ const state = {
   quoteValidDays: 30,
   depositPct: 50,
   leadTime: '10–12 weeks',
+  heroStyle: 'dusk',         // PDF cover: 'dusk' (lights on) or 'day'
   // Serving windows: any number, each on the front (customer) or back (kitchen/road) wall,
   // with an optional dragged position in mm from the interior left wall
   windows: [{ id: 1, side: 'front', mm: 2000, posMM: null }]
@@ -1415,7 +1442,7 @@ function init() {
   renderWindowList();
   state.benchLayout = 'standard';
   document.getElementById('benchLayout').value = 'standard';
-  state.quoteValidDays = 30; state.depositPct = 50; state.leadTime = '10–12 weeks';
+  state.quoteValidDays = 30; state.depositPct = 50; state.leadTime = '10–12 weeks'; state.heroStyle = 'dusk';
   syncQuoteSettingsInputs();
 
   // Every new quote starts with 2m of commercial range hood included by default
@@ -1785,13 +1812,16 @@ function updateQuoteSettings() {
   state.quoteValidDays = Math.max(1, parseInt(document.getElementById('quoteValidDays').value) || 30);
   state.depositPct = Math.min(100, Math.max(1, parseInt(document.getElementById('depositPct').value) || 50));
   state.leadTime = (document.getElementById('leadTime').value || '').trim() || '10–12 weeks';
+  state.heroStyle = document.getElementById('heroStyle').value === 'day' ? 'day' : 'dusk';
   updatePreview();
+  renderFloorPlan();
 }
 function syncQuoteSettingsInputs() {
   const v = document.getElementById('quoteValidDays'), d = document.getElementById('depositPct'), l = document.getElementById('leadTime');
   if (v) v.value = state.quoteValidDays || 30;
   if (d) d.value = state.depositPct || 50;
   if (l) l.value = state.leadTime || '10–12 weeks';
+  const hs = document.getElementById('heroStyle'); if (hs) hs.value = state.heroStyle === 'day' ? 'day' : 'dusk';
 }
 function fmtDateAU(d, long) {
   return d.toLocaleDateString('en-AU', long ? { day: 'numeric', month: 'long', year: 'numeric' } : { day: 'numeric', month: 'short', year: 'numeric' });
@@ -2016,6 +2046,7 @@ function autoSave() {
     custEmail: document.getElementById('custEmail').value,
     custPhone: document.getElementById('custPhone').value,
     custLocation: document.getElementById('custLocation').value,
+    custTrailerName: document.getElementById('custTrailerName').value,
     quoteDate: document.getElementById('quoteDate').value,
     trailerDesc: document.getElementById('trailerDesc').value,
     basePrice: document.getElementById('basePrice').value,
@@ -2083,6 +2114,7 @@ function loadQuote(qNum) {
   document.getElementById('custEmail').value = data.custEmail || '';
   document.getElementById('custPhone').value = data.custPhone || '';
   document.getElementById('custLocation').value = data.custLocation || '';
+  document.getElementById('custTrailerName').value = data.custTrailerName || '';
   document.getElementById('quoteDate').value = data.quoteDate || '';
   document.getElementById('trailerDesc').value = data.trailerDesc || '';
   document.getElementById('basePrice').value = data.basePrice || '';
@@ -2112,6 +2144,7 @@ function loadQuote(qNum) {
   state.quoteValidDays = parseInt(data.state && data.state.quoteValidDays) || 30;
   state.depositPct = parseInt(data.state && data.state.depositPct) || 50;
   state.leadTime = (data.state && data.state.leadTime) || '10–12 weeks';
+  state.heroStyle = (data.state && data.state.heroStyle === 'day') ? 'day' : 'dusk';
   syncQuoteSettingsInputs();
 
   // Restore custom appliances (and keep the id counter ahead of existing ones)
@@ -2274,8 +2307,15 @@ function updatePrintDoc(t, showFinance) {
 
   // Page 1 hero: their name, one line, and the trailer
   const firstName = (document.getElementById('custName').value || '').trim().split(' ')[0];
+  const trailerName = ((document.getElementById('custTrailerName') || {}).value || '').trim();
   const eHeroTitle = document.getElementById('pHeroTitle');
-  if (eHeroTitle) eHeroTitle.textContent = firstName ? `${firstName}, here's your new trailer.` : "Here's your new trailer.";
+  if (eHeroTitle) eHeroTitle.textContent = trailerName
+    ? (firstName ? `${firstName}, meet ${trailerName}.` : `Meet ${trailerName}.`)
+    : (firstName ? `${firstName}, here's your new trailer.` : "Here's your new trailer.");
+  const eHeroCredit = document.getElementById('pHeroCredit');
+  if (eHeroCredit) eHeroCredit.textContent = `Designed with Ryan${dateStr ? ' on ' + dateStr : ''}${quoteNum ? '  ·  Build ref ' + quoteNum : ''}. Drawn to scale. Nothing is built until you've signed off the 3D render.`;
+  const heroPage = document.querySelector('.hero-page');
+  if (heroPage) heroPage.classList.toggle('night', state.heroStyle !== 'day');
   const eHeroSub = document.getElementById('pHeroSub');
   if (eHeroSub) {
     const what = meta.size ? `A ${meta.size}m custom food trailer` : (desc ? `A ${desc.replace(/^a /i, '')}` : 'A custom food trailer');
@@ -3413,6 +3453,35 @@ function renderIsoView(d) {
     });
   }
   const lin = (id, a, b, x2, y2) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2 == null ? 0 : x2}" y2="${y2 == null ? 1 : y2}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+  const rad = (id, a, b, r) => `<radialGradient id="${id}" cx="0.5" cy="0.5" r="${r || 0.5}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></radialGradient>`;
+  // Dusk palette: warm interior light, cool exterior; the same gradient ids so the drawing code doesn't change
+  const defsNight = `<defs>
+    ${lin('I_stF', '#ecdcba', '#a8956f')}${lin('I_stT', '#fbf1d9', '#dcc9a0', 1, 1)}${lin('I_stS', '#b9a47c', '#7d6a4c')}
+    ${lin('I_frF', '#dccfb0', '#9f9270')}${lin('I_frT', '#f1e7cb', '#c9bb94', 1, 1)}${lin('I_frS', '#ad9f7b', '#7d7052')}
+    ${lin('I_whF', '#fff4dc', '#e2cfa6')}${lin('I_whT', '#fff8e6', '#ecdcb8', 1, 1)}${lin('I_whS', '#e2cfa6', '#b39f78')}
+    ${lin('I_wallL', '#f8ead0', '#b99c6e', 1, 0)}${lin('I_wallB', '#fcf0d6', '#c9ab7c')}${lin('I_floor', '#a08c66', '#5a4a33', 1, 1)}
+    ${lin('I_skinLow', 'rgba(14,24,48,0.55)', 'rgba(10,18,38,0.45)')}${lin('I_skinUp', 'rgba(20,32,60,0.35)', 'rgba(20,32,60,0.2)')}
+    ${rad('I_ground', 'rgba(0,0,0,0)', 'rgba(0,0,0,0)')}
+    ${rad('I_pool', 'rgba(255,176,72,0.55)', 'rgba(255,150,40,0)', 0.5)}
+    ${rad('I_spill', 'rgba(255,210,130,0.75)', 'rgba(255,180,80,0)', 0.5)}
+    ${rad('I_lamp', 'rgba(255,240,200,0.8)', 'rgba(255,240,200,0)', 0.5)}
+    ${lin('I_winGlow', '#ffdc9e', '#ffa13d')}
+    <radialGradient id="I_rim" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c4c9d1"/></radialGradient>
+  </defs>`;
+  // Dusk extras: light pool under the trailer, glow in every window with spill onto the ground, lamps, rim light
+  let nightUnder = hpoly([[-900, -400], [L + 900, -400], [L + 900, WD + 1600], [-900, WD + 1600]], GROUND + 1, 'fill="url(#I_pool)"');
+  let nightOver = '';
+  fw.forEach(w => {
+    nightOver += poly([P(w.u0, WD, SILL), P(w.u1, WD, SILL), P(w.u1, WD, HEAD), P(w.u0, WD, HEAD)], 'fill="url(#I_winGlow)" opacity="0.36"');
+    const cu = (w.u0 + w.u1) / 2, ru = (w.u1 - w.u0) / 2 + 600, rv = 950, cv = WD + 750, a = [];
+    for (let i = 0; i < 24; i++) { const t = i / 24 * Math.PI * 2; a.push(P(cu + ru * Math.cos(t), cv + rv * Math.sin(t), GROUND + 2)); }
+    nightOver += poly(a, 'fill="url(#I_spill)"');
+  });
+  nightOver += poly([P(0, 600, SILL), P(0, 1500, SILL), P(0, 1500, HEAD), P(0, 600, HEAD)], 'fill="url(#I_winGlow)" opacity="0.7"');
+  d.windows.filter(w => w.side === 'back').forEach(w => { const u0 = Math.max(0, w.posMM), u1 = Math.min(L, w.posMM + w.mm); nightOver += poly([P(u0, 0, SILL), P(u1, 0, SILL), P(u1, 0, HEAD), P(u0, 0, HEAD)], 'fill="url(#I_winGlow)" opacity="0.7"'); });
+  { const n = Math.max(1, Math.round(L / 1500)); for (let i = 0; i < n; i++) { const cu = L * (i + 0.5) / n; nightOver += circleTop(cu, WD / 2, 560, HW - 6, 'fill="url(#I_lamp)"'); nightOver += circleTop(cu, WD / 2, 140, HW - 5, 'fill="#fff7d6"'); } }
+  [[P(0, WD, HW), P(L, WD, HW), 1.3, 0.9], [P(L, 0, HW), P(L, WD, HW), 1.3, 0.9], [P(0, 0, HW), P(0, WD, HW), 0.9, 0.6], [P(0, 0, HW), P(L, 0, HW), 0.9, 0.6], [P(L, WD, -110), P(L, WD, HW), 1, 0.7]]
+    .forEach(([a, b, wdt, op]) => nightOver += line3(a, b, `stroke="#ffe3b0" stroke-width="${wdt}" opacity="${op}"`));
   const defs = `<defs>
     ${lin('I_stF', '#dfe3e8', '#aeb5be')}${lin('I_stT', '#f3f5f7', '#d3d8de', 1, 1)}${lin('I_stS', '#b5bcc5', '#8a929c')}
     ${lin('I_frF', '#c4d3e2', '#93a9c0')}${lin('I_frT', '#e2ebf3', '#c0d0df', 1, 1)}${lin('I_frS', '#9fb3c8', '#7b91a8')}
@@ -3423,12 +3492,16 @@ function renderIsoView(d) {
     <radialGradient id="I_rim" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c4c9d1"/></radialGradient>
   </defs>`;
   // The on-screen copy carries a small title; the PDF hero page has its own headline, so the print copy doesn't
-  const build = (tag, full) => (`<svg viewBox="0 0 ${W} ${full ? H : Hp}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${defs}
+  const build = (tag, full, night) => {
+    let body = night ? nightUnder + g + nightOver : g;
+    if (night) body = body.replace(/fill="#(1a2e44|374151|6b7280|64748b)" font-family/g, 'fill="#f1e7d0" font-family').replace('fill="#16a34a" letter-spacing="1"', 'fill="#fbbf24" letter-spacing="1"');   // labels readable on the dark cover
+    return (`<svg viewBox="0 0 ${W} ${full ? H : Hp}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${night ? defsNight : defs}
     ${full ? `<text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
     <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall panels made see-through · equipment drawn to scale</text>` : ''}
-    ${g}${full ? dimsTxt + key : ''}</svg>`).replace(/I_/g, tag + '_');
-  if (el) { el.style.display = 'block'; el.innerHTML = build('isoS', true); }
-  if (pEl) pEl.innerHTML = build('isoP', false);
+    ${body}${full ? dimsTxt + key : ''}</svg>`).replace(/I_/g, tag + '_');
+  };
+  if (el) { el.style.display = 'block'; el.innerHTML = build('isoS', true, false); }
+  if (pEl) pEl.innerHTML = build('isoP', false, state.heroStyle !== 'day');
   const keyEl = document.getElementById('pHeroKey');
   if (keyEl) keyEl.innerHTML = keyRows.map((r, i) => `<div><span class="n" style="background:${r.item.isCashDrawer ? '#ef4444' : planColor(r.item)}">${i + 1}</span>${esc(r.item.name || r.item.label)}${r.count > 1 ? ` ×${r.count}` : ''}</div>`).join('');
 }
@@ -3828,7 +3901,7 @@ function duplicateQuote(qNum) {
   let newNum;
   do { newNum = `BFT-${new Date().getFullYear()}-${Math.floor(Math.random() * 900) + 100}`; } while (saves[newNum]);
   copy.qNum = newNum;
-  copy.custName = ''; copy.custEmail = ''; copy.custPhone = ''; copy.custLocation = '';
+  copy.custName = ''; copy.custEmail = ''; copy.custPhone = ''; copy.custLocation = ''; copy.custTrailerName = '';
   copy.quoteDate = new Date().toISOString().split('T')[0];
   copy.tracking = { status: 'draft', sentAt: null, followUps: [] };
   saves[newNum] = copy;
