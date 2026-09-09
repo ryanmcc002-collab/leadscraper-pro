@@ -324,7 +324,7 @@
     .hero-credit { font-size: 9.5px; color: #9ca3af; margin: 12px 0 10px; }
     /* Dusk cover: full-bleed twilight, warm light from the windows */
     .hero-page.night { background: linear-gradient(180deg, #050c1f 0%, #0e1d42 46%, #2a2242 78%, #3b2716 100%); margin: -15mm -15mm 0; padding: 12mm 15mm 10mm; min-height: 297mm; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .hero-page.night .hero-top img { background: #fff; padding: 7px 14px; border-radius: 14px; }
+    .hero-page.night .hero-top img { width: 210px; }
     .hero-page.night .hero-title { color: #fff; }
     .hero-page.night .hero-sub { color: #cbd5e1; }
     .hero-page.night .hero-kicker { color: #fbbf24; }
@@ -1427,6 +1427,46 @@ function showToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
+// ── KNOCKOUT LOGO for the dark cover ──
+// The brand logo is a JPEG on white. For the twilight cover we build a knockout in the browser:
+// the white background (reached from the edges) becomes transparent, black and grey art becomes
+// white, and the orange stays orange. Cached once; the cover picks it up when it's ready.
+let KNOCKOUT_LOGO = '';
+function buildKnockoutLogo() {
+  const src = document.querySelector('.print-logo-block img');
+  if (!src || !src.src) return;
+  const img = new Image();
+  img.onload = () => {
+    try {
+      const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0);
+      const W = c.width, H = c.height, id = ctx.getImageData(0, 0, W, H), d = id.data;
+      const bg = new Uint8Array(W * H);
+      const isBg = i => d[i * 4] > 200 && d[i * 4 + 1] > 200 && d[i * 4 + 2] > 200;
+      const stack = [];
+      for (let x = 0; x < W; x++) { stack.push(x, (H - 1) * W + x); }
+      for (let y = 0; y < H; y++) { stack.push(y * W, y * W + W - 1); }
+      while (stack.length) {
+        const i = stack.pop();
+        if (bg[i] || !isBg(i)) continue;
+        bg[i] = 1;
+        const x = i % W, y = (i - x) / W;
+        if (x > 0) stack.push(i - 1); if (x < W - 1) stack.push(i + 1); if (y > 0) stack.push(i - W); if (y < H - 1) stack.push(i + W);
+      }
+      for (let i = 0; i < W * H; i++) {
+        const o = i * 4, r = d[o], g = d[o + 1], b = d[o + 2];
+        if (bg[i]) { d[o + 3] = 0; continue; }
+        const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+        if (mx - mn < 45 && mx < 215) { d[o] = d[o + 1] = d[o + 2] = 255; d[o + 3] = 255; }   // black/grey art → white
+      }
+      ctx.putImageData(id, 0, 0);
+      KNOCKOUT_LOGO = c.toDataURL('image/png');
+      if (typeof updatePreview === 'function' && state.trailerSize) updatePreview();
+    } catch (e) { /* keep the original logo */ }
+  };
+  img.src = src.src;
+}
+
 function init() {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('quoteDate').value = today;
@@ -2330,7 +2370,10 @@ function updatePrintDoc(t, showFinance) {
       : '';
   }
   const eHeroLogo = document.getElementById('pHeroLogo'), srcLogo = document.querySelector('.print-logo-block img');
-  if (eHeroLogo && srcLogo && !eHeroLogo.getAttribute('src')) eHeroLogo.src = srcLogo.src;
+  if (eHeroLogo && srcLogo) {
+    const want = (state.heroStyle !== 'day' && KNOCKOUT_LOGO) ? KNOCKOUT_LOGO : srcLogo.src;
+    if (eHeroLogo.getAttribute('src') !== want) eHeroLogo.src = want;
+  }
   const eFooterDateH = document.getElementById('pFooterDateH');
   if (eFooterDateH) eFooterDateH.textContent = dateStr;
 
@@ -2785,10 +2828,10 @@ function renderFloorPlan() {
   }
 
   // Range hood band along the top edge, sized to the metres selected and drawn over the appliances
-  // (inset from the wall edge, which is where any kitchen-side serving windows are drawn)
+  // The hood runs along the kitchen wall (any kitchen-side windows are drawn just outside the wall line)
   if (hasRangeHood && rhPx > 0) {
-    s += `<rect x="${TL+EBW+2}" y="${TT+17}" width="${rhPx}" height="18" fill="#16a34a" rx="5"/>`;
-    s += `<text x="${TL+EBW+rhPx/2+2}" y="${TT+29}" text-anchor="middle" font-size="9" font-weight="800" fill="white" font-family="sans-serif">Range Hood (${state.addons['range_hood']}m)</text>`;
+    s += `<rect x="${TL+EBW+2}" y="${TT-5}" width="${rhPx}" height="20" fill="#16a34a" rx="5"/>`;
+    s += `<text x="${TL+EBW+rhPx/2+2}" y="${TT+8}" text-anchor="middle" font-size="9" font-weight="800" fill="white" font-family="sans-serif">Range Hood (${state.addons['range_hood']}m)</text>`;
   }
 
   if (!isU) {
@@ -2877,7 +2920,7 @@ function renderFloorPlan() {
     const list = allWins.filter(w => w.side === side);
     if (!list.length) return;
     // Front windows straddle the customer wall; back windows mirror that on the kitchen/road wall
-    const wy = side === 'front' ? TB - 15 : TT - 5;
+    const wy = side === 'front' ? TB - 15 : TT - 21;
     // Windows without a dragged position are packed together and centred along the wall
     const auto = list.filter(w => w.posMM == null);
     const autoPx = auto.reduce((t, w) => t + Math.min(w.mm * sc, SWW), 0) + Math.max(0, auto.length - 1) * WIN_GAP;
@@ -4210,6 +4253,7 @@ function renderDashboard() {
 })();
 
 init();
+buildKnockoutLogo();
 renderPresetRow();
 renderFloorPlan();
 showDashboard();
