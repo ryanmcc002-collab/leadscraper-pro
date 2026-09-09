@@ -3473,8 +3473,6 @@ function renderIsoView(d) {
     g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, fv, fz), P(w.u0, fv, fz)], 'fill="rgba(236,239,243,0.42)" stroke="#6b7280" stroke-width="0.9" stroke-linejoin="round"');
     g += poly([P(w.u0 - 30, WD - 10, HEAD - 20), P(w.u1 + 30, WD - 10, HEAD - 20), P(w.u1 + 30, WD + 60, HEAD + 40), P(w.u0 - 30, WD + 60, HEAD + 40)], 'fill="#9ca3af" stroke="#4b5563" stroke-width="0.5"');   // hinge rail
     [w.u0 + 70, w.u1 - 70].forEach(uu => g += line3(P(uu, WD, SILL + 80), P(uu, fv - 120, fz - 40), 'stroke="#374151" stroke-width="1.1"'));   // gas struts
-    g += box(w.u0, w.u1, WD, WD + 300, SILL - 40, SILL, STEEL);                                                    // serving shelf
-    [w.u0 + 90, w.u1 - 90].forEach(uu => g += line3(P(uu, WD + 290, SILL - 45), P(uu, WD, SILL - 330), 'stroke="#6b7280" stroke-width="0.9"'));
     const c = P((w.u0 + w.u1) / 2, WD, SILL + fh * 0.5), lbl = `Serving window ${w.mm}mm`, lw = lbl.length * 3.5 + 10;
     g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${lbl}</text>`;
   });
