@@ -317,16 +317,24 @@
     .print-page-note { font-size: 9px; color: #9ca3af; text-align: right; margin-top: 4px; }
     .page-plan-container { display: flex; flex-direction: column; min-height: 262mm; padding-top: 12mm; }
     /* ── PAGE 1 HERO ── */
-    .hero-page { display: flex; flex-direction: column; min-height: 262mm; }
-    .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .hero-top img { width: 150px; }
-    .hero-meta { font-size: 10px; color: #9ca3af; font-weight: 700; text-align: right; letter-spacing: .3px; }
-    .hero-kicker { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #f47c20; font-weight: 800; margin-bottom: 10px; }
-    .hero-title { font-size: 36px; font-weight: 900; letter-spacing: -1px; line-height: 1.06; color: #111; margin: 0 0 12px; }
-    .hero-sub { font-size: 13.5px; color: #6b7280; font-weight: 600; margin-bottom: 24px; }
-    .hero-page .iso-container { margin-top: auto; margin-bottom: auto; }
+    .hero-page { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 262mm; }
+    .hero-top { width: 100%; display: flex; justify-content: center; margin: 4px 0 30px; }
+    .hero-top img { width: 118px; }
+    .hero-title { font-size: 42px; font-weight: 800; letter-spacing: -1.6px; line-height: 1.04; color: #111; margin: 0 0 12px; max-width: 160mm; }
+    .hero-sub { font-size: 14px; color: #6b7280; font-weight: 500; margin: 0 0 10px; max-width: 150mm; line-height: 1.45; }
+    .hero-stage { width: calc(100% + 22mm); margin: 4px -11mm 2px; padding: 6px 0 0; border-radius: 20px; background: radial-gradient(ellipse at 50% 60%, #f1f3f6 0%, #ffffff 66%); }
+    .hero-page .iso-container { margin: 0; }
     .hero-page .iso-container svg { max-height: 150mm; }
-    .hero-foot { font-size: 10.5px; color: #6b7280; text-align: center; margin: 14px 0 10px; }
+    .hero-specs { display: flex; justify-content: center; margin: 8px 0 12px; width: 100%; }
+    .hero-spec { padding: 2px 24px; border-left: 1px solid #e5e7eb; }
+    .hero-spec:first-child { border-left: none; }
+    .hero-spec .v { font-size: 21px; font-weight: 800; letter-spacing: -.7px; color: #111; line-height: 1.1; }
+    .hero-spec .l { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1.3px; color: #9ca3af; font-weight: 700; margin-top: 3px; }
+    .hero-key { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px 18px; width: 100%; max-width: 168mm; margin: 0 auto 4px; text-align: left; }
+    .hero-key div { font-size: 9.5px; color: #374151; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+    .hero-key .n { width: 15px; height: 15px; border-radius: 50%; color: #fff; font-size: 8px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .hero-foot { font-size: 10px; color: #9ca3af; margin: 8px 0 10px; }
+    .hero-page .print-footer { width: 100%; }
     .page-two-container .print-header { margin-bottom: 10px; }
     .page-two-container .print-logo-block img { width: 160px; margin-bottom: 4px; }
     .page-two-container .print-to { margin-bottom: 12px; }
@@ -345,7 +353,7 @@
     .print-total-row.grand { background: #111; color: white; padding: 12px 16px; border-radius: 8px; border: none; font-size: 18px; font-weight: 800; margin-top: 8px; }
     .print-total-row.grand .t-amount { color: #f47c20; }
     
-    .print-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 2px solid #e5e7eb; padding-top: 14px; margin-top: 4px; margin-bottom: 6px; break-inside: avoid; }
+    .print-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding-top: 2px; margin-top: 0; margin-bottom: 10px; break-inside: avoid; }
     .print-terms h4 { font-size: 11px; text-transform: uppercase; margin-bottom: 6px; color: #111; font-weight: 800; }
     .print-terms p { font-size: 10px; color: #4b5563; line-height: 1.6; }
     
@@ -848,14 +856,12 @@
   <div class="print-doc">
 
     <div class="hero-page">
-      <div class="hero-top">
-        <img id="pHeroLogo" alt="Bondi Food Trailers">
-        <div class="hero-meta" id="pHeroQuote"></div>
-      </div>
-      <div class="hero-kicker">Your new trailer</div>
+      <div class="hero-top"><img id="pHeroLogo" alt="Bondi Food Trailers"></div>
       <h1 class="hero-title" id="pHeroTitle">Here's your new trailer.</h1>
       <div class="hero-sub" id="pHeroSub"></div>
-      <div class="iso-container" id="pIsoView"></div>
+      <div class="hero-stage"><div class="iso-container" id="pIsoView"></div></div>
+      <div class="hero-specs" id="pHeroSpecs"></div>
+      <div class="hero-key" id="pHeroKey"></div>
       <div class="hero-foot">Drawn to scale from what we talked about. Nothing is locked in until you've signed off the drawings.</div>
       <div class="print-footer" style="margin-top:auto;">
         <strong style="color:#f47c20; font-size:12px; text-transform:uppercase;">bondi food trailers</strong>
@@ -956,23 +962,19 @@
     <div class="page-break"></div>
 
     <div class="page-three-container">
+      <div class="print-section-title" style="margin-top:0;">Terms &amp; Finance</div>
       <div class="print-terms">
         <div>
-          <h4>Terms & Conditions</h4>
-          <p style="margin-bottom:6px;" id="pTermsText">A 50% deposit is required to confirm your build slot. Balance is due 7 days prior to delivery. All prices are in AUD. GST is included. Lead time is approximately 10–12 weeks from deposit, ready to customer.</p>
-          
-          <div id="pFinanceBlock" style="margin-top: 14px; display: none;">
-            <h4>Commercial Finance</h4>
-            <p style="margin-bottom:4px; font-size: 11px;">Keep your cash flow strong with flexible finance from <strong style="color:#111; font-size:12px;" id="pWeeklyFinVal">$0/week</strong>. We partner with Jacob at Get Mates Rates to secure the best commercial rates. Contact Jacob on 0406 811 767 or jacob@getmatesrates.com.au for rapid pre-approval.</p>
-            <p style="font-size: 9px; color: #9ca3af;">*Estimate based on standard 5-year commercial terms. Subject to lending criteria and credit profile.</p>
-          </div>
+          <h4>Terms &amp; Conditions</h4>
+          <p style="margin-bottom:6px;" id="pTermsText">A 50% deposit is required to confirm your build slot. Balance is due 7 days prior to delivery. All prices are in AUD and include GST.</p>
+          <p>Payment by bank transfer or credit card. Your deposit invoice, with payment details, is sent as soon as you give the go-ahead.</p>
         </div>
-        <div>
-          <h4>Payment Details</h4>
-          <p>Bank transfer or credit card accepted.<br>BSB: &nbsp; &nbsp; &nbsp; &nbsp; ___________<br>Account: ___________<br>Ref: Quote number</p>
+        <div id="pFinanceBlock" style="display: none;">
+          <h4>Commercial Finance</h4>
+          <p style="margin-bottom:4px; font-size: 11px;">Keep your cash flow strong with flexible finance from <strong style="color:#111; font-size:12px;" id="pWeeklyFinVal">$0/week</strong>. We partner with Jacob at Get Mates Rates to secure the best commercial rates. Contact Jacob on 0406 811 767 or jacob@getmatesrates.com.au for rapid pre-approval.</p>
+          <p style="font-size: 9px; color: #9ca3af;">*Estimate based on standard 5-year commercial terms. Subject to lending criteria and credit profile.</p>
         </div>
       </div>
-
 
       <div class="print-section-title" style="margin-top:16px;">Getting Ready to Trade <span id="pComplianceState" style="font-weight:600; text-transform:none; color:#6b7280; font-size:12px;"></span></div>
       <div class="compliance-state" id="pComplianceLead"></div>
@@ -2276,14 +2278,17 @@ function updatePrintDoc(t, showFinance) {
   if (eHeroTitle) eHeroTitle.textContent = firstName ? `${firstName}, here's your new trailer.` : "Here's your new trailer.";
   const eHeroSub = document.getElementById('pHeroSub');
   if (eHeroSub) {
-    const bits = [];
-    if (meta.size) bits.push(`${meta.size}m custom food trailer`); else if (desc) bits.push(desc);
-    if (concept) bits.push(concept);
-    if (meta.windows.length) bits.push(`${meta.windows.length} serving window${meta.windows.length > 1 ? 's' : ''}`);
-    eHeroSub.textContent = bits.join('  ·  ');
+    const what = meta.size ? `A ${meta.size}m custom food trailer` : (desc ? `A ${desc.replace(/^a /i, '')}` : 'A custom food trailer');
+    eHeroSub.textContent = concept ? `${what}, built around ${concept}.` : `${what}, built around your menu.`;
   }
-  const eHeroQuote = document.getElementById('pHeroQuote');
-  if (eHeroQuote) eHeroQuote.textContent = `${quoteNum ? 'Quote ' + quoteNum : ''}${quoteNum && dateStr ? '  ·  ' : ''}${dateStr}`;
+  const eSpecs = document.getElementById('pHeroSpecs');
+  if (eSpecs) {
+    const spec = (v, l) => `<div class="hero-spec"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+    const nWin = meta.windows.length + 1;   // plus the drawbar window
+    eSpecs.innerHTML = meta.size
+      ? spec(`${meta.size}m`, 'Long') + spec('2.1m', 'Wide') + spec(meta.isDual ? 'Dual' : 'Single', 'Axle') + spec(String(nWin), `Serving window${nWin === 1 ? '' : 's'}`)
+      : '';
+  }
   const eHeroLogo = document.getElementById('pHeroLogo'), srcLogo = document.querySelector('.print-logo-block img');
   if (eHeroLogo && srcLogo && !eHeroLogo.getAttribute('src')) eHeroLogo.src = srcLogo.src;
   const eFooterDateH = document.getElementById('pFooterDateH');
@@ -3388,14 +3393,15 @@ function renderIsoView(d) {
   });
   const cl = P(L / 2, WD + 300, -800), dl = P(L / 2, WD + 300, -970), dw = P(L + 330, WD / 2, -250);
   g += `<text x="${cl[0]}" y="${cl[1]}" text-anchor="middle" font-size="7.5" font-weight="800" fill="#16a34a" letter-spacing="1" font-family="sans-serif">◀ CUSTOMERS THIS SIDE ▶</text>`;
-  g += `<text x="${dl[0]}" y="${dl[1]}" text-anchor="middle" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">${L}mm long</text>`;
-  g += `<text x="${dw[0]}" y="${dw[1]}" text-anchor="start" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">2100mm wide</text>`;
+  const dimsTxt = `<text x="${dl[0]}" y="${dl[1]}" text-anchor="middle" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">${L}mm long</text>`
+    + `<text x="${dw[0]}" y="${dw[1]}" text-anchor="start" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">2100mm wide</text>`;
 
   // ── Frame and key ──
   const drawBottom = Math.max(P(L, WD, -110)[1], dl[1]) + 10;
   const W = 760, cols = keyRows.length > 8 ? 3 : 2, colW = (W - 24) / cols, rowH = 11, keyTop = drawBottom + 2;
   const keyH = keyRows.length ? Math.ceil(keyRows.length / cols) * rowH + 18 : 0;
   const H = keyTop + keyH + 6;
+  const Hp = drawBottom - 6;   // print copy: no key inside the drawing
   let key = '';
   if (keyRows.length) {
     key += `<text x="12" y="${keyTop + 8}" font-size="7.5" font-weight="800" fill="#1a2e44" letter-spacing="1" font-family="sans-serif">WHAT'S INSIDE</text>`;
@@ -3417,12 +3423,14 @@ function renderIsoView(d) {
     <radialGradient id="I_rim" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c4c9d1"/></radialGradient>
   </defs>`;
   // The on-screen copy carries a small title; the PDF hero page has its own headline, so the print copy doesn't
-  const build = (tag, withTitle) => (`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${defs}
-    ${withTitle ? `<text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
+  const build = (tag, full) => (`<svg viewBox="0 0 ${W} ${full ? H : Hp}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">${defs}
+    ${full ? `<text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
     <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall panels made see-through · equipment drawn to scale</text>` : ''}
-    ${g}${key}</svg>`).replace(/I_/g, tag + '_');
+    ${g}${full ? dimsTxt + key : ''}</svg>`).replace(/I_/g, tag + '_');
   if (el) { el.style.display = 'block'; el.innerHTML = build('isoS', true); }
   if (pEl) pEl.innerHTML = build('isoP', false);
+  const keyEl = document.getElementById('pHeroKey');
+  if (keyEl) keyEl.innerHTML = keyRows.map((r, i) => `<div><span class="n" style="background:${r.item.isCashDrawer ? '#ef4444' : planColor(r.item)}">${i + 1}</span>${esc(r.item.name || r.item.label)}${r.count > 1 ? ` ×${r.count}` : ''}</div>`).join('');
 }
 
 // ── FOLLOW-UP DASHBOARD ──
