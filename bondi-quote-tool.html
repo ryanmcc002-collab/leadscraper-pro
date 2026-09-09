@@ -3412,6 +3412,25 @@ function renderIsoView(d) {
   benchRun(d.frontStartMM, L, WD - 600, WD, cutsOf(frontUnits));
   frontUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
 
+  // ── Wheels (dual axle from 3.5m): tyre with tread band and steel rim, tucked under the skirt ──
+  const wheel = cu => {
+    const cv = WD - 90, cz = -400, R = 300, back = cv - 230, rad = a => a * Math.PI / 180;
+    const sh = []; for (let i = 0; i < 16; i++) { const t = i / 16 * Math.PI * 2; sh.push(P(cu + 330 * Math.cos(t), cv + 130 * Math.sin(t), GROUND + 1)); }
+    g += poly(sh, 'fill="rgba(0,0,0,0.38)"');                                                                 // contact shadow
+    const band = [], N = 16;
+    for (let i = 0; i <= N; i++) { const t = rad(-120 + 180 * i / N); band.push(P(cu + R * Math.cos(t), cv, cz + R * Math.sin(t))); }
+    for (let i = N; i >= 0; i--) { const t = rad(-120 + 180 * i / N); band.push(P(cu + R * Math.cos(t), back, cz + R * Math.sin(t))); }
+    g += poly(band, 'fill="#24272c" stroke="#0f1114" stroke-width="0.4"');                                    // tread band
+    for (let i = 1; i < N; i += 2) { const t = rad(-120 + 180 * i / N); g += line3(P(cu + R * Math.cos(t), cv, cz + R * Math.sin(t)), P(cu + R * Math.cos(t), back, cz + R * Math.sin(t)), 'stroke="#0f1114" stroke-width="0.7"'); }
+    g += circleFront(cu, cv, cz, R, 'fill="#1b1f24" stroke="#0f1114" stroke-width="0.5"');                    // tyre face
+    g += circleFront(cu, cv, cz, R - 50, 'fill="none" stroke="#2f343b" stroke-width="1.2"');                  // sidewall
+    g += circleFront(cu, cv, cz, 192, 'fill="url(#I_rim)" stroke="#8a929c" stroke-width="0.6"');              // steel rim
+    g += circleFront(cu, cv, cz, 150, 'fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="0.8"');
+    for (let i = 0; i < 5; i++) { const t = i / 5 * Math.PI * 2 + 0.3; g += circleFront(cu + 100 * Math.cos(t), cv, cz + 100 * Math.sin(t), 20, 'fill="#9aa3ad" stroke="#4b5563" stroke-width="0.4"'); }
+    g += circleFront(cu, cv, cz, 44, 'fill="#4b5563"'); g += circleFront(cu, cv, cz, 22, 'fill="#9aa3ad"');
+  };
+  (d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5]).forEach(wheel);
+
   // ── Near walls: white panel skin drawn see-through, tread-plate skirt, windows with flaps and shelves ──
   const skinLow = 'fill="url(#I_skinLow)" stroke="#9aa3af" stroke-width="0.8" stroke-linejoin="round"';
   const skinUp = 'fill="url(#I_skinUp)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
@@ -3422,18 +3441,26 @@ function renderIsoView(d) {
   if (cur < L) g += poly([P(cur, WD, SILL), P(L, WD, SILL), P(L, WD, HW), P(cur, WD, HW)], skinUp);
   fw.forEach(w => g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, WD, HW), P(w.u0, WD, HW)], skinUp));
   for (let u = 1200; u < L; u += 1200) g += line3(P(u, WD, SKIRT), P(u, WD, HW), 'stroke="rgba(107,114,128,0.35)" stroke-width="0.5"');   // panel joins
-  tread(0, L, WD, -110, SKIRT, 160);
+  tread(0, L, WD, -330, SKIRT, 160);
   // Door-end wall: doorway gap, dashed door outline, fold-down step, vent grille
   g += poly([P(L, 0, SKIRT), P(L, 750, SKIRT), P(L, 750, HW), P(L, 0, HW)], skinLow);
   g += poly([P(L, 1350, SKIRT), P(L, WD, SKIRT), P(L, WD, HW), P(L, 1350, HW)], skinLow);
-  tread(0, 750, L, -110, SKIRT, 160, true); tread(1350, WD, L, -110, SKIRT, 160, true);
+  tread(0, 750, L, -330, SKIRT, 160, true); tread(1350, WD, L, -330, SKIRT, 160, true);
   g += poly([P(L, 750, 0), P(L, 1350, 0), P(L, 1350, 1950), P(L, 750, 1950)], 'fill="none" stroke="#374151" stroke-width="0.9" stroke-dasharray="3,2"');
-  g += box(L, L + 260, 820, 1280, -420, -350, '#9ca3af');                                                     // fold-down step
+  { const S0 = L + 30, S1 = L + 320, V0 = 790, V1 = 1310, SZ = -330;                                          // fold-down tread-plate step
+    [V0 + 70, V1 - 70].forEach(v => { g += line3(P(L, v, -150), P(S1 - 30, v, SZ), 'stroke="#6b7280" stroke-width="1.8" stroke-linecap="round"'); g += line3(P(L, v, -330), P(S0 + 20, v, SZ - 5), 'stroke="#6b7280" stroke-width="1.4"'); });
+    g += box(S0, S1, V0, V1, SZ - 45, SZ, '#a4acb6');
+    for (let a = S0 + 40; a < S1; a += 70) g += line3(P(a, V0 + 30, SZ + 1), P(Math.min(S1 - 20, a + 160), V1 - 30, SZ + 1), 'stroke="rgba(255,255,255,0.5)" stroke-width="0.5"');
+    g += line3(P(S0, V1, SZ), P(S1, V1, SZ), 'stroke="#4b5563" stroke-width="0.9"'); }
   for (let z = 120; z < 420; z += 60) g += line3(P(L, 1600, z), P(L, 1950, z), 'stroke="#9ca3af" stroke-width="0.7"');   // vent grille
   const dr = P(L + 40, 1050, 500);
   g += `<text x="${dr[0] + 4}" y="${dr[1]}" font-size="7" font-weight="700" fill="#374151" font-family="sans-serif">Door</text>`;
-  [[180, '#dc2626'], [WD - 180, '#dc2626']].forEach(([vv, col]) => { g += circleFront(L + 1, vv, 420, 70, `fill="${col}" stroke="#7f1d1d" stroke-width="0.5"`); });   // tail lights (shown on the door end for the view)
-  g += circleFront(L + 1, WD - 180, 420, 30, 'fill="#fca5a5"'); g += circleFront(L + 1, 180, 420, 30, 'fill="#fca5a5"');
+  const lamp = v0 => {   // LED combination lamp (about 220 x 90mm): bezel, then red / amber / white cells
+    g += poly([P(L + 1, v0 - 12, -20), P(L + 1, v0 + 222, -20), P(L + 1, v0 + 222, 82), P(L + 1, v0 - 12, 82)], 'fill="#111827" stroke="#0b0f19" stroke-width="0.4"');
+    [['#dc2626', 0], ['#f59e0b', 70], ['#e5e7eb', 140]].forEach(([c, o]) => g += poly([P(L + 2, v0 + o, -6), P(L + 2, v0 + o + 66, -6), P(L + 2, v0 + o + 66, 68), P(L + 2, v0 + o, 68)], `fill="${c}"`));
+    g += line3(P(L + 3, v0 + 6, 52), P(L + 3, v0 + 200, 52), 'stroke="rgba(255,255,255,0.45)" stroke-width="0.6"');
+  };
+  lamp(110); lamp(WD - 320);
   // Aluminium edge trims
   g += line3(P(0, WD, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
   g += line3(P(L, 0, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.6"');
@@ -3470,16 +3497,6 @@ function renderIsoView(d) {
     const m0 = Math.max(60, fw[0].u0 - 620), m1 = fw[0].u0 - 120;
     if (m1 - m0 > 300) { g += box(m0, m1, WD, WD + 50, SILL + 80, HEAD - 40, '#111827'); g += poly([P(m0 + 25, WD + 51, SILL + 105), P(m1 - 25, WD + 51, SILL + 105), P(m1 - 25, WD + 51, HEAD - 65), P(m0 + 25, WD + 51, HEAD - 65)], 'fill="#1e3a5f"'); const ml = P((m0 + m1) / 2, WD + 52, (SILL + HEAD) / 2 + 20); g += `<text x="${ml[0]}" y="${ml[1]}" text-anchor="middle" font-size="6" font-weight="800" fill="#93c5fd" font-family="sans-serif">MENU</text>`; }
   }
-  // ── Wheels under the skirt (dual axle from 3.5m) ──
-  const axles = d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5];
-  axles.forEach(cu => {
-    g += circleFront(cu, WD + 60, -400, 300, 'fill="#1f2937"');
-    g += circleFront(cu, WD + 60, -400, 245, 'fill="none" stroke="#374151" stroke-width="1"');
-    g += circleFront(cu, WD + 60, -400, 170, 'fill="url(#I_rim)" stroke="#9ca3af" stroke-width="0.6"');
-    for (let i = 0; i < 5; i++) { const t = i / 5 * Math.PI * 2; g += circleFront(cu + 105 * Math.cos(t), WD + 60, -400 + 105 * Math.sin(t), 16, 'fill="#9ca3af"'); }
-    g += circleFront(cu, WD + 60, -400, 40, 'fill="#6b7280"');
-  });
-
   // ── Numbers on every unit, then dimensions and orientation ──
   backUnits.concat(frontUnits).forEach(o => {
     const zt = o.mount === 'under' ? BH : (o.mount === 'floor' ? Math.max(o.h, 880) : (o.mount === 'lowered' ? BH : BH + o.h));
