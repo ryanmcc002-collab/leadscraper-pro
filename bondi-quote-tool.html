@@ -320,16 +320,14 @@
     /* ── PAGE 1 HERO ──  (left-aligned, upper-third headline, product as the hero, one accent) */
     .hero-page { position: relative; display: flex; flex-direction: column; align-items: stretch; text-align: left; min-height: 297mm; margin: -15mm -15mm 0; padding: 13mm 14mm 11mm; background: #fff; color: #111; font-family: "Helvetica Neue", "Segoe UI", "Arial Nova", Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .page-plan-container { break-before: page; page-break-before: always; }
-    .hero-top { display: flex; justify-content: space-between; align-items: center; margin: 0 0 9mm; }
-    .hero-top img { width: 30mm; display: block; }
-    .hero-plate { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #f28c28; font-variant-numeric: tabular-nums; }
+    .hero-plate { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #f28c28; font-variant-numeric: tabular-nums; margin: 6mm 0 5mm; }
     .hero-title { margin: 0 0 4mm; max-width: 170mm; }
     .hero-name { display: block; font-size: 64pt; font-weight: 700; letter-spacing: -0.03em; line-height: 0.96; color: #111; }
     .hero-line2 { display: block; font-size: 36pt; font-weight: 600; letter-spacing: -0.02em; line-height: 1.06; color: #333; margin-top: 1.5mm; }
     .hero-sub { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 13pt; color: #6b7280; margin: 0 0 3mm; max-width: 150mm; line-height: 1.4; }
     .hero-stage { width: calc(100% + 28mm); margin: 0 -14mm 0; padding: 0; }
     .hero-page .iso-container { margin: 0; }
-    .hero-page .iso-container svg { max-height: 138mm; }
+    .hero-page .iso-container svg { max-height: 152mm; }
     .hero-specs { display: flex; gap: 9mm; margin: 4mm 0 0; padding-top: 3mm; border-top: 0.25pt solid rgba(0,0,0,.18); white-space: nowrap; }
     .hero-spec .v { font-size: 22pt; font-weight: 600; letter-spacing: -0.02em; color: #111; line-height: 1.05; font-variant-numeric: tabular-nums lining-nums; }
     .hero-spec .l { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(0,0,0,.55); font-weight: 600; margin-top: 1.5mm; }
@@ -885,10 +883,7 @@
   <div class="print-doc">
 
     <div class="hero-page">
-      <div class="hero-top">
-        <img id="pHeroLogo" alt="Bondi Food Trailers">
-        <div class="hero-plate" id="pHeroPlate"></div>
-      </div>
+      <div class="hero-plate" id="pHeroPlate"></div>
       <h1 class="hero-title"><span class="hero-name" id="pHeroName">Steve,</span><span class="hero-line2" id="pHeroLine2">here's your new trailer.</span></h1>
       <div class="hero-sub" id="pHeroSub"></div>
       <div class="hero-stage"><div class="iso-container" id="pIsoView"></div></div>
@@ -2381,11 +2376,7 @@ function updatePrintDoc(t, showFinance) {
   if (eHeroCredit) eHeroCredit.textContent = [`Designed with Ryan${dateStr ? ', ' + dateStr : ''}`, trailerName && firstName ? `Named by ${firstName}` : '', 'Drawn to scale', 'Everything on this page can still change before we cut steel'].filter(Boolean).join('  ·  ') + '.';
   const heroPage = document.querySelector('.hero-page');
   if (heroPage) heroPage.classList.toggle('night', state.heroStyle !== 'day');
-  const eHeroLogo = document.getElementById('pHeroLogo'), srcLogo = document.querySelector('.print-logo-block img');
-  if (eHeroLogo && srcLogo) {
-    const want = (state.heroStyle !== 'day' && KNOCKOUT_LOGO) ? KNOCKOUT_LOGO : srcLogo.src;
-    if (eHeroLogo.getAttribute('src') !== want) eHeroLogo.src = want;
-  }
+
   const eFooterDateH = document.getElementById('pFooterDateH');
   if (eFooterDateH) eFooterDateH.textContent = dateStr;
 
