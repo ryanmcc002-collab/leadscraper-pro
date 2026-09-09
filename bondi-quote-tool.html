@@ -3186,10 +3186,12 @@ function renderIsoView(d) {
       case 'fridge': {
         const glassy = /glass|beverage|display|cake|cooler/.test(name);
         if (o.mount === 'under') {
+          // Underbench fridges are two-door up to 2000mm (1200, 1500, 1800, 2000), three from 2400mm
+          const nd = w >= 2400 ? 3 : (w >= 900 ? 2 : 1);
           g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
-          for (let i = 0; i < Math.max(1, Math.round(w / 600)); i++) { const uu = u0 + (u1 - u0) * (i + 0.5) / Math.max(1, Math.round(w / 600)); g += circleFront(uu + 130, v1, BH - 400, 18, 'fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"'); }
+          for (let i = 0; i < nd; i++) { const uu = u0 + (u1 - u0) * (i + 0.5) / nd; g += circleFront(uu + 130, v1, BH - 400, 18, 'fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"'); }
           g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
-          doors(u0, u1, v1, 110, BH - 30, Math.max(1, Math.round(w / 600)), false);
+          doors(u0, u1, v1, 110, BH - 30, nd, false);
         } else if (o.mount === 'floor') {
           g += contact(u0, u1, v0, v1, 0);
           g += box(u0, u1, v0, v1, 0, h, FRIDGE);
