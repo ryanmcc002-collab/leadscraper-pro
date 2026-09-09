@@ -662,12 +662,6 @@
               <input type="date" id="quoteDate" oninput="updatePreview()">
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Trailer Name <span style="text-transform:none; letter-spacing:0; font-weight:600; color:var(--grey-text);">— optional, ask on the call ("what are you going to call it?")</span></label>
-              <input type="text" id="custTrailerName" placeholder="e.g. The Patty Wagon" oninput="updatePreview()">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -2087,7 +2081,6 @@ function autoSave() {
     custEmail: document.getElementById('custEmail').value,
     custPhone: document.getElementById('custPhone').value,
     custLocation: document.getElementById('custLocation').value,
-    custTrailerName: document.getElementById('custTrailerName').value,
     quoteDate: document.getElementById('quoteDate').value,
     trailerDesc: document.getElementById('trailerDesc').value,
     basePrice: document.getElementById('basePrice').value,
@@ -2155,7 +2148,6 @@ function loadQuote(qNum) {
   document.getElementById('custEmail').value = data.custEmail || '';
   document.getElementById('custPhone').value = data.custPhone || '';
   document.getElementById('custLocation').value = data.custLocation || '';
-  document.getElementById('custTrailerName').value = data.custTrailerName || '';
   document.getElementById('quoteDate').value = data.quoteDate || '';
   document.getElementById('trailerDesc').value = data.trailerDesc || '';
   document.getElementById('basePrice').value = data.basePrice || '';
@@ -2348,7 +2340,7 @@ function updatePrintDoc(t, showFinance) {
 
   // Page 1 hero: build plate, their name, one line, and the trailer
   const firstName = (document.getElementById('custName').value || '').trim().split(' ')[0];
-  const trailerName = ((document.getElementById('custTrailerName') || {}).value || '').trim();
+  const trailerName = '';
   const monthYear = dateVal ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-AU', { month: 'long', year: 'numeric' }) : '';
   const ePlate = document.getElementById('pHeroPlate');
   if (ePlate) ePlate.textContent = ['Custom build', quoteNum ? 'No. ' + quoteNum : '', monthYear].filter(Boolean).join('  ·  ');
@@ -3991,7 +3983,7 @@ function duplicateQuote(qNum) {
   let newNum;
   do { newNum = `BFT-${new Date().getFullYear()}-${Math.floor(Math.random() * 900) + 100}`; } while (saves[newNum]);
   copy.qNum = newNum;
-  copy.custName = ''; copy.custEmail = ''; copy.custPhone = ''; copy.custLocation = ''; copy.custTrailerName = '';
+  copy.custName = ''; copy.custEmail = ''; copy.custPhone = ''; copy.custLocation = '';
   copy.quoteDate = new Date().toISOString().split('T')[0];
   copy.tracking = { status: 'draft', sentAt: null, followUps: [] };
   saves[newNum] = copy;
