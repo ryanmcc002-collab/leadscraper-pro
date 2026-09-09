@@ -3448,14 +3448,23 @@ function renderIsoView(d) {
   if (cur < L) g += poly([P(cur, WD, SILL), P(L, WD, SILL), P(L, WD, HW), P(cur, WD, HW)], skinUp);
   fw.forEach(w => g += poly([P(w.u0, WD, HEAD), P(w.u1, WD, HEAD), P(w.u1, WD, HW), P(w.u0, WD, HW)], skinUp));
   for (let u = 1200; u < L; u += 1200) g += line3(P(u, WD, SKIRT), P(u, WD, HW), 'stroke="rgba(107,114,128,0.35)" stroke-width="0.5"');   // panel joins
-  tread(0, L, WD, -120, SKIRT, 160);
+  {   // deep skirt with a wheel arch cut out over the wheels (straight top, chamfered corners)
+    const ax = d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5];
+    const cutL = ax[0] - 380, cutR = ax[ax.length - 1] + 380, TOP = -50, BOT = -330, CH = 150;
+    tread(0, cutL - CH, WD, BOT, SKIRT, 160);
+    tread(cutR + CH, L, WD, BOT, SKIRT, 160);
+    tread(cutL - CH, cutR + CH, WD, TOP, SKIRT, 160);
+    g += poly([P(cutL - CH, WD, TOP), P(cutL - CH, WD, BOT), P(cutL, WD, TOP)], 'fill="#b4bcc6" stroke="#6b7280" stroke-width="0.6" stroke-linejoin="round"');
+    g += poly([P(cutR + CH, WD, TOP), P(cutR + CH, WD, BOT), P(cutR, WD, TOP)], 'fill="#b4bcc6" stroke="#6b7280" stroke-width="0.6" stroke-linejoin="round"');
+    g += line3(P(cutL - CH, WD, BOT), P(cutL, WD, TOP), 'stroke="#6b7280" stroke-width="0.6"'); g += line3(P(cutL, WD, TOP), P(cutR, WD, TOP), 'stroke="#6b7280" stroke-width="0.6"'); g += line3(P(cutR, WD, TOP), P(cutR + CH, WD, BOT), 'stroke="#6b7280" stroke-width="0.6"');
+  }
   // Door-end wall: doorway gap, dashed door outline, fold-down step, vent grille
   g += poly([P(L, 0, SKIRT), P(L, 750, SKIRT), P(L, 750, HW), P(L, 0, HW)], skinLow);
   g += poly([P(L, 1350, SKIRT), P(L, WD, SKIRT), P(L, WD, HW), P(L, 1350, HW)], skinLow);
-  tread(0, 750, L, -120, SKIRT, 160, true); tread(1350, WD, L, -120, SKIRT, 160, true);
+  tread(0, 750, L, -330, SKIRT, 160, true); tread(1350, WD, L, -330, SKIRT, 160, true);
   g += poly([P(L, 750, 0), P(L, 1350, 0), P(L, 1350, 1950), P(L, 750, 1950)], 'fill="none" stroke="#374151" stroke-width="0.9" stroke-dasharray="3,2"');
   { const S0 = L + 30, S1 = L + 320, V0 = 790, V1 = 1310, SZ = -330;                                          // fold-down tread-plate step
-    [V0 + 70, V1 - 70].forEach(v => { g += line3(P(L, v, -150), P(S1 - 30, v, SZ), 'stroke="#6b7280" stroke-width="1.8" stroke-linecap="round"'); g += line3(P(L, v, -120), P(S0 + 20, v, SZ - 5), 'stroke="#6b7280" stroke-width="1.4"'); });
+    [V0 + 70, V1 - 70].forEach(v => { g += line3(P(L, v, -150), P(S1 - 30, v, SZ), 'stroke="#6b7280" stroke-width="1.8" stroke-linecap="round"'); g += line3(P(L, v, -330), P(S0 + 20, v, SZ - 5), 'stroke="#6b7280" stroke-width="1.4"'); });
     g += box(S0, S1, V0, V1, SZ - 45, SZ, '#a4acb6');
     for (let a = S0 + 40; a < S1; a += 70) g += line3(P(a, V0 + 30, SZ + 1), P(Math.min(S1 - 20, a + 160), V1 - 30, SZ + 1), 'stroke="rgba(255,255,255,0.5)" stroke-width="0.5"');
     g += line3(P(S0, V1, SZ), P(S1, V1, SZ), 'stroke="#4b5563" stroke-width="0.9"'); }
