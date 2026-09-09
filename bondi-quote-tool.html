@@ -3273,13 +3273,13 @@ function renderIsoView(d) {
         if (o.mount === 'under') {
           // Underbench fridges are two-door up to 2000mm (1200, 1500, 1800, 2000), three from 2400mm
           const nd = w >= 2400 ? 3 : (w >= 900 ? 2 : 1);
-          g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
+          g += box(u0, u1, v0, v1, 0, BH, STEEL);
           for (let i = 0; i < nd; i++) { const uu = u0 + (u1 - u0) * (i + 0.5) / nd; g += circleFront(uu + 130, v1, BH - 400, 18, 'fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"'); }
           g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
           doors(u0, u1, v1, 110, BH - 30, nd, false);
         } else if (o.mount === 'floor') {
           g += contact(u0, u1, v0, v1, 0);
-          g += box(u0, u1, v0, v1, 0, h, FRIDGE);
+          g += box(u0, u1, v0, v1, 0, h, STEEL);
           g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
           if (glassy) {
             g += poly([P(u0 + 30, v1, 130), P(u1 - 30, v1, 130), P(u1 - 30, v1, h - 60), P(u0 + 30, v1, h - 60)], 'fill="rgba(226,240,250,0.9)" stroke="#0369a1" stroke-width="0.6"');
@@ -3326,7 +3326,7 @@ function renderIsoView(d) {
         for (let i = 1; i <= 2; i++) g += line3(P(u0 + 15, v0 + 15, BH + 130 + (h - 130) * i / 3), P(u1 - 15, v0 + 15, BH + 130 + (h - 130) * i / 3), 'stroke="#6b7280" stroke-width="0.6"');
         break; }
       case 'keg': {
-        g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
+        g += box(u0, u1, v0, v1, 0, BH, STEEL);
         g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
         doors(u0, u1, v1, 110, BH - 30, 1, true);
         const taps = /6/.test(name) ? 3 : (/4/.test(name) ? 2 : (/double|2/.test(name) ? 2 : 1)), cu = (u0 + u1) / 2, cv = (v0 + v1) / 2;
