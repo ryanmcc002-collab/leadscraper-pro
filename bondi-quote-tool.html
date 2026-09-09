@@ -3005,21 +3005,48 @@ function renderFloorPlan() {
 }
 
 // ── 3D CUTAWAY VIEW ──
-// Same data as the plan, drawn as an isometric cutaway: floor, the two far walls (customer side and
-// drawbar end) with the windows cut in, benches and every appliance as a solid block at true scale.
-// The kitchen wall and roof are removed so the customer can see straight into their layout.
+// Same data as the plan, drawn as a cutaway seen from the customer side: drawbar on the left, door on
+// the right, exactly as the plan reads. The serving wall is kept low and open at the windows so you
+// look straight over the serving bench into the kitchen; the far wall carries the cookline and hood.
+// Benches are 850mm stainless. Fryers stand on the floor, grills sit in a lowered bench so their
+// plates are level with the bench, everything else sits on top.
+function isoKind(item) {
+  const key = (item.id + ' ' + (item.name || '') + ' ' + (item.label || '')).toLowerCase().replace(/\n/g, ' ');
+  if (item.isCashDrawer) return 'cash';
+  if (item.isCustomApp) return 'custom';
+  if (/fryer/.test(key)) return 'fryer';
+  if (/chargrill|char grill|smokeless|kebab/.test(key)) return 'chargrill';
+  if (/griddle|hot plate|hotplate|crepe|panini|sandwich|waffle|crisp/.test(key)) return 'griddle';
+  if (/stove|gasmax|burner|wok/.test(key)) return 'stove';
+  if (/oven|pizza|churros|donut|muffin/.test(key)) return 'oven';
+  if (/coffee|espresso/.test(key)) return 'coffee';
+  if (/bain|soup|hot dog|hotdog|rice/.test(key)) return 'bain';
+  if (/warmer/.test(key)) return 'warmer';
+  if (/keg|beer/.test(key)) return 'keg';
+  if (/slush|juice|soft serve|milkshake|snow|dispenser|fountain|sealer|ice cream/.test(key)) return 'drinks';
+  if (/fridge|freezer|cooler|display|beverage|cake|chiller|ice/.test(key)) return 'fridge';
+  if (/sink/.test(key)) return 'sink';
+  if (/mixer|mincer|cutter|blender|slicer|dumpling/.test(key)) return 'prep';
+  return 'box';
+}
+// Footprint depth, body height and how the unit mounts: on the floor, built in under the bench,
+// sunk into a lowered bench (hot plates level with the bench) or simply sitting on top.
 function isoDims(item) {
+  const kind = isoKind(item);
   const desc = String(item.desc || '');
   const m = desc.match(/(\d{2,4})\s*[x×*]\s*(\d{2,4})\s*[x×*]\s*(\d{2,4})\s*(mm|cm)?/i);
-  let w = item.mm || 600, d = 600, h = 0;
+  let d = 600, h = 0;
   if (m) { let b = +m[2], c = +m[3]; if ((m[4] || '').toLowerCase() === 'cm') { b *= 10; c *= 10; } d = b; h = c; }
-  if (item.isCustomApp) { d = item.depth || 600; h = 0; }
-  if (item.isCashDrawer) { d = 450; h = 120; }
-  if (!h) h = item.type === 'fridge' ? 800 : (item.type === 'cook' ? 400 : 450);
+  if (item.isCustomApp) { d = item.depth || 600; h = 400; }
+  const defaults = { fryer: 1300, chargrill: 300, griddle: 300, stove: 280, oven: 520, coffee: 480, bain: 260, warmer: 620, keg: 890, drinks: 700, fridge: 800, sink: 250, prep: 500, cash: 0, custom: 400, box: 450 };
+  if (!h) h = defaults[kind] != null ? defaults[kind] : 450;
   d = Math.max(250, Math.min(d, 700));
-  const under = item.type === 'fridge' && h >= 700 && h <= 1000 && d >= 550;   // bench-height cabinet (workbench fridge etc.)
-  const floor = !under && (h > 1000 || (item.type === 'fridge' && h >= 700 && d >= 450));
-  return { w, d, h: Math.min(h, 2000), floor, under };
+  let mount = 'bench';
+  if (kind === 'fryer' || kind === 'keg') mount = 'floor';
+  else if (kind === 'chargrill' || kind === 'griddle' || kind === 'stove') { mount = 'lowered'; h = Math.max(180, Math.min(h, 420)); }
+  else if (kind === 'fridge') { if (h > 1000) mount = 'floor'; else if (h >= 650 && d >= 500) mount = 'under'; }
+  else if (h > 1000) mount = 'floor';
+  return { kind, d, h: Math.min(h, 2000), mount };
 }
 function isoShade(hex, f) {
   const n = parseInt(hex.slice(1), 16); let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
@@ -3029,125 +3056,301 @@ function isoShade(hex, f) {
 function renderIsoView(d) {
   const el = document.getElementById('isoContainer'), pEl = document.getElementById('pIsoView');
   if (!el && !pEl) return;
-  const L = d.intMM, WD = 2100, HW = 1650, BH = 900;
-  // Flattened dimetric projection (20°) so the view is wide rather than tall and fills the page
-  const CA = 0.94, SA = 0.342;
-  const k = 736 / ((L + 2150) * CA);
-  const ox = 2150 * CA * k + 12, oy = HW * k + 30;
+  const L = d.intMM, WD = 2100, HW = 1850, BH = 850;
+  const CA = 0.94, SA = 0.342;                       // flattened dimetric (20°) so the view is wide
+  const k = 690 / ((L + 2650) * CA);
+  const ox = 2650 * CA * k + 10, oy = HW * k + 34;
+  // u runs drawbar → door (left → right); v runs kitchen wall (far) → customer wall (near); z is up
   const P = (u, v, z) => [ox + (u - v) * CA * k, oy + (u + v) * SA * k - z * k];
   const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
   const poly = (a, attr) => `<polygon points="${pts(a)}" ${attr}/>`;
+  const hpoly = (uv, z, attr) => poly(uv.map(q => P(q[0], q[1], z)), attr);
+  const line3 = (a, b, attr) => `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" ${attr}/>`;
+  const circleTop = (cu, cv, r, z, attr) => { const a = []; for (let i = 0; i < 16; i++) { const t = i / 16 * Math.PI * 2; a.push(P(cu + r * Math.cos(t), cv + r * Math.sin(t), z)); } return poly(a, attr); };
+  const circleFront = (cu, v, cz, r, attr) => { const a = []; for (let i = 0; i < 16; i++) { const t = i / 16 * Math.PI * 2; a.push(P(cu + r * Math.cos(t), v, cz + r * Math.sin(t))); } return poly(a, attr); };
   const box = (u0, u1, v0, v1, z0, z1, col, o) => {
     const op = o != null ? ` opacity="${o}"` : '';
-    const st = `stroke="${isoShade(col, 0.55)}" stroke-width="0.5" stroke-linejoin="round"${op}`;
-    return poly([P(u1, v0, z0), P(u1, v1, z0), P(u1, v1, z1), P(u1, v0, z1)], `fill="${isoShade(col, 0.72)}" ${st}`)
+    const st = `stroke="${isoShade(col, 0.6)}" stroke-width="0.45" stroke-linejoin="round"${op}`;
+    return poly([P(u1, v0, z0), P(u1, v1, z0), P(u1, v1, z1), P(u1, v0, z1)], `fill="${isoShade(col, 0.74)}" ${st}`)
          + poly([P(u0, v1, z0), P(u1, v1, z0), P(u1, v1, z1), P(u0, v1, z1)], `fill="${col}" ${st}`)
-         + poly([P(u0, v0, z1), P(u1, v0, z1), P(u1, v1, z1), P(u0, v1, z1)], `fill="${isoShade(col, 1.22)}" ${st}`);
+         + poly([P(u0, v0, z1), P(u1, v0, z1), P(u1, v1, z1), P(u0, v1, z1)], `fill="${isoShade(col, 1.2)}" ${st}`);
   };
+  const STEEL = '#c3c9d1', FRIDGE = '#a7bdd2', DARK = '#3f3f46', GLASS = 'rgba(191,227,247,0.72)';
   let g = '';
 
-  // Floor slab with a thin edge, and the drawbar A-frame out past the far-left wall
-  g += box(0, L, 0, WD, -70, 0, '#c4c9d2');
-  g += poly([P(0, 0, 0), P(L, 0, 0), P(L, WD, 0), P(0, WD, 0)], 'fill="#d8dce3" stroke="#9ca3af" stroke-width="0.6"');
-  for (let u = 500; u < L; u += 500) g += `<line x1="${P(u, 0, 0)[0]}" y1="${P(u, 0, 0)[1]}" x2="${P(u, WD, 0)[0]}" y2="${P(u, WD, 0)[1]}" stroke="#cbd0d8" stroke-width="0.4"/>`;
-  const hitch = P(-950, WD / 2, -35);
-  [700, 1400].forEach(v => { const a = P(0, v, -35); g += `<line x1="${a[0]}" y1="${a[1]}" x2="${hitch[0]}" y2="${hitch[1]}" stroke="#9ca3af" stroke-width="3.2" stroke-linecap="round"/>`; });
-  g += `<circle cx="${hitch[0]}" cy="${hitch[1]}" r="3.4" fill="#4b5563"/>`;
-  const dbLbl = P(-520, WD / 2, -35);
-  g += `<text x="${dbLbl[0]}" y="${dbLbl[1] + 12}" text-anchor="middle" font-size="7" font-weight="700" fill="#6b7280" font-family="sans-serif">Drawbar</text>`;
+  // ── Ground shadow, floor, chassis, drawbar ──
+  g += hpoly([[-150, 150], [L + 150, 150], [L + 150, WD + 250], [-150, WD + 250]], -640, 'fill="rgba(15,23,42,0.08)"');
+  g += box(0, L, 0, WD, -110, 0, '#8e959f');                                   // chassis / floor slab
+  g += hpoly([[0, 0], [L, 0], [L, WD], [0, WD]], 0, 'fill="#d4d8de" stroke="#9ca3af" stroke-width="0.5"');
+  for (let u = 500; u < L; u += 500) g += line3(P(u, 0, 0), P(u, WD, 0), 'stroke="#c3c8cf" stroke-width="0.4"');
+  for (let v = 500; v < WD; v += 500) g += line3(P(0, v, 0), P(L, v, 0), 'stroke="#c3c8cf" stroke-width="0.4"');
+  const hitch = P(-1000, WD / 2, -60);
+  [650, WD - 650].forEach(v => g += line3(P(0, v, -60), hitch, 'stroke="#6b7280" stroke-width="3.4" stroke-linecap="round"'));
+  g += line3(P(-450, 720, -60), P(-450, WD - 720, -60), 'stroke="#6b7280" stroke-width="2.4"');
+  g += `<circle cx="${hitch[0]}" cy="${hitch[1]}" r="3.6" fill="#374151"/>`;
+  g += line3(P(-420, WD / 2 + 300, -60), P(-420, WD / 2 + 300, -420), 'stroke="#6b7280" stroke-width="2"');   // jockey wheel
+  g += circleFront(-420, WD / 2 + 300, -520, 110, 'fill="#1f2937"');
+  const dbLbl = P(-700, WD / 2, -60);
+  g += `<text x="${dbLbl[0]}" y="${dbLbl[1] - 10}" text-anchor="middle" font-size="7" font-weight="700" fill="#6b7280" font-family="sans-serif">Drawbar</text>`;
 
-  // Far walls: customer side (v = 0) and drawbar end (u = 0), with the windows cut in
-  const wallAttr = 'fill="#eef1f5" stroke="#94a3b8" stroke-width="0.7" stroke-linejoin="round"';
+  // ── Far walls: drawbar end (u = 0) and kitchen wall (v = 0), with splashback, hood and windows ──
+  const wallAttr = 'fill="#f1f3f6" stroke="#9aa3af" stroke-width="0.7" stroke-linejoin="round"';
   g += poly([P(0, 0, 0), P(0, WD, 0), P(0, WD, HW), P(0, 0, HW)], wallAttr);
   g += poly([P(0, 0, 0), P(L, 0, 0), P(L, 0, HW), P(0, 0, HW)], wallAttr);
-  const glass = 'fill="#bfe3f7" stroke="#0369a1" stroke-width="0.8" stroke-linejoin="round"';
-  const win = (a, label) => {
-    g += poly(a, glass);
-    const c = [(a[0][0] + a[2][0]) / 2, (a[0][1] + a[2][1]) / 2];
-    g += `<line x1="${a[3][0]}" y1="${a[3][1]}" x2="${a[1][0]}" y2="${a[1][1]}" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>`;
-    if (label) { const lw = label.length * 3.6 + 10; g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${label}</text>`; }
-  };
-  win([P(0, 600, BH), P(0, 1500, BH), P(0, 1500, 1500), P(0, 600, 1500)], 'Drawbar window');
-  d.windows.filter(w => w.side === 'front').forEach(w => {
-    const u0 = Math.max(0, w.posMM), u1 = Math.min(L, w.posMM + w.mm);
-    win([P(u0, 0, BH), P(u1, 0, BH), P(u1, 0, 1500), P(u0, 0, 1500)], `Serving window ${w.mm}mm`);
-  });
-
-  // Benches (900mm high, 600mm deep), then the sinks
-  const BENCH = '#2f4a6b';
   const eb = d.isU ? d.EB_MM : 0;
-  if (d.isU) g += box(0, d.EB_MM, 0, WD, 0, BH, BENCH);
-  g += box(d.frontStartMM, L, 0, 600, 0, BH, BENCH);
-  g += box(eb, d.bbEndMM, WD - 600, WD, 0, BH, BENCH);
-  const basin = (u0, u1, v0, v1) => { g += poly([P(u0, v0, BH + 1), P(u1, v0, BH + 1), P(u1, v1, BH + 1), P(u0, v1, BH + 1)], 'fill="#9aa3ad" stroke="#4b5563" stroke-width="0.5"'); g += poly([P(u0 + 40, v0 + 40, BH + 1), P(u1 - 40, v0 + 40, BH + 1), P(u1 - 40, v1 - 40, BH + 1), P(u0 + 40, v1 - 40, BH + 1)], 'fill="#cfd5dc"'); };
-  if (d.isU) {
-    g += box(0, d.EB_MM, 600, 1500, 0, BH, '#6b7280');
-    for (let i = 0; i < 3; i++) basin(60, d.EB_MM - 60, 620 + i * 300, 880 + i * 300);
-  } else {
-    g += box(d.bbEndMM, L, WD - 600, WD, 0, BH, '#6b7280');
-    const bw = (L - d.bbEndMM) / 3;
-    for (let i = 0; i < 3; i++) basin(d.bbEndMM + i * bw + 40, d.bbEndMM + (i + 1) * bw - 40, WD - 540, WD - 60);
-  }
-
-  // Equipment as true-scale blocks, drawn far to near, numbered for the key
-  const blocks = [];
-  d.frontBlocks.forEach(b => blocks.push({ b, bench: 'front' }));
-  d.backBlocks.forEach(b => blocks.push({ b, bench: 'back' }));
-  const keyIds = [], keyRows = [];
-  const solids = blocks.map(({ b, bench }) => {
-    const dm = isoDims(b.item);
-    const depth = Math.min(dm.d, 580);
-    const u0 = Math.max(0, b.x), u1 = Math.min(L, b.x + b.wMM);
-    const v0 = bench === 'front' ? 20 : WD - 20 - depth, v1 = bench === 'front' ? 20 + depth : WD - 20;
-    const z0 = (dm.floor || dm.under) ? 0 : BH, z1 = dm.under ? BH : (dm.floor ? dm.h : BH + dm.h);
-    let n = keyIds.indexOf(b.item.id);
-    if (n < 0) { keyIds.push(b.item.id); keyRows.push({ item: b.item, count: 1 }); n = keyIds.length - 1; } else keyRows[n].count++;
-    return { u0, u1, v0, v1, z0, z1, col: b.item.isCashDrawer ? '#ef4444' : planColor(b.item), n: n + 1, depthKey: u0 + v0 };
-  }).sort((a, b) => a.depthKey - b.depthKey);
-  solids.forEach(o => {
-    g += box(o.u0, o.u1, o.v0, o.v1, o.z0, o.z1, o.col);
-    if (o.z1 - o.z0 >= 500 && o.u1 - o.u0 >= 500) { // door / drawer line on the front face of big units
-      const m0 = P((o.u0 + o.u1) / 2, o.v1, o.z0 + 40), m1 = P((o.u0 + o.u1) / 2, o.v1, o.z1 - 40);
-      g += `<line x1="${m0[0]}" y1="${m0[1]}" x2="${m1[0]}" y2="${m1[1]}" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>`;
-    }
-  });
-  // Ghost outlines for kitchen-side windows (that wall is cut away)
+  g += poly([P(eb, 0, BH), P(d.bbEndMM, 0, BH), P(d.bbEndMM, 0, 1550), P(eb, 0, 1550)], 'fill="#dde2e8" stroke="#b6bec8" stroke-width="0.5"');   // stainless splashback
+  g += line3(P(0, WD, HW), P(0, 0, HW), 'stroke="#4b5563" stroke-width="1.4"');
+  g += line3(P(0, 0, HW), P(L, 0, HW), 'stroke="#4b5563" stroke-width="1.4"');
+  const glassWin = (a, label) => {
+    g += poly(a, 'fill="' + GLASS + '" stroke="#0369a1" stroke-width="0.8" stroke-linejoin="round"');
+    g += line3(a[3], a[1], 'stroke="rgba(255,255,255,0.75)" stroke-width="1"');
+    if (label) { const c = [(a[0][0] + a[2][0]) / 2, (a[0][1] + a[2][1]) / 2], lw = label.length * 3.5 + 10; g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${label}</text>`; }
+  };
+  glassWin([P(0, 600, BH), P(0, 1500, BH), P(0, 1500, 1500), P(0, 600, 1500)], 'Drawbar window');
   d.windows.filter(w => w.side === 'back').forEach(w => {
     const u0 = Math.max(0, w.posMM), u1 = Math.min(L, w.posMM + w.mm);
-    g += poly([P(u0, WD, BH), P(u1, WD, BH), P(u1, WD, 1500), P(u0, WD, 1500)], 'fill="rgba(191,227,247,0.45)" stroke="#0369a1" stroke-width="0.8" stroke-dasharray="3,2"');
-    const c = P((u0 + u1) / 2, WD, 1200);
-    g += `<rect x="${c[0] - 40}" y="${c[1] - 6}" width="80" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">Kitchen-side window ${w.mm}mm</text>`;
+    glassWin([P(u0, 0, BH), P(u1, 0, BH), P(u1, 0, 1500), P(u0, 0, 1500)], `Kitchen-side window ${w.mm}mm`);
   });
-  // Range hood floating over the cookline (translucent so it doesn't hide the gear)
-  if (d.rhMM > 0) {
-    g += box(eb, eb + d.rhMM, WD - 650, WD, 1650, 1900, '#16a34a', 0.42);
-    const c = P(eb + d.rhMM / 2, WD, 1780);
-    g += `<text x="${c[0]}" y="${c[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#166534" font-family="sans-serif">Range hood ${(d.rhMM / 1000)}m</text>`;
+
+  // ── Benches (850mm stainless with plinth and sliding doors), cut around built-in units ──
+  const benchSeg = (u0, u1, v0, v1, zTop) => {
+    if (u1 - u0 < 20) return;
+    g += box(u0, u1, v0, v1, 0, zTop, STEEL);
+    g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#4b5563"');
+    if (zTop >= BH) {
+      const n = Math.max(1, Math.round((u1 - u0) / 600));
+      for (let i = 1; i < n; i++) { const uu = u0 + (u1 - u0) * i / n; g += line3(P(uu, v1, 110), P(uu, v1, zTop - 40), 'stroke="rgba(0,0,0,0.2)" stroke-width="0.7"'); }
+      for (let i = 0; i < n; i++) { const uu = u0 + (u1 - u0) * (i + 0.5) / n; g += line3(P(uu - 80, v1, zTop - 130), P(uu + 80, v1, zTop - 130), 'stroke="#374151" stroke-width="1.5" stroke-linecap="round"'); }
+    }
+  };
+  const benchRun = (uStart, uEnd, v0, v1, cuts) => {
+    let u = uStart;
+    cuts.filter(c => c.u1 > uStart && c.u0 < uEnd).sort((a, b) => a.u0 - b.u0).forEach(c => {
+      if (c.u0 > u) benchSeg(u, c.u0, v0, v1, BH);
+      if (c.type === 'lowered') benchSeg(Math.max(c.u0, u), c.u1, v0, v1, c.z);
+      u = Math.max(u, c.u1);
+    });
+    if (uEnd > u) benchSeg(u, uEnd, v0, v1, BH);
+  };
+  const bowl = (u0, u1, v0, v1) => {
+    g += hpoly([[u0, v0], [u1, v0], [u1, v1], [u0, v1]], BH + 1, 'fill="#7c8590" stroke="#4b5563" stroke-width="0.5"');
+    g += hpoly([[u0 + 35, v0 + 35], [u1 - 35, v0 + 35], [u1 - 35, v1 - 35], [u0 + 35, v1 - 35]], BH + 2, 'fill="#aeb6bf"');
+  };
+  const tap = (u, v) => { g += line3(P(u, v, BH), P(u, v, BH + 260), 'stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"'); g += line3(P(u, v, BH + 260), P(u, v + 160, BH + 230), 'stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"'); };
+
+  // Work out every unit first so the benches know where to lower or leave a gap
+  const keyIds = [], keyRows = [];
+  const mkUnit = (b, bench) => {
+    const dm = isoDims(b.item);
+    const depth = Math.min(dm.d, 570);
+    const u0 = Math.max(0, b.x), u1 = Math.min(L, b.x + b.wMM);
+    const v0 = bench === 'back' ? 30 : WD - 30 - depth, v1 = bench === 'back' ? 30 + depth : WD - 30;
+    let n = keyIds.indexOf(b.item.id);
+    if (n < 0) { keyIds.push(b.item.id); keyRows.push({ item: b.item, count: 1 }); n = keyIds.length - 1; } else keyRows[n].count++;
+    return { u0, u1, v0, v1, bench, kind: dm.kind, h: dm.h, mount: dm.mount, item: b.item, n: n + 1 };
+  };
+  const backUnits = d.backBlocks.map(b => mkUnit(b, 'back')), frontUnits = d.frontBlocks.map(b => mkUnit(b, 'front'));
+  const cutsOf = units => units.filter(o => o.mount !== 'bench').map(o => ({ u0: o.u0, u1: o.u1, type: o.mount === 'lowered' ? 'lowered' : 'gap', z: BH - o.h }));
+
+  // Colours for the key follow the plan
+  const unitColor = o => o.kind === 'cash' ? '#ef4444' : planColor(o.item);
+  const doors = (u0, u1, v, zb, zt, n, vertical) => {
+    for (let i = 1; i < n; i++) { const uu = u0 + (u1 - u0) * i / n; g += line3(P(uu, v, zb), P(uu, v, zt), 'stroke="rgba(0,0,0,0.22)" stroke-width="0.7"'); }
+    for (let i = 0; i < n; i++) {
+      const uu = u0 + (u1 - u0) * (i + 0.5) / n;
+      if (vertical) g += line3(P(uu + (u1 - u0) / n * 0.32, v, zb + (zt - zb) * 0.35), P(uu + (u1 - u0) / n * 0.32, v, zb + (zt - zb) * 0.75), 'stroke="#374151" stroke-width="1.6" stroke-linecap="round"');
+      else g += line3(P(uu - 70, v, zt - 90), P(uu + 70, v, zt - 90), 'stroke="#374151" stroke-width="1.5" stroke-linecap="round"');
+    }
+  };
+  const knobs = (u0, u1, v, z, n, r) => { for (let i = 0; i < n; i++) g += circleFront(u0 + (u1 - u0) * (i + 0.5) / n, v, z, r, 'fill="#111827"'); };
+  const drawUnit = o => {
+    const { u0, u1, v0, v1, kind, h } = o, w = u1 - u0, name = (o.item.name || '').toLowerCase();
+    switch (kind) {
+      case 'fryer': {
+        const top = 880;
+        g += box(u0, u1, v0, v1, 0, top, STEEL);
+        g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 80), P(u0, v1, 80)], 'fill="#374151"');
+        g += box(u0, u1, v0, v0 + 45, top, Math.max(h, 1150), isoShade(STEEL, 1.05));               // splashback
+        const n = w >= 450 ? 2 : 1, wu = (w - 60 - (n - 1) * 30) / n;
+        for (let i = 0; i < n; i++) {
+          const a = u0 + 30 + i * (wu + 30);
+          g += hpoly([[a, v0 + 80], [a + wu, v0 + 80], [a + wu, v1 - 150], [a, v1 - 150]], top + 1, 'fill="#27272a"');
+          g += hpoly([[a + 18, v0 + 98], [a + wu - 18, v0 + 98], [a + wu - 18, v1 - 168], [a + 18, v1 - 168]], top + 2, 'fill="#52525b"');
+          g += line3(P(a + wu / 2, v1 - 150, top + 70), P(a + wu / 2, v1 + 130, top + 150), 'stroke="#111827" stroke-width="2" stroke-linecap="round"');   // basket handle
+        }
+        g += poly([P(u0 + 20, v1, top - 160), P(u1 - 20, v1, top - 160), P(u1 - 20, v1, top - 80), P(u0 + 20, v1, top - 80)], 'fill="#6b7280"');
+        knobs(u0 + 20, u1 - 20, v1, top - 120, n, 20);
+        break; }
+      case 'griddle': case 'chargrill': case 'stove': {
+        const zb = BH - h;
+        g += box(u0, u1, v0, v1, zb, BH, STEEL);
+        if (kind === 'stove') {
+          const n = /4/.test(name) ? 4 : 2, cols = 2, rows = n === 4 ? 2 : 1;
+          for (let i = 0; i < n; i++) { const c = i % cols, r = Math.floor(i / cols), cu = u0 + w * (c + 0.5) / cols, cv = v0 + (v1 - v0) * (r + 0.5) / rows; g += circleTop(cu, cv, Math.min(w / (cols * 2.7), (v1 - v0) / (rows * 2.7)), BH + 1, 'fill="none" stroke="#111827" stroke-width="1.5"'); g += circleTop(cu, cv, 28, BH + 1, 'fill="#111827"'); }
+        } else {
+          g += hpoly([[u0 + 22, v0 + 50], [u1 - 22, v0 + 50], [u1 - 22, v1 - 70], [u0 + 22, v1 - 70]], BH + 1, `fill="${DARK}"`);
+          if (kind === 'chargrill') for (let uu = u0 + 55; uu < u1 - 22; uu += 60) g += line3(P(uu, v0 + 50, BH + 2), P(uu, v1 - 70, BH + 2), 'stroke="#9ca3af" stroke-width="0.5"');
+          g += hpoly([[u0 + 22, v1 - 70], [u1 - 22, v1 - 70], [u1 - 22, v1 - 30], [u0 + 22, v1 - 30]], BH + 1, 'fill="#1f2937"');   // grease trough
+          g += box(u0, u1, v0, v0 + 22, BH, BH + 110, isoShade(STEEL, 1.05));                                                          // splash guard
+        }
+        knobs(u0, u1, v1, zb + h * 0.5, Math.max(1, Math.min(4, Math.round(w / 300))), Math.min(22, h * 0.18));
+        break; }
+      case 'fridge': {
+        const glassy = /glass|beverage|display|cake|cooler/.test(name);
+        if (o.mount === 'under') {
+          g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
+          g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
+          doors(u0, u1, v1, 110, BH - 30, Math.max(1, Math.round(w / 600)), false);
+        } else if (o.mount === 'floor') {
+          g += box(u0, u1, v0, v1, 0, h, FRIDGE);
+          g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
+          if (glassy) { g += poly([P(u0 + 30, v1, 130), P(u1 - 30, v1, 130), P(u1 - 30, v1, h - 60), P(u0 + 30, v1, h - 60)], `fill="${GLASS}" stroke="#0369a1" stroke-width="0.6"`); for (let i = 1; i <= 3; i++) g += line3(P(u0 + 40, v1, 130 + (h - 190) * i / 4), P(u1 - 40, v1, 130 + (h - 190) * i / 4), 'stroke="rgba(3,105,161,0.45)" stroke-width="0.6"'); }
+          else doors(u0, u1, v1, 100, h - 60, Math.max(1, Math.round(w / 650)), true);
+        } else {
+          g += box(u0, u1, v0, v1, BH, BH + h, FRIDGE);
+          g += poly([P(u0 + 20, v1, BH + 60), P(u1 - 20, v1, BH + 60), P(u1 - 20, v1, BH + h - 30), P(u0 + 20, v1, BH + h - 30)], `fill="${GLASS}" stroke="#0369a1" stroke-width="0.6"`);
+        }
+        break; }
+      case 'oven': {
+        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        const layers = /double|2 layer|2-layer|conveyor/.test(name) && !/conveyor/.test(name) ? 2 : 1;
+        for (let i = 0; i < layers; i++) {
+          const zb = BH + h * (i + 0.12) / layers, zt = BH + h * (i + 0.82) / layers, a = [P(u0 + w * 0.18, v1, zb)];
+          for (let t = 0; t <= 8; t++) a.push(P(u0 + w * (0.18 + 0.64 * t / 8), v1, zb + (zt - zb) * Math.sin(Math.PI * t / 8)));
+          a.push(P(u0 + w * 0.82, v1, zb));
+          g += poly(a, 'fill="#1f2937"');
+        }
+        knobs(u1 - Math.min(160, w * 0.2), u1 - 20, v1, BH + h * 0.5, 1, 18);
+        break; }
+      case 'coffee': {
+        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        const n = w >= 550 ? 2 : 1;
+        for (let i = 0; i < n; i++) g += circleFront(u0 + w * (i + 0.5) / n, v1, BH + h * 0.45, Math.min(w / (n * 4.2), h * 0.17), 'fill="#374151"');
+        g += poly([P(u0 + 20, v1, BH + 30), P(u1 - 20, v1, BH + 30), P(u1 - 20, v1, BH + 65), P(u0 + 20, v1, BH + 65)], 'fill="#9ca3af"');
+        g += line3(P(u0 + 30, v0 + 50, BH + h + 1), P(u1 - 30, v0 + 50, BH + h + 1), 'stroke="#6b7280" stroke-width="1"');
+        g += line3(P(u1, v1 - 90, BH + h * 0.75), P(u1 + 110, v1 + 30, BH + h * 0.35), 'stroke="#374151" stroke-width="1.6" stroke-linecap="round"');   // steam wand
+        break; }
+      case 'bain': {
+        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        const cols = Math.max(1, Math.min(6, Math.round(w / 220))), rows = (v1 - v0) > 480 ? 2 : 1, cw = (w - 40 - (cols - 1) * 20) / cols, ch = ((v1 - v0) - 40 - (rows - 1) * 20) / rows;
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { const a = u0 + 20 + c * (cw + 20), b = v0 + 20 + r * (ch + 20); g += hpoly([[a, b], [a + cw, b], [a + cw, b + ch], [a, b + ch]], BH + h + 1, 'fill="#8fb8dc" stroke="#4b5563" stroke-width="0.5"'); }
+        break; }
+      case 'warmer': {
+        g += box(u0, u1, v0, v1, BH, BH + 130, STEEL);
+        g += box(u0 + 10, u1 - 10, v0 + 10, v1 - 10, BH + 130, BH + h, '#bfe3f7', 0.62);
+        for (let i = 1; i <= 2; i++) g += line3(P(u0 + 15, v0 + 15, BH + 130 + (h - 130) * i / 3), P(u1 - 15, v0 + 15, BH + 130 + (h - 130) * i / 3), 'stroke="#6b7280" stroke-width="0.6"');
+        break; }
+      case 'keg': {
+        g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
+        g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#374151"');
+        doors(u0, u1, v1, 110, BH - 30, 1, true);
+        const taps = /6/.test(name) ? 3 : (/4/.test(name) ? 2 : (/double|2/.test(name) ? 2 : 1)), cu = (u0 + u1) / 2, cv = (v0 + v1) / 2;
+        g += box(cu - 60, cu + 60, cv - 60, cv + 60, BH, BH + 380, STEEL);
+        for (let i = 0; i < taps; i++) g += line3(P(cu - 60 + 120 * (i + 0.5) / taps, cv + 60, BH + 330), P(cu - 60 + 120 * (i + 0.5) / taps, cv + 190, BH + 300), 'stroke="#111827" stroke-width="1.8" stroke-linecap="round"');
+        break; }
+      case 'drinks': {
+        g += box(u0, u1, v0, v1, BH, BH + h * 0.45, STEEL);
+        const n = /3/.test(name) ? 3 : (/double|2/.test(name) ? 2 : 1), bw = (w - 30 - (n - 1) * 20) / n;
+        for (let i = 0; i < n; i++) { const a = u0 + 15 + i * (bw + 20); g += box(a, a + bw, v0 + 20, v1 - 20, BH + h * 0.45, BH + h, i % 2 ? '#fbbf24' : '#f87171', 0.75); }
+        break; }
+      case 'sink': {
+        g += box(u0, u1, v0, v1, BH, BH + 200, STEEL);
+        const n = w >= 900 ? 2 : 1, bw = (w - 60 - (n - 1) * 30) / n;
+        for (let i = 0; i < n; i++) { const a = u0 + 30 + i * (bw + 30); g += hpoly([[a, v0 + 40], [a + bw, v0 + 40], [a + bw, v1 - 40], [a, v1 - 40]], BH + 201, 'fill="#7c8590"'); }
+        tap(u0 + w / 2, v0 + 25);
+        break; }
+      case 'cash': {
+        const vf = o.bench === 'front' ? WD : v1;   // sits in the bench front, just under the top
+        g += poly([P(u0 + 20, vf, BH - 200), P(u1 - 20, vf, BH - 200), P(u1 - 20, vf, BH - 60), P(u0 + 20, vf, BH - 60)], 'fill="#ef4444" stroke="#b91c1c" stroke-width="0.6"');
+        g += line3(P(u0 + w * 0.32, vf, BH - 130), P(u1 - w * 0.32, vf, BH - 130), 'stroke="#fff" stroke-width="1.4" stroke-linecap="round"');
+        break; }
+      case 'custom': g += box(u0, u1, v0, v1, BH, BH + h, '#6d28d9'); break;
+      case 'prep': {
+        g += box(u0, u1, v0, v1, BH, BH + h * 0.4, STEEL);
+        g += box(u0 + w * 0.2, u1 - w * 0.2, v0 + 40, v1 - 40, BH + h * 0.4, BH + h, isoShade(STEEL, 0.9));
+        break; }
+      default: {
+        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        g += hpoly([[u0 + 25, v0 + 25], [u1 - 25, v0 + 25], [u1 - 25, v1 - 25], [u0 + 25, v1 - 25]], BH + h + 1, 'fill="rgba(0,0,0,0.08)"');
+      }
+    }
+  };
+
+  // Far (kitchen) bench first, then its units left to right; sinks at the door end or on the U end bench
+  if (d.isU) {
+    benchSeg(0, d.EB_MM, 0, WD, BH);
+    for (let i = 0; i < 3; i++) bowl(60, d.EB_MM - 60, 620 + i * 300, 880 + i * 300);
+    tap(d.EB_MM / 2, 1500);
   }
-  // Cut-away near walls as low stubs, with the door opening shown in the end wall
-  const stub = 'fill="#d5dae2" stroke="#94a3b8" stroke-width="0.6" stroke-linejoin="round"';
-  g += poly([P(0, WD, 0), P(L, WD, 0), P(L, WD, 110), P(0, WD, 110)], stub);
-  g += poly([P(L, 0, 0), P(L, 750, 0), P(L, 750, 110), P(L, 0, 110)], stub);
-  g += poly([P(L, 1350, 0), P(L, WD, 0), P(L, WD, 110), P(L, 1350, 110)], stub);
-  const dr = P(L + 60, 1050, 0);
-  g += `<text x="${dr[0] + 6}" y="${dr[1] + 3}" font-size="7" font-weight="700" fill="#374151" font-family="sans-serif">Door</text>`;
-  // Number tags (after everything, so they always sit on top)
-  solids.forEach(o => {
-    const c = P((o.u0 + o.u1) / 2, o.v1, o.z1 + 40);
+  benchRun(eb, d.bbEndMM, 0, 600, cutsOf(backUnits));
+  if (!d.isU) {
+    benchSeg(d.bbEndMM, L, 0, 600, BH);
+    const bw = (L - d.bbEndMM - 80) / 3;
+    for (let i = 0; i < 3; i++) bowl(d.bbEndMM + 40 + i * bw + 15, d.bbEndMM + 40 + (i + 1) * bw - 15, 60, 540);
+    tap(d.bbEndMM + (L - d.bbEndMM) / 2, 30);
+  }
+  backUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
+  if (d.rhMM > 0) {   // canopy range hood over the cookline
+    g += box(eb, eb + d.rhMM, 0, 680, 1520, 1780, '#d5dae1');
+    g += poly([P(eb + 40, 680, 1525), P(eb + d.rhMM - 40, 680, 1525), P(eb + d.rhMM - 40, 680, 1600), P(eb + 40, 680, 1600)], 'fill="#6b7280"');
+    const c = P(eb + d.rhMM / 2, 680, 1700);
+    g += `<text x="${c[0]}" y="${c[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#374151" font-family="sans-serif">Range hood ${(d.rhMM / 1000)}m</text>`;
+  }
+  // Near (customer) bench and its units
+  benchRun(d.frontStartMM, L, WD - 600, WD, cutsOf(frontUnits));
+  frontUnits.sort((a, b) => a.u0 - b.u0).forEach(drawUnit);
+
+  // ── Near walls: the serving wall is low and open at the windows; upper skin drawn see-through ──
+  const skinLow = 'fill="rgba(248,250,252,0.55)" stroke="#94a3b8" stroke-width="0.8" stroke-linejoin="round"';
+  const skinUp = 'fill="rgba(255,255,255,0.28)" stroke="#b6bfc9" stroke-width="0.6" stroke-linejoin="round"';
+  g += poly([P(0, WD, 0), P(L, WD, 0), P(L, WD, BH), P(0, WD, BH)], skinLow);
+  const fw = d.windows.filter(w => w.side === 'front').map(w => ({ u0: Math.max(0, w.posMM), u1: Math.min(L, w.posMM + w.mm), mm: w.mm })).sort((a, b) => a.u0 - b.u0);
+  let cur = 0;
+  fw.forEach(w => { if (w.u0 > cur) g += poly([P(cur, WD, BH), P(w.u0, WD, BH), P(w.u0, WD, HW), P(cur, WD, HW)], skinUp); cur = Math.max(cur, w.u1); });
+  if (cur < L) g += poly([P(cur, WD, BH), P(L, WD, BH), P(L, WD, HW), P(cur, WD, HW)], skinUp);
+  g += poly([P(L, 0, 0), P(L, 750, 0), P(L, 750, BH), P(L, 0, BH)], skinLow);           // door-end wall with the doorway gap
+  g += poly([P(L, 1350, 0), P(L, WD, 0), P(L, WD, BH), P(L, 1350, BH)], skinLow);
+  g += poly([P(L, 0, BH), P(L, WD, BH), P(L, WD, HW), P(L, 0, HW)], skinUp);
+  g += poly([P(L, 750, 0), P(L, 1350, 0), P(L, 1350, 1950 > HW ? HW : 1950), P(L, 750, HW)], 'fill="none" stroke="#374151" stroke-width="0.9" stroke-dasharray="3,2"');
+  const dr = P(L + 40, 1050, 400);
+  g += `<text x="${dr[0] + 4}" y="${dr[1]}" font-size="7" font-weight="700" fill="#374151" font-family="sans-serif">Door</text>`;
+  g += line3(P(0, WD, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.2"');
+  g += line3(P(L, 0, HW), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.2"');
+  g += line3(P(L, WD, 0), P(L, WD, HW), 'stroke="#4b5563" stroke-width="1.2"');
+  fw.forEach(w => {   // window frame, fold-up flap and serving shelf
+    g += poly([P(w.u0, WD, BH), P(w.u1, WD, BH), P(w.u1, WD, 1500), P(w.u0, WD, 1500)], 'fill="none" stroke="#16a34a" stroke-width="1.6" stroke-linejoin="round"');
+    g += poly([P(w.u0, WD, 1500), P(w.u1, WD, 1500), P(w.u1, WD + 520, 1500 + 330), P(w.u0, WD + 520, 1500 + 330)], 'fill="#e5e9ee" stroke="#6b7280" stroke-width="0.8" stroke-linejoin="round"');
+    g += line3(P(w.u0 + 60, WD + 520, 1500 + 330), P(w.u0 + 60, WD + 40, 1500 + 20), 'stroke="#9ca3af" stroke-width="1"');
+    g += line3(P(w.u1 - 60, WD + 520, 1500 + 330), P(w.u1 - 60, WD + 40, 1500 + 20), 'stroke="#9ca3af" stroke-width="1"');
+    g += box(w.u0, w.u1, WD, WD + 260, BH - 40, BH, STEEL);
+    const c = P((w.u0 + w.u1) / 2, WD, 1180), lbl = `Serving window ${w.mm}mm`, lw = lbl.length * 3.5 + 10;
+    g += `<rect x="${c[0] - lw / 2}" y="${c[1] - 6}" width="${lw}" height="11" rx="3" fill="#16a34a"/><text x="${c[0]}" y="${c[1] + 2.4}" text-anchor="middle" font-size="6.2" font-weight="800" fill="white" font-family="sans-serif">${lbl}</text>`;
+  });
+
+  // ── Wheels and mudguards under the near edge (dual axle from 3.5m) ──
+  const axles = d.size >= 3.5 ? [L * 0.5 - 380, L * 0.5 + 380] : [L * 0.5];
+  axles.forEach(cu => {
+    const arc = []; for (let i = 0; i <= 10; i++) { const t = Math.PI * (1 - i / 10); arc.push(P(cu + 400 * Math.cos(t), WD + 120, -300 + 400 * Math.sin(t))); }
+    g += poly(arc, 'fill="#b0b7c1" stroke="#6b7280" stroke-width="0.7"');
+    g += circleFront(cu, WD + 160, -330, 300, 'fill="#1f2937"');
+    g += circleFront(cu, WD + 160, -330, 150, 'fill="#9ca3af"');
+    g += circleFront(cu, WD + 160, -330, 40, 'fill="#4b5563"');
+  });
+
+  // ── Numbers on every unit, then dimensions and orientation ──
+  backUnits.concat(frontUnits).forEach(o => {
+    const zt = o.mount === 'under' ? BH : (o.mount === 'floor' ? Math.max(o.h, 880) : (o.mount === 'lowered' ? BH : BH + o.h));
+    const c = P((o.u0 + o.u1) / 2, o.v1, zt + 60);
     g += `<circle cx="${c[0]}" cy="${c[1] - 6}" r="6.2" fill="#111" stroke="white" stroke-width="1.2"/><text x="${c[0]}" y="${c[1] - 3.7}" text-anchor="middle" font-size="7" font-weight="800" fill="white" font-family="sans-serif">${o.n}</text>`;
   });
-  // Dimensions along the near edges
-  const dl = P(L / 2, WD + 260, -70), dw = P(L + 300, WD / 2, -70);
-  g += `<text x="${dl[0]}" y="${dl[1] + 8}" text-anchor="middle" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">${L}mm long</text>`;
-  g += `<text x="${dw[0] + 4}" y="${dw[1] + 4}" text-anchor="start" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">2100mm wide</text>`;
-  const custLbl = P(L / 2, -520, 1500);
-  g += `<text x="${custLbl[0]}" y="${custLbl[1]}" text-anchor="middle" font-size="7.5" font-weight="800" fill="#16a34a" letter-spacing="1" font-family="sans-serif">▲ CUSTOMERS THIS SIDE</text>`;
+  const cl = P(L / 2, WD + 300, -760), dl = P(L / 2, WD + 300, -930), dw = P(L + 260, WD / 2, -250);
+  g += `<text x="${cl[0]}" y="${cl[1]}" text-anchor="middle" font-size="7.5" font-weight="800" fill="#16a34a" letter-spacing="1" font-family="sans-serif">◀ CUSTOMERS THIS SIDE ▶</text>`;
+  g += `<text x="${dl[0]}" y="${dl[1]}" text-anchor="middle" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">${L}mm long</text>`;
+  g += `<text x="${dw[0]}" y="${dw[1]}" text-anchor="start" font-size="8" font-weight="800" fill="#1a2e44" font-family="sans-serif">2100mm wide</text>`;
 
-  // Frame + key
-  const drawBottom = P(L, WD, -70)[1] + 26;
-  const W = 760;
-  const cols = keyRows.length > 8 ? 3 : 2, colW = (W - 24) / cols, rowH = 11;
-  const keyTop = drawBottom + 4;
+  // ── Frame and key ──
+  const drawBottom = Math.max(P(L, WD, -110)[1], dl[1]) + 10;
+  const W = 760, cols = keyRows.length > 8 ? 3 : 2, colW = (W - 24) / cols, rowH = 11, keyTop = drawBottom + 2;
   const keyH = keyRows.length ? Math.ceil(keyRows.length / cols) * rowH + 18 : 0;
   const H = keyTop + keyH + 6;
   let key = '';
@@ -3162,7 +3365,7 @@ function renderIsoView(d) {
   }
   const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:sans-serif;">
     <text x="12" y="16" font-size="10" font-weight="800" fill="#1a2e44" font-family="sans-serif">Your ${d.size}m trailer, inside</text>
-    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Cutaway view · kitchen wall and roof removed · equipment drawn to scale</text>
+    <text x="12" y="27" font-size="7.5" fill="#64748b" font-weight="600" font-family="sans-serif">Seen from the customer side · roof and serving-wall skin made see-through · equipment drawn to scale</text>
     ${g}${key}</svg>`;
   if (el) { el.style.display = 'block'; el.innerHTML = svg; }
   if (pEl) pEl.innerHTML = svg;
