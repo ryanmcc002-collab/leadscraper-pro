@@ -617,6 +617,15 @@
               <input type="number" id="basePrice" placeholder="30000" oninput="updatePreview()" min="0">
             </div>
           </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Bench Layout</label>
+              <select id="benchLayout" onchange="updateBenchLayout()">
+                <option value="standard">Standard — two side benches, sinks at the door end</option>
+                <option value="u">U-shape — bench across the drawbar with the sinks on it</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -877,6 +886,7 @@ const state = {
   clickOrder: [],
   windowCount: 1,
   windowLength: 2000,
+  benchLayout: 'standard',   // 'standard' (sinks at the door end) or 'u' (bench + sinks across the drawbar)
   // Serving windows: any number, each on the front (customer) or back (kitchen/road) wall,
   // with an optional dragged position in mm from the interior left wall
   windows: [{ id: 1, side: 'front', mm: 2000, posMM: null }]
@@ -1221,6 +1231,8 @@ function init() {
   state.windows = [{ id: 1, side: 'front', mm: 2000, posMM: null }];
   syncWindowTotals();
   renderWindowList();
+  state.benchLayout = 'standard';
+  document.getElementById('benchLayout').value = 'standard';
 
   // Every new quote starts with 2m of commercial range hood included by default
   state.addons['range_hood'] = 2;
@@ -1551,6 +1563,12 @@ function removeCustomItem(id) {
   updatePreview();
 }
 
+function updateBenchLayout() {
+  state.benchLayout = document.getElementById('benchLayout').value === 'u' ? 'u' : 'standard';
+  updatePreview();
+  renderFloorPlan();
+}
+
 // ── SERVING WINDOWS ──
 // Returns state.windows, migrating quotes saved before per-window config existed
 // (they only stored a count, a total length and a single dragged position)
@@ -1829,6 +1847,9 @@ function loadQuote(qNum) {
   if (!state.windowLength) state.windowLength = 2000;
   syncWindowTotals();
   renderWindowList();
+  // Quotes saved before the layout option existed are the standard layout
+  state.benchLayout = (data.state && data.state.benchLayout === 'u') ? 'u' : 'standard';
+  document.getElementById('benchLayout').value = state.benchLayout;
 
   // Restore custom appliances (and keep the id counter ahead of existing ones)
   if (!state.customAppliances) state.customAppliances = [];
@@ -2041,7 +2062,8 @@ function updatePrintDoc(t, showFinance) {
     const backN = wins.filter(w => w.side === 'back').length;
     const sideNote = backN && backN < wins.length ? `, ${backN} on the kitchen side` : (backN && backN === wins.length ? ', kitchen side' : '');
     const winNote = wins.length ? ` with ${wins.length}x Serving Window (${state.windowLength}mm total${sideNote})` : '';
-    rows += `<tr><td>${desc}</td><td>Fully fitted, compliant build${axleNote}${winNote}</td><td>$${fmtFull(t.base)}</td></tr>`;
+    const layoutNote = state.benchLayout === 'u' ? ', U-shape benches with sinks across the drawbar' : '';
+    rows += `<tr><td>${desc}</td><td>Fully fitted, compliant build${axleNote}${winNote}${layoutNote}</td><td>$${fmtFull(t.base)}</td></tr>`;
   }
 
   const chassisEl = document.getElementById('incl-chassis-text');
@@ -2174,8 +2196,13 @@ function layoutDragEnd(e) {
   state.benchAssign[instId] = targetBench;
 
   // Free placement: the item stays exactly where it was dropped, clamped inside the bench
-  // Both side benches start after the 600mm end bench across the drawbar and run to the door wall
-  const zone = { start: 600, end: intMM };
+  // U-shape: both side benches start after the 600mm end bench and run to the door wall.
+  // Standard: sinks take the door end of the back bench, a 200mm end panel starts the front bench.
+  const isU = state.benchLayout === 'u';
+  const SINK_MM = state.addons['sink_3_1'] ? 1200 : 960;
+  const zone = targetBench === 'back'
+    ? { start: isU ? 600 : 0, end: isU ? intMM : intMM - SINK_MM }
+    : { start: isU ? 600 : 200, end: intMM };
   // Each dragged block is a single unit, so it only needs its own width
   const wMM = (item && item.mm) || 0;
   const posMM = (finalX - TL) / sc;
@@ -2279,10 +2306,17 @@ function renderFloorPlan() {
   });
   
   const hasBigSink = selectedItems.find(i => i.id === 'sink_3_1');
+  const SINK_MM = hasBigSink ? 1200 : 960;
+  const SINK_W = SINK_MM * sc;
 
-  // U-shape: a 600mm-deep bench across the drawbar end joins the two side benches and carries the sinks
-  const EB_MM = 600, EBW = EB_MM * sc;
-  const BB_COOK_MM = intMM - EB_MM;   // cookline runs from the end bench to the door wall
+  // Bench layout option:
+  //  U-shape  — a 600mm-deep bench across the drawbar end joins the side benches and carries the sinks
+  //  Standard — sinks take the door end of the back bench; a 200mm end panel starts the front bench
+  const isU = state.benchLayout === 'u';
+  const EB_MM = isU ? 600 : 0, EBW = EB_MM * sc;
+  const FRONT_START_MM = isU ? 600 : 200;
+  const BB_END_MM = isU ? intMM : intMM - SINK_MM;
+  const BB_COOK_MM = BB_END_MM - EB_MM;   // cookline length
   const BB_COOK_W = BB_COOK_MM * sc;
 
   // ── FREE-PLACEMENT BENCH LAYOUT ──
@@ -2291,8 +2325,8 @@ function renderFloorPlan() {
   if (!state.benchPos) state.benchPos = {};
 
   const zones = {
-    back:  { start: EB_MM, end: intMM },   // from the end bench to the door wall
-    front: { start: EB_MM, end: intMM }
+    back:  { start: EB_MM, end: BB_END_MM },
+    front: { start: FRONT_START_MM, end: intMM }
   };
 
   function layoutBench(bench) {
@@ -2400,8 +2434,10 @@ function renderFloorPlan() {
   });
   if (backOverflowMM > 0) {
     const overW = backOverflowMM * sc;
-    s += `<rect x="${TR - overW}" y="${bkY}" width="${overW}" height="12" fill="red" opacity="0.9"/>`;
-    s += `<text x="${TR - overW/2}" y="${TT+15}" font-size="10" fill="white" text-anchor="middle" font-weight="900">OVERFLOW</text>`;
+    // Standard layout shows the overflow running over the sinks; U-shape shows it at the door wall
+    const ox = isU ? TR - overW : TL + BB_END_MM * sc;
+    s += `<rect x="${ox}" y="${bkY}" width="${overW}" height="12" fill="red" opacity="0.9"/>`;
+    s += `<text x="${ox + overW/2}" y="${TT+15}" font-size="10" fill="white" text-anchor="middle" font-weight="900">OVERFLOW</text>`;
   }
 
   // Range hood band along the top edge, sized to the metres selected and drawn over the appliances
@@ -2411,6 +2447,14 @@ function renderFloorPlan() {
     s += `<text x="${TL+EBW+rhPx/2+2}" y="${TT+29}" text-anchor="middle" font-size="9" font-weight="800" fill="white" font-family="sans-serif">Range Hood (${state.addons['range_hood']}m)</text>`;
   }
 
+  if (!isU) {
+    const SX = TL + BB_END_MM * sc;
+    s += `<rect x="${SX}" y="${TT}" width="${SINK_W}" height="${BB_H}" fill="#6b7280"/>`;
+    s += `<text x="${SX+SINK_W/2}" y="${TT+20}" text-anchor="middle" font-size="9" font-weight="800" fill="white" font-family="sans-serif">Water Sinks</text>`;
+    const sw3 = (SINK_W - 10) / 3;
+    for (let i = 0; i < 3; i++) s += `<rect x="${SX+4+i*(sw3+2)}" y="${TT+28}" width="${sw3}" height="${BB_H-34}" fill="rgba(210,210,210,0.55)" rx="5"/>`;
+  }
+
   s += `<rect x="${TR}" y="${TT}" width="${WALL_T}" height="${DOOR_Y-TT}" fill="#6b7280"/>`;
   s += `<rect x="${TR}" y="${DOOR_Y+DOOR_H}" width="${WALL_T}" height="${TB-DOOR_Y-DOOR_H}" fill="#6b7280"/>`;
   s += `<line x1="${TR}" y1="${DOOR_Y}" x2="${TR}" y2="${DOOR_Y+DOOR_H}" stroke="#374151" stroke-width="2"/>`;
@@ -2418,7 +2462,7 @@ function renderFloorPlan() {
   s += `<text x="${TR-DOOR_H/2-4}" y="${DOOR_Y+DOOR_H/2+4}" text-anchor="middle" font-size="9" fill="#374151" font-weight="800" font-family="sans-serif">Door</text>`;
 
   s += `<text x="${TL+TW/2}" y="${FLOOR_Y+FLOOR_H/2-5}" text-anchor="middle" font-size="14" font-weight="800" fill="#aaa" font-family="sans-serif">${size}m × 2.1m Custom Trailer Layout</text>`;
-  s += `<text x="${TL+TW/2}" y="${FLOOR_Y+FLOOR_H/2+14}" text-anchor="middle" font-size="10" font-weight="600" fill="#c0c0c0" font-family="sans-serif">Interior Dimensions: ${dims[size]||''}mm × 2100mm · 600mm U-shape benches</text>`;
+  s += `<text x="${TL+TW/2}" y="${FLOOR_Y+FLOOR_H/2+14}" text-anchor="middle" font-size="10" font-weight="600" fill="#c0c0c0" font-family="sans-serif">Interior Dimensions: ${dims[size]||''}mm × 2100mm · 600mm ${isU ? 'U-shape benches' : 'benches both sides'}</text>`;
   
   if (hasAircon) {
     const acX = TL+(TW-130)/2;
@@ -2429,10 +2473,13 @@ function renderFloorPlan() {
   const fbW = TW;
   s += `<rect x="${TL}" y="${FB_Y}" width="${fbW}" height="${FB_H}" fill="#2d3748"/>`;
 
-  // Bench-space base layer from the end bench to the door wall
-  s += `<rect x="${TL + EBW + 2}" y="${FB_Y+3}" width="${TR - (TL + EBW) - 4}" height="${FB_H-6}" fill="#1e3a5f" rx="3"/>`;
+  // Bench-space base layer from the bench start (end bench or 200mm end panel) to the door wall
+  const FSX = TL + FRONT_START_MM * sc;
+  if (!isU) s += `<rect x="${TL+2}" y="${FB_Y+3}" width="${FSX - TL - 2}" height="${FB_H-6}" fill="#1e3a5f" rx="3"/>`;
+  s += `<rect x="${FSX + 2}" y="${FB_Y+3}" width="${TR - FSX - 4}" height="${FB_H-6}" fill="#1e3a5f" rx="3"/>`;
 
-  // ── END BENCH ACROSS THE DRAWBAR: joins the side benches into a U and carries the sinks ──
+  // ── END BENCH ACROSS THE DRAWBAR (U-shape only): joins the side benches and carries the sinks ──
+  if (isU) {
   s += `<rect x="${TL}" y="${TT}" width="${EBW}" height="${TH}" fill="#2d3748"/>`;
   s += `<rect x="${TL+2}" y="${TT+3}" width="${EBW-3}" height="${TH-6}" fill="#1e3a5f" rx="3"/>`;
   // Stainless sink unit with three basins stacked along the end bench, between the side benches
@@ -2442,11 +2489,12 @@ function renderFloorPlan() {
   for (let i = 0; i < 3; i++) s += `<rect x="${SNK_X+4}" y="${SNK_Y + 4 + i*(bh+4)}" width="${SNK_W-8}" height="${bh}" fill="rgba(210,210,210,0.55)" rx="4"/>`;
   const snkCX = SNK_X + SNK_W/2, snkCY = SNK_Y + SNK_H/2;
   s += `<text x="${snkCX}" y="${snkCY}" transform="rotate(-90 ${snkCX} ${snkCY})" text-anchor="middle" dominant-baseline="middle" font-size="8.5" font-weight="800" fill="#1f2937" font-family="sans-serif">Water Sinks${hasBigSink ? ' (3-in-1)' : ''}</text>`;
+  }
 
-  // Standard drawbar serving window — fixed on the towing-end (left) wall, above the end bench
+  // Standard drawbar serving window — fixed on the towing-end (left) wall of every trailer
   const DBWIN_Y = FLOOR_Y + 6, DBWIN_H = FLOOR_H - 12;
   s += `<rect x="${TL-3}" y="${DBWIN_Y}" width="6" height="${DBWIN_H}" fill="#16a34a" stroke="#0f7a35" stroke-width="0.6" rx="2"/>`;
-  s += `<text x="${TL+9}" y="${DBWIN_Y + DBWIN_H/2}" transform="rotate(-90 ${TL+9} ${DBWIN_Y + DBWIN_H/2})" text-anchor="middle" font-size="7.5" font-weight="800" fill="#4ade80" font-family="sans-serif">Drawbar Window</text>`;
+  s += `<text x="${TL+9}" y="${DBWIN_Y + DBWIN_H/2}" transform="rotate(-90 ${TL+9} ${DBWIN_Y + DBWIN_H/2})" text-anchor="middle" font-size="7.5" font-weight="800" fill="${isU ? '#4ade80' : '#16a34a'}" font-family="sans-serif">Drawbar Window</text>`;
 
   const frontLayout = layoutBench('front');
   s += benchSpaceLabel(frontLayout, FB_Y+FB_H/2+4);
