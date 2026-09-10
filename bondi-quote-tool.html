@@ -3160,9 +3160,9 @@ function renderIsoView(d) {
   g += poly([P(0, 0, 0), P(L, 0, 0), P(L, 0, HW), P(0, 0, HW)], 'fill="url(#I_wallB)" ' + wallAttr);
   for (let u = 1200; u < L; u += 1200) g += line3(P(u, 0, 0), P(u, 0, HW), 'stroke="#dfe3e8" stroke-width="0.5"');   // panel joins
   const eb = d.isU ? d.EB_MM : 0;
-  g += poly([P(eb, 0, BH), P(d.bbEndMM, 0, BH), P(d.bbEndMM, 0, SILL), P(eb, 0, SILL)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');   // stainless splashback to sill height
-  if (d.rhMM > 0) g += poly([P(eb, 0, BH), P(eb + d.rhMM, 0, BH), P(eb + d.rhMM, 0, HW), P(eb, 0, HW)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');   // full-height stainless behind the hood
-  g += poly([P(0, 600, BH), P(0, WD, BH), P(0, WD, SILL), P(0, 600, SILL)], 'fill="#d9dee5" stroke="#b6bec8" stroke-width="0.5"');
+  g += poly([P(eb, 0, BH), P(d.bbEndMM, 0, BH), P(d.bbEndMM, 0, SILL), P(eb, 0, SILL)], 'fill="#eef1f4" stroke="#c9d0d8" stroke-width="0.5"');   // stainless splashback to sill height
+  if (d.rhMM > 0) g += poly([P(eb, 0, BH), P(eb + d.rhMM, 0, BH), P(eb + d.rhMM, 0, HW), P(eb, 0, HW)], 'fill="#eef1f4" stroke="#c9d0d8" stroke-width="0.5"');   // full-height stainless behind the hood
+  g += poly([P(0, 600, BH), P(0, WD, BH), P(0, WD, SILL), P(0, 600, SILL)], 'fill="#eef1f4" stroke="#c9d0d8" stroke-width="0.5"');
   g += line3(P(0, WD, HW), P(0, 0, HW), 'stroke="#4b5563" stroke-width="1.6"');
   g += line3(P(0, 0, HW), P(L, 0, HW), 'stroke="#4b5563" stroke-width="1.6"');
   g += line3(P(0, 0, 0), P(0, 0, HW), 'stroke="#6b7280" stroke-width="1.2"');
@@ -3185,6 +3185,8 @@ function renderIsoView(d) {
     if (u1 - u0 < 20) return;
     g += box(u0, u1, v0, v1, 0, zTop, STEEL);
     g += poly([P(u0, v1, 0), P(u1, v1, 0), P(u1, v1, 90), P(u0, v1, 90)], 'fill="#4b5563"');
+    g += line3(P(u0, v1, zTop), P(u1, v1, zTop), 'stroke="#5b636e" stroke-width="1.1"');   // benchtop nosing
+    g += line3(P(u0, v0, zTop), P(u1, v0, zTop), 'stroke="#8a929c" stroke-width="0.7"');
     if (zTop >= BH) {
       const n = Math.max(1, Math.round((u1 - u0) / 600));
       for (let i = 1; i < n; i++) { const uu = u0 + (u1 - u0) * i / n; g += line3(P(uu, v1, 110), P(uu, v1, zTop - 40), 'stroke="rgba(0,0,0,0.2)" stroke-width="0.7"'); }
@@ -3555,7 +3557,7 @@ function renderIsoView(d) {
   [[P(0, WD, HW), P(L, WD, HW), 1.3, 0.9], [P(L, 0, HW), P(L, WD, HW), 1.3, 0.9], [P(0, 0, HW), P(0, WD, HW), 0.9, 0.6], [P(0, 0, HW), P(L, 0, HW), 0.9, 0.6], [P(L, WD, -110), P(L, WD, HW), 1, 0.7]]
     .forEach(([a, b, wdt, op]) => nightOver += line3(a, b, `stroke="#ffe3b0" stroke-width="${wdt}" opacity="${op}"`));
   const defs = `<defs>
-    ${lin('I_stF', '#d4d9df', '#a3aab4')}${lin('I_stT', '#e6eaee', '#c3c9d0', 1, 1)}${lin('I_stS', '#a9b0ba', '#7f8792')}
+    ${lin('I_stF', '#cdd3da', '#98a0aa')}${lin('I_stT', '#d9dee4', '#aeb5be', 1, 1)}${lin('I_stS', '#a2a9b3', '#767e89')}
     ${lin('I_frF', '#c4d3e2', '#93a9c0')}${lin('I_frT', '#e2ebf3', '#c0d0df', 1, 1)}${lin('I_frS', '#9fb3c8', '#7b91a8')}
     ${lin('I_whF', '#ffffff', '#e5e8ec')}${lin('I_whT', '#ffffff', '#eceff3', 1, 1)}${lin('I_whS', '#e5e8ec', '#c9ced5')}
     ${lin('I_wallL', '#ffffff', '#eef0f3', 1, 0)}${lin('I_wallB', '#fdfdfe', '#f0f2f5')}${lin('I_floor', '#d9dde2', '#bcc2c9', 1, 1)}
