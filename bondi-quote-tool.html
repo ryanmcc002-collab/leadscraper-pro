@@ -2580,7 +2580,7 @@ function layoutDragEnd(e) {
   const SINK_MM = state.addons['sink_3_1'] ? 1200 : 960;
   const zone = targetBench === 'back'
     ? { start: isU ? 600 : 0, end: isU ? intMM : intMM - SINK_MM }
-    : { start: isU ? 600 : 200, end: intMM };
+    : { start: isU ? 600 : 0, end: intMM };
   // Each dragged block is a single unit, so it only needs its own width
   const wMM = (item && item.mm) || 0;
   const posMM = (finalX - TL) / sc;
@@ -2691,10 +2691,10 @@ function renderFloorPlan() {
 
   // Bench layout option:
   //  U-shape  — a 600mm-deep bench across the drawbar end joins the side benches and carries the sinks
-  //  Standard — sinks take the door end of the back bench; a 200mm end panel starts the front bench
+  //  Standard — sinks take the door end of the back bench; the front bench runs wall to wall
   const isU = state.benchLayout === 'u';
   const EB_MM = isU ? 600 : 0, EBW = EB_MM * sc;
-  const FRONT_START_MM = isU ? 600 : 200;
+  const FRONT_START_MM = isU ? 600 : 0;
   const BB_END_MM = isU ? intMM : intMM - SINK_MM;
   const BB_COOK_MM = BB_END_MM - EB_MM;   // cookline length
   const BB_COOK_W = BB_COOK_MM * sc;
@@ -3210,7 +3210,7 @@ function renderIsoView(d) {
   const keyIds = [], keyRows = [];
   const mkUnit = (b, bench) => {
     const dm = isoDims(b.item);
-    const builtIn = dm.mount === 'under' || dm.kind === 'keg';
+    const builtIn = dm.mount === 'under' || dm.mount === 'lowered' || dm.kind === 'keg';
     const depth = builtIn ? 600 : Math.min(dm.d, 570), inset = builtIn ? 0 : 30;
     const u0 = Math.max(0, b.x), u1 = Math.min(L, b.x + b.wMM);
     const v0 = bench === 'back' ? inset : WD - inset - depth, v1 = v0 + depth;
