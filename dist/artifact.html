@@ -445,7 +445,7 @@ kbd {
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v34';
+  BFT.VERSION = 'v35';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -2317,26 +2317,30 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
         noteToast('✓ ' + filename);
         return;
       } catch (e) {
-        const code = e && e.code;
+        const code = (e && e.code) || 'unknown';
         if (code === 'declined') return; // viewer said no — their call
-        if (code === 'rejected_extension' || code === 'extension_not_enabled') {
-          // .pdf/.dxf aren't on claude.ai's save allowlist; both are plain
-          // text inside, so save with a .txt ending and tell the user to
-          // rename — the contents are byte-identical.
-          try {
-            await window.claude.downloads.save({ filename: filename + '.txt', data });
-            noteToast('✓ Saved as "' + filename + '.txt" — claude.ai only allows a .txt ending here. ' +
-              'Rename the file to "' + filename + '" (just remove .txt) and it works as normal.');
-            return;
-          } catch (e2) {
-            if (e2 && e2.code === 'declined') return;
-          }
-        }
         if (code === 'rate_limited') {
           noteToast('A download prompt is already open — answer it, then try again.');
           return;
         }
-        // anything else: fall through and try the normal browser paths
+        // Everything else (.pdf/.dxf aren't on claude.ai's save allowlist,
+        // and unknown codes act the same): our PDFs/DXFs/SVGs are plain text
+        // inside, so retry with a .txt ending and tell the user to rename —
+        // the contents are byte-identical.
+        try {
+          await window.claude.downloads.save({ filename: filename + '.txt', data });
+          noteToast('✓ Saved as "' + filename + '.txt" — claude.ai only allows a .txt ending here. ' +
+            'Rename the file to "' + filename + '" (just remove .txt) and it works as normal.');
+          return;
+        } catch (e2) {
+          const code2 = (e2 && e2.code) || 'unknown';
+          if (code2 === 'declined') return;
+          // never fail silently: say what happened, then still try the
+          // normal browser paths below in case they work in this view
+          noteToast('claude.ai refused the download (' + code + ' / ' + code2 + '). ' +
+            'Trying the browser download instead — if nothing arrives, use the standalone ' +
+            'BondiTrailerCAD.html file, where exports always save directly.');
+        }
       }
     }
     if (window.showSaveFilePicker) {
@@ -2530,7 +2534,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     setTimeout(() => win.print(), 400);
   }
 
-  BFT.exporters = { svgFromScene, pngFromScene, printScene, download, lightLayers };
+  BFT.exporters = { svgFromScene, pngFromScene, printScene, download, lightLayers, noteToast };
 })(typeof window !== 'undefined' ? window : globalThis);
 if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 
@@ -2946,12 +2950,21 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
       });
 
     // overhangs (past a bench edge or wall line) are deliberate all the
-    // time in real builds - only true clashes get flagged
-    const isBench = (r) => r.it.catId === 'bench';
+    // time in real builds - only true clashes get flagged. Anything that
+    // works as a surface — benches (they get cut to suit), counters, and
+    // every fridge/freezer/cold display — can have equipment sitting on
+    // or over it, so overlaps with those never warn.
+    const isSurface = (r) => {
+      const it = r.it;
+      if (it.catId === 'bench' || it.catId === 'counter') return true;
+      if (it.sym === 'fridge') return true;
+      const c = BFT.catalogById(it.catId);
+      return !!(c && /refrigeration/i.test(c.cat || ''));
+    };
     for (let i = 0; i < rects.length; i++) {
       for (let j = i + 1; j < rects.length; j++) {
         const a = rects[i], b = rects[j];
-        if (isBench(a) || isBench(b)) continue;
+        if (isSurface(a) || isSurface(b)) continue;
         const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
         const oy = Math.min(a.y + a.d, b.y + b.d) - Math.max(a.y, b.y);
         if (ox > 5 && oy > 5) warns.push({ msg: a.it.en + ' overlaps ' + b.it.en, ids: [a.it.id, b.it.id] });
@@ -3828,10 +3841,15 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
   }
 
   function exportDXF(sheetMode) {
-    const p = store.project;
-    const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
-    const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
-    BFT.exporters.download(fileBase() + (sheetMode ? '-sheet' : '-plan') + '.dxf', dxf, 'application/dxf');
+    try {
+      const p = store.project;
+      const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
+      const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
+      BFT.exporters.download(fileBase() + (sheetMode ? '-sheet' : '-plan') + '.dxf', dxf, 'application/dxf');
+    } catch (e) {
+      BFT.exporters.noteToast('DXF export failed: ' + (e && e.message ? e.message : e) +
+        ' — please tell Ryan/Claude this exact message.');
+    }
   }
 
   function exportSVG() {
@@ -3883,14 +3901,19 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
   }
 
   function customerPDF() {
-    setMode('sales'); // show what's being sent
-    // real vector PDF with the whole project embedded, so the customer copy
-    // can be re-opened later (More > Open) and its layout edited
-    const pdf = BFT.pdf.pdfFromScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, {
-      title: (store.project.meta.project || 'Food Trailer') + ' — customer drawing',
-      project: store.project,
-    });
-    BFT.exporters.download(fileBase() + '-customer.pdf', pdf, 'application/pdf');
+    try {
+      setMode('sales'); // show what's being sent
+      // real vector PDF with the whole project embedded, so the customer copy
+      // can be re-opened later (More > Open) and its layout edited
+      const pdf = BFT.pdf.pdfFromScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, {
+        title: (store.project.meta.project || 'Food Trailer') + ' — customer drawing',
+        project: store.project,
+      });
+      BFT.exporters.download(fileBase() + '-customer.pdf', pdf, 'application/pdf');
+    } catch (e) {
+      BFT.exporters.noteToast('Customer PDF failed: ' + (e && e.message ? e.message : e) +
+        ' — please tell Ryan/Claude this exact message.');
+    }
   }
 
   // ------------------------------------------------------------------

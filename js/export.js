@@ -92,26 +92,30 @@
         noteToast('✓ ' + filename);
         return;
       } catch (e) {
-        const code = e && e.code;
+        const code = (e && e.code) || 'unknown';
         if (code === 'declined') return; // viewer said no — their call
-        if (code === 'rejected_extension' || code === 'extension_not_enabled') {
-          // .pdf/.dxf aren't on claude.ai's save allowlist; both are plain
-          // text inside, so save with a .txt ending and tell the user to
-          // rename — the contents are byte-identical.
-          try {
-            await window.claude.downloads.save({ filename: filename + '.txt', data });
-            noteToast('✓ Saved as "' + filename + '.txt" — claude.ai only allows a .txt ending here. ' +
-              'Rename the file to "' + filename + '" (just remove .txt) and it works as normal.');
-            return;
-          } catch (e2) {
-            if (e2 && e2.code === 'declined') return;
-          }
-        }
         if (code === 'rate_limited') {
           noteToast('A download prompt is already open — answer it, then try again.');
           return;
         }
-        // anything else: fall through and try the normal browser paths
+        // Everything else (.pdf/.dxf aren't on claude.ai's save allowlist,
+        // and unknown codes act the same): our PDFs/DXFs/SVGs are plain text
+        // inside, so retry with a .txt ending and tell the user to rename —
+        // the contents are byte-identical.
+        try {
+          await window.claude.downloads.save({ filename: filename + '.txt', data });
+          noteToast('✓ Saved as "' + filename + '.txt" — claude.ai only allows a .txt ending here. ' +
+            'Rename the file to "' + filename + '" (just remove .txt) and it works as normal.');
+          return;
+        } catch (e2) {
+          const code2 = (e2 && e2.code) || 'unknown';
+          if (code2 === 'declined') return;
+          // never fail silently: say what happened, then still try the
+          // normal browser paths below in case they work in this view
+          noteToast('claude.ai refused the download (' + code + ' / ' + code2 + '). ' +
+            'Trying the browser download instead — if nothing arrives, use the standalone ' +
+            'BondiTrailerCAD.html file, where exports always save directly.');
+        }
       }
     }
     if (window.showSaveFilePicker) {
@@ -305,7 +309,7 @@
     setTimeout(() => win.print(), 400);
   }
 
-  BFT.exporters = { svgFromScene, pngFromScene, printScene, download, lightLayers };
+  BFT.exporters = { svgFromScene, pngFromScene, printScene, download, lightLayers, noteToast };
 })(typeof window !== 'undefined' ? window : globalThis);
 if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 

@@ -109,12 +109,21 @@
       });
 
     // overhangs (past a bench edge or wall line) are deliberate all the
-    // time in real builds - only true clashes get flagged
-    const isBench = (r) => r.it.catId === 'bench';
+    // time in real builds - only true clashes get flagged. Anything that
+    // works as a surface — benches (they get cut to suit), counters, and
+    // every fridge/freezer/cold display — can have equipment sitting on
+    // or over it, so overlaps with those never warn.
+    const isSurface = (r) => {
+      const it = r.it;
+      if (it.catId === 'bench' || it.catId === 'counter') return true;
+      if (it.sym === 'fridge') return true;
+      const c = BFT.catalogById(it.catId);
+      return !!(c && /refrigeration/i.test(c.cat || ''));
+    };
     for (let i = 0; i < rects.length; i++) {
       for (let j = i + 1; j < rects.length; j++) {
         const a = rects[i], b = rects[j];
-        if (isBench(a) || isBench(b)) continue;
+        if (isSurface(a) || isSurface(b)) continue;
         const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
         const oy = Math.min(a.y + a.d, b.y + b.d) - Math.max(a.y, b.y);
         if (ox > 5 && oy > 5) warns.push({ msg: a.it.en + ' overlaps ' + b.it.en, ids: [a.it.id, b.it.id] });
@@ -991,10 +1000,15 @@
   }
 
   function exportDXF(sheetMode) {
-    const p = store.project;
-    const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
-    const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
-    BFT.exporters.download(fileBase() + (sheetMode ? '-sheet' : '-plan') + '.dxf', dxf, 'application/dxf');
+    try {
+      const p = store.project;
+      const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
+      const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
+      BFT.exporters.download(fileBase() + (sheetMode ? '-sheet' : '-plan') + '.dxf', dxf, 'application/dxf');
+    } catch (e) {
+      BFT.exporters.noteToast('DXF export failed: ' + (e && e.message ? e.message : e) +
+        ' — please tell Ryan/Claude this exact message.');
+    }
   }
 
   function exportSVG() {
@@ -1046,14 +1060,19 @@
   }
 
   function customerPDF() {
-    setMode('sales'); // show what's being sent
-    // real vector PDF with the whole project embedded, so the customer copy
-    // can be re-opened later (More > Open) and its layout edited
-    const pdf = BFT.pdf.pdfFromScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, {
-      title: (store.project.meta.project || 'Food Trailer') + ' — customer drawing',
-      project: store.project,
-    });
-    BFT.exporters.download(fileBase() + '-customer.pdf', pdf, 'application/pdf');
+    try {
+      setMode('sales'); // show what's being sent
+      // real vector PDF with the whole project embedded, so the customer copy
+      // can be re-opened later (More > Open) and its layout edited
+      const pdf = BFT.pdf.pdfFromScene(BFT.views.buildCustomerSheet(store.project), BFT.layers, {
+        title: (store.project.meta.project || 'Food Trailer') + ' — customer drawing',
+        project: store.project,
+      });
+      BFT.exporters.download(fileBase() + '-customer.pdf', pdf, 'application/pdf');
+    } catch (e) {
+      BFT.exporters.noteToast('Customer PDF failed: ' + (e && e.message ? e.message : e) +
+        ' — please tell Ryan/Claude this exact message.');
+    }
   }
 
   // ------------------------------------------------------------------
