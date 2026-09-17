@@ -80,6 +80,13 @@
         lpline([[0, 0], [w, d]], false);
         break;
       }
+      case 'fan': {
+        // roof unit: fan circle with a centre hub
+        const fr = Math.min(w, d);
+        lcircle(w / 2, d / 2, fr * 0.34);
+        lcircle(w / 2, d / 2, fr * 0.08);
+        break;
+      }
       case 'hood': {
         lpline([[0, 0], [w, d]], false);
         lpline([[0, d], [w, 0]], false);

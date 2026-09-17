@@ -36,6 +36,7 @@
 
     { id: 'gas',       en: 'Gas Bottle 9kg',   zh: '煤气瓶',   w: 310,  d: 310, h: 580,  sym: 'circle', shape: 'circle', cat: 'Services', svc: true },
     { id: 'gas45',     en: 'Gas Bottle 45kg',  zh: '煤气瓶45kg', w: 375, d: 375, h: 1250, sym: 'circle', shape: 'circle', cat: 'Services', svc: true },
+    { id: 'aircon',    en: 'Air Conditioner (roof)', zh: '车顶空调', w: 500, d: 500, h: 350, sym: 'fan', overhead: true, kg: 45, cat: 'Services' },
     { id: 'generator', en: 'Generator',        zh: '发电机',   w: 700,  d: 500, h: 550,  sym: 'cross', cat: 'Services' },
     { id: 'switchbd',  en: 'Switchboard',      zh: '配电箱',   w: 400,  d: 150, h: 600,  sym: 'plain', fixture: true, cat: 'Services' },
     // connection points: where the factory fits gas/power/water services.
