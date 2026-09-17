@@ -71,8 +71,9 @@
         break;
       }
       case 'fridge': {
-        lpline([[0, 0], [w, d]], false);
-        lpline([[0, d], [w, 0]], false);
+        // inset inner outline — reads as a cabinet door, not an error cross
+        const fg = Math.min(w, d) * 0.12;
+        lpline([[fg, fg], [w - fg, fg], [w - fg, d - fg], [fg, d - fg]], true);
         break;
       }
       case 'cross': {
