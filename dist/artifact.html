@@ -445,7 +445,7 @@ kbd {
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v35';
+  BFT.VERSION = 'v36';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -2305,6 +2305,30 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
   //  3. a toast with a direct link, a Share button (tablets/phones: save to
   //     Files or send straight to WhatsApp) and a Copy button for text files
   let toastTimer = null;
+  // A tiny self-contained page that saves the REAL file when opened.
+  // claude.ai's save prompt allows .html but not .pdf/.dxf, so the file
+  // travels inside this carrier and downloads itself with the proper name
+  // the moment the user opens it — outside the sandbox, where downloads work.
+  function carrierHTML(filename, text, type) {
+    // UTF-8 safe base64 (DXF labels can contain Chinese)
+    let b64;
+    try { b64 = btoa(unescape(encodeURIComponent(text))); }
+    catch (e) { b64 = btoa(text); }
+    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    return '<!doctype html><html><head><meta charset="utf-8"><title>Save ' + esc(filename) + '</title></head>' +
+      '<body style="font-family:-apple-system,Segoe UI,Arial,sans-serif;display:grid;place-items:center;height:100vh;margin:0;background:#eef1f4;color:#21303e">' +
+      '<div style="text-align:center;background:#fff;border:1px solid #d8dee6;border-radius:12px;padding:36px 44px">' +
+      '<div style="font-weight:700;letter-spacing:.4px;margin-bottom:14px">BONDI <span style="color:#1f7a35">TRAILER CAD</span></div>' +
+      '<p style="margin:0 0 18px">Your file should be downloading now. If not, click:</p>' +
+      '<a id="dl" download="' + esc(filename) + '" style="font-size:19px;background:#1f7a35;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none">&#128190; Save ' + esc(filename) + '</a>' +
+      '</div><script>' +
+      'var b="' + b64 + '";var s=atob(b);var u8=new Uint8Array(s.length);' +
+      'for(var i=0;i<s.length;i++)u8[i]=s.charCodeAt(i);' +
+      'var url=URL.createObjectURL(new Blob([u8],{type:"' + type + '"}));' +
+      'var a=document.getElementById("dl");a.href=url;setTimeout(function(){a.click();},300);' +
+      '<\/script></body></html>';
+  }
+
   async function download(filename, content, mime) {
     const type = mime || 'application/octet-stream';
     const blob = content instanceof Blob ? content : new Blob([content], { type });
@@ -2323,10 +2347,19 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
           noteToast('A download prompt is already open — answer it, then try again.');
           return;
         }
-        // Everything else (.pdf/.dxf aren't on claude.ai's save allowlist,
-        // and unknown codes act the same): our PDFs/DXFs/SVGs are plain text
-        // inside, so retry with a .txt ending and tell the user to rename —
-        // the contents are byte-identical.
+        // claude.ai's allowlist has no .pdf/.dxf. Wrap text files in a small
+        // .html carrier that saves the real file when opened — no renaming.
+        if (typeof content === 'string') {
+          try {
+            await window.claude.downloads.save({ filename: filename + '.html', data: carrierHTML(filename, content, type) });
+            noteToast('✓ Saved "' + filename + '.html" — claude.ai can\'t save this file type directly. ' +
+              'Just open that file (double-click it) and the real ' + filename + ' downloads itself, correctly named.');
+            return;
+          } catch (e15) {
+            if (e15 && e15.code === 'declined') return;
+          }
+        }
+        // last resort: same bytes with a .txt ending (needs a manual rename)
         try {
           await window.claude.downloads.save({ filename: filename + '.txt', data });
           noteToast('✓ Saved as "' + filename + '.txt" — claude.ai only allows a .txt ending here. ' +
