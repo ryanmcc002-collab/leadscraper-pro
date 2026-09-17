@@ -123,6 +123,7 @@
     for (let i = 0; i < rects.length; i++) {
       for (let j = i + 1; j < rects.length; j++) {
         const a = rects[i], b = rects[j];
+        if (a.it.noWarn || b.it.noWarn) continue;
         if (isSurface(a) || isSurface(b)) continue;
         const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
         const oy = Math.min(a.y + a.d, b.y + b.d) - Math.max(a.y, b.y);
@@ -140,6 +141,7 @@
       if (f.wall === 'top') zone = { x: f.offset - t.wall, y: iW - depth, w: f.width, d: depth };
       if (!zone) continue;
       for (const r of rects) {
+        if (r.it.noWarn) continue;
         const ox = Math.min(r.x + r.w, zone.x + zone.w) - Math.max(r.x, zone.x);
         const oy = Math.min(r.y + r.d, zone.y + zone.d) - Math.max(r.y, zone.y);
         if (ox > 30 && oy > 30) warns.push({ msg: r.it.en + ' blocks the door', ids: [r.it.id] });
@@ -811,6 +813,19 @@
     mountRow.appendChild(mountSel);
     el.appendChild(mountRow);
 
+    // deliberate placements (fridge by the door, stacked units…) shouldn't
+    // nag forever — per-item opt-out from the red X / warning list
+    const nwRow = document.createElement('label');
+    nwRow.className = 'check';
+    nwRow.style.margin = '6px 2px';
+    const nw = document.createElement('input');
+    nw.type = 'checkbox';
+    nw.checked = !!it.noWarn;
+    nw.onchange = () => { store.checkpoint(); it.noWarn = nw.checked ? true : undefined; commit(); };
+    nwRow.appendChild(nw);
+    nwRow.appendChild(document.createTextNode(' No warnings for this item (placement is deliberate)'));
+    el.appendChild(nwRow);
+
     const btns = document.createElement('div');
     btns.className = 'btn-row';
     btns.innerHTML = '';
@@ -1004,7 +1019,7 @@
       const p = store.project;
       const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
       const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
-      BFT.exporters.download(fileBase() + (sheetMode ? '-sheet' : '-plan') + '.dxf', dxf, 'application/dxf');
+      BFT.exporters.download(fileBase() + (sheetMode ? '-factory' : '-plan') + '.dxf', dxf, 'application/dxf');
     } catch (e) {
       BFT.exporters.noteToast('DXF export failed: ' + (e && e.message ? e.message : e) +
         ' — please tell Ryan/Claude this exact message.');
