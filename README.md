@@ -42,3 +42,7 @@ index.html      app shell
 css/app.css     design tokens + components (light/dark)
 js/app.js       data, views, router, chart, interactions
 ```
+
+## Also in this repo
+
+- `sign/` — **Quick Ink**, a browser-only tool for putting your signature, initials, date and text on a PDF or a photo of a document and downloading the signed PDF. See `sign/README.md`.
