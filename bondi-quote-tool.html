@@ -1140,7 +1140,7 @@ const defaultCategories = [
   {
     name: 'Ventilation & Climate Control',
     items: [
-      { id: 'range_hood', name: 'Commercial Range Hood', desc: 'Extraction ($500 per metre)', price: 500, isQty: true, qtyOptions: [1,1.5,2,2.5,3,3.5,4] },
+      { id: 'range_hood', name: 'Commercial Range Hood', desc: 'Extraction ($500 per metre)', price: 500, isQty: true, perMetre: true, qtyOptions: [1,1.5,2,2.5,3,3.5,4] },
       { id: 'aircon',           name: 'Air Conditioning Unit', desc: 'Reverse cycle, roof-mounted', price: 1800 },
       { id: 'roof_ac_220', name: 'Roof Air Conditioner 220V', desc: 'Dometic B3200 (3000W Cool / 1600W Heat)', price: 1960 },
       { id: 'roof_ac_110', name: 'Roof Air Conditioner 110V', desc: '4000W Cool / 3000W Heat', price: 2400 },
@@ -1187,8 +1187,8 @@ const defaultCategories = [
   {
     name: 'Storage & Cabinetry',
     items: [
-      { id: 'upper_cab', name: 'Upper Cabinet / Overhead Cupboards', desc: 'With sliding doors', price: 240, isQty: true, qtyOptions: [1,2,3] },
-      { id: 'upper_shelf', name: 'Upper Shelf 1m', desc: 'Stainless steel', price: 100, isQty: true, qtyOptions: [1,2,3,4,5] },
+      { id: 'upper_cab', name: 'Overhead Cupboards', desc: 'Stainless, sliding doors ($250 per metre)', price: 250, isQty: true, perMetre: true, qtyOptions: [0.5,1,1.5,2,2.5,3,3.5,4,4.5,5] },
+      { id: 'upper_shelf', name: 'Upper Shelf', desc: 'Stainless steel ($180 per metre)', price: 180, isQty: true, perMetre: true, qtyOptions: [0.5,1,1.5,2,2.5,3,3.5,4,4.5,5] },
       { id: 'trash_pullout', name: 'Pull-out Trash Can', desc: 'Underbench hidden mount', price: 240 },
       { id: 'trash_can', name: 'Standard Trash Can', desc: 'Stainless steel', price: 160 },
       { id: 'cup_dispenser', name: 'Cup Dispenser (Double Hole)', desc: 'Adjustable size', price: 270 }
@@ -1282,6 +1282,11 @@ const defaultCategories = [
 ];
 
 let CATEGORIES = JSON.parse(localStorage.getItem('bondi_inventory')) || defaultCategories;
+// Per-metre items (hood, cupboards, shelves): make sure an inventory saved by an older version carries the flag and current pricing
+(function migratePerMetre() {
+  const fresh = {}; defaultCategories.forEach(c => c.items.forEach(i => { if (i.perMetre) fresh[i.id] = i; }));
+  CATEGORIES.forEach(c => c.items.forEach(i => { const f = fresh[i.id]; if (f && !i.perMetre) Object.assign(i, { name: f.name, desc: f.desc, price: f.price, perMetre: true, qtyOptions: f.qtyOptions }); }));
+})();
 
 // Backfill floor-plan display properties (size, colour, label, bench) onto any saved
 // inventory so layout upgrades reach existing setups without overwriting custom prices
@@ -1680,12 +1685,12 @@ function renderCategories() {
             let qtyHtml = '';
             if (a.isQty) {
               const currentQty = state.addons[a.id] || a.qtyOptions[0];
-              const labelAppend = a.id === 'range_hood' ? 'm' : '';
+              const labelAppend = a.perMetre ? 'm' : '';
               qtyHtml = `<select id="qty_${a.id}" class="addon-qty-select" onclick="event.stopPropagation()" onchange="updateAddonQty('${a.id}', this.value)">
                 ${a.qtyOptions.map(q => `<option value="${q}" ${currentQty == q ? 'selected' : ''}>${q}${labelAppend}</option>`).join('')}
               </select>`;
             }
-            const displayPrice = a.id === 'range_hood' ? `+$${a.price.toLocaleString()} /m` : `+$${a.price.toLocaleString()}`;
+            const displayPrice = a.perMetre ? `+$${a.price.toLocaleString()} /m` : `+$${a.price.toLocaleString()}`;
             return `
               <div class="addon-item ${isSelected}" id="addon_${a.id}" onclick="toggleAddonDOM('${a.id}')">
                 <div class="addon-check" id="check_${a.id}">✓</div>
@@ -1994,7 +1999,7 @@ function calcTotals() {
   orderedAddons.forEach(a => {
     const qty = a.isQty ? state.addons[a.id] : 1;
     const lineTotal = a.price * qty;
-    const suffix = a.id === 'range_hood' ? ` (${qty}m)` : (qty > 1 ? ` (x${qty})` : '');
+    const suffix = a.perMetre ? ` (${qty}m)` : (qty > 1 ? ` (x${qty})` : '');
     addonTotal += lineTotal;
     addonLines.push({ desc: a.name + suffix, price: lineTotal });
   });
@@ -3036,7 +3041,7 @@ function renderFloorPlan() {
   const drawbarBox = state.addons['gen_box'] || state.addons['generator'] ? 'Gen box' : (state.addons['gas_box'] ? 'Gas box' : '');
   renderIsoView({ intMM, size, isU, EB_MM, frontStartMM: FRONT_START_MM, bbEndMM: BB_END_MM, sinkMM: SINK_MM, hasBigSink: !!hasBigSink,
     frontBlocks: frontLayout.blocks, backBlocks: backLayout.blocks, windows: winPlaced, rhMM: hasRangeHood ? Math.min(rhMM, BB_COOK_MM) : 0,
-    hasAircon: !!hasAircon, upperCabs: parseInt(state.addons['upper_cab']) || 0, hasDrawbarBox: !!drawbarBox, drawbarBoxLabel: drawbarBox,
+    hasAircon: !!hasAircon, upperCabs: parseFloat(state.addons['upper_cab']) || 0, hasDrawbarBox: !!drawbarBox, drawbarBoxLabel: drawbarBox,
     hasCanopy: !!hasCanopy, hasLogoBox: !!state.addons['led_logo'], hasMenuScreen: !!(state.addons['menu_tv'] || state.addons['ad_screen']) });
 }
 
@@ -3401,7 +3406,7 @@ function renderIsoView(d) {
     g += `<text x="${c[0]}" y="${c[1]}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#374151" font-family="sans-serif">Range hood ${(d.rhMM / 1000)}m</text>`;
   }
   if (d.upperCabs > 0) {   // overhead cupboards on the kitchen wall past the hood
-    const c0 = eb + d.rhMM + 40, c1 = Math.min(d.bbEndMM - 40, c0 + d.upperCabs * 900);
+    const c0 = eb + d.rhMM + 40, c1 = Math.min(d.bbEndMM - 40, c0 + d.upperCabs * 1000);
     if (c1 - c0 > 300) { g += box(c0, c1, 0, 350, 1550, 1980, STEEL); const n = Math.max(1, Math.round((c1 - c0) / 600)); for (let i = 1; i < n; i++) g += line3(P(c0 + (c1 - c0) * i / n, 350, 1560), P(c0 + (c1 - c0) * i / n, 350, 1970), 'stroke="rgba(0,0,0,0.25)" stroke-width="0.7"'); for (let i = 0; i < n; i++) { const uu = c0 + (c1 - c0) * (i + 0.5) / n; g += line3(P(uu - 60, 350, 1620), P(uu + 60, 350, 1620), 'stroke="#374151" stroke-width="1.3" stroke-linecap="round"'); } }
   }
   if (d.hasAircon) { g += box(L * 0.5 - 380, L * 0.5 + 380, WD / 2 - 380, WD / 2 + 380, HW, HW + 280, '#eef0f3'); const ac = P(L * 0.5, WD / 2 + 380, HW + 140); g += `<text x="${ac[0]}" y="${ac[1] + 2}" text-anchor="middle" font-size="6.5" font-weight="800" fill="#1d4ed8" font-family="sans-serif">Air con</text>`; }
