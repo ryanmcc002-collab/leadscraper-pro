@@ -2855,7 +2855,7 @@ function renderFloorPlan() {
 
   // Bench-space base layer from the bench start (end bench or 200mm end panel) to the door wall
   const FSX = TL + FRONT_START_MM * sc;
-  if (!isU) s += `<rect x="${TL+2}" y="${FB_Y+3}" width="${FSX - TL - 2}" height="${FB_H-6}" fill="#1e3a5f" rx="3"/>`;
+  if (!isU && FSX - TL - 2 > 0) s += `<rect x="${TL+2}" y="${FB_Y+3}" width="${FSX - TL - 2}" height="${FB_H-6}" fill="#1e3a5f" rx="3"/>`;
   s += `<rect x="${FSX + 2}" y="${FB_Y+3}" width="${TR - FSX - 4}" height="${FB_H-6}" fill="#1e3a5f" rx="3"/>`;
 
   // ── END BENCH ACROSS THE DRAWBAR (U-shape only): joins the side benches and carries the sinks ──
