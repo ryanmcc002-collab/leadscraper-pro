@@ -213,6 +213,25 @@
 
   /* -------------------------------------------------------------- fields */
   const pageOf = f => state.pages[f.page];
+  const isImage = f => f.type === "sig" || f.type === "ini" || f.type === "tick" || f.type === "cross";
+
+  // Tick / cross marks for checkboxes, drawn once per ink colour.
+  const markCache = new Map();
+  function markPng(kind, color) {
+    const key = kind + color;
+    if (markCache.has(key)) return markCache.get(key);
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const ctx = c.getContext("2d");
+    ctx.strokeStyle = color; ctx.lineWidth = 14; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    if (kind === "tick") { ctx.moveTo(20, 70); ctx.lineTo(52, 102); ctx.lineTo(110, 28); }
+    else { ctx.moveTo(30, 30); ctx.lineTo(98, 98); ctx.moveTo(98, 30); ctx.lineTo(30, 98); }
+    ctx.stroke();
+    const src = c.toDataURL("image/png");
+    markCache.set(key, src);
+    return src;
+  }
 
   function positionFields(p) {
     for (const f of state.fields) if (pageOf(f) === p) positionField(f);
@@ -226,7 +245,7 @@
     f.el.style.left = `${f.x * p.cssW}px`;
     f.el.style.top = `${f.y * p.cssH}px`;
     f.el.style.height = `${hPx}px`;
-    if (f.type === "sig" || f.type === "ini") {
+    if (isImage(f)) {
       f.el.style.width = `${f.w * p.cssW}px`;
     } else {
       f.el.style.width = "auto";
@@ -240,9 +259,9 @@
     const d = document.createElement("div");
     d.className = `field ${f.type}`;
     d.dataset.id = String(f.id);
-    if (f.type === "sig" || f.type === "ini") {
+    if (isImage(f)) {
       const img = document.createElement("img");
-      img.src = f.src; img.alt = f.type === "sig" ? "Signature" : "Initials"; img.draggable = false;
+      img.src = f.src; img.alt = { sig: "Signature", ini: "Initials", tick: "Tick", cross: "Cross" }[f.type]; img.draggable = false;
       d.appendChild(img);
     } else {
       const t = document.createElement("span");
@@ -297,8 +316,8 @@
       handle.setPointerCapture(e.pointerId);
       const move = ev => {
         const px = ev.clientX - rect.left, py = ev.clientY - rect.top;
-        if (f.type === "sig" || f.type === "ini") {
-          let wPx = clamp(px - f.x * p.cssW, 24, (1 - f.x) * p.cssW);
+        if (isImage(f)) {
+          let wPx = clamp(px - f.x * p.cssW, 8, (1 - f.x) * p.cssW);
           let hPx = wPx / f.aspect;
           if (hPx > (1 - f.y) * p.cssH) { hPx = (1 - f.y) * p.cssH; wPx = hPx * f.aspect; }
           f.w = wPx / p.cssW; f.h = hPx / p.cssH;
@@ -339,6 +358,10 @@
       f.src = s.src; f.aspect = s.aspect;
       f.w = type === "sig" ? 0.28 : 0.1;
       f.h = (f.w * p.vp1.width) / f.aspect / p.vp1.height;
+    } else if (type === "tick" || type === "cross") {
+      f.src = markPng(type, state.ink); f.aspect = 1;
+      f.w = 14 / p.vp1.width;          // a 14pt mark fits a standard form checkbox
+      f.h = 14 / p.vp1.height;
     } else {
       f.text = type === "date" ? today() : "";
       f.h = 20 / p.vp1.height;       // ~20pt line on the page
@@ -358,7 +381,7 @@
   }
 
   /* --------------------------------------------------------- placing mode */
-  const hintFor = { sig: "Tap the page where you want your signature", ini: "Tap where your initials go", date: "Tap where today's date goes", text: "Tap where the text goes" };
+  const hintFor = { sig: "Tap the page where you want your signature", ini: "Tap where your initials go", date: "Tap where today's date goes", text: "Tap where the text goes", tick: "Tap the box you want ticked", cross: "Tap the box you want crossed" };
 
   function setPlacing(tool) {
     state.placing = tool;
@@ -664,7 +687,7 @@
       const x = f.x * W, y = f.y * H, w = f.w * W, h = f.h * H;
       const BL = vp.convertToPdfPoint(x, y + h), BR = vp.convertToPdfPoint(x + w, y + h), TL = vp.convertToPdfPoint(x, y);
       const angle = Math.atan2(BR[1] - BL[1], BR[0] - BL[0]) * 180 / Math.PI;
-      if (f.type === "sig" || f.type === "ini") {
+      if (isImage(f)) {
         const img = await embed(f.src);
         page.drawImage(img, {
           x: BL[0], y: BL[1],
@@ -738,7 +761,13 @@
     y -= 14;
     const para = ["By signing below you accept the quote above and the terms supplied with it.", "Work starts once this signed copy is returned. There is no lock-in and no ongoing", "fee unless a support plan is chosen separately."];
     for (const l of para) { t(l, 11); y -= 17; }
-    y -= 40;
+    y -= 12;
+    const check = (label, x) => {
+      page.drawRectangle({ x, y: y - 2, width: 11, height: 11, borderWidth: 1, borderColor: ink });
+      page.drawText(label, { x: x + 18, y, size: 10.5, font: reg, color: ink });
+    };
+    check("I accept the quote and terms", L); check("Email me the invoice", 300);
+    y -= 44;
     const box = (label, x, w) => {
       page.drawLine({ start: { x, y }, end: { x: x + w, y }, thickness: 1, color: ink });
       page.drawText(label, { x, y: y - 14, size: 9, font: reg, color: grey });

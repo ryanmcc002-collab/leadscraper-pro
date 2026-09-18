@@ -21,7 +21,8 @@ Opening `sign/index.html` straight from disk also works in most browsers.
    paper background is removed automatically). It's saved on the device so
    next time it's one tap. **Initials** work the same way.
 3. **Date** and **Text** drop editable text boxes (date defaults to today,
-   Australian format).
+   Australian format). **Tick** and **Cross** drop a mark sized for a standard
+   form checkbox; tap the box, nudge or resize if needed.
 4. Drag to move, pull the blue corner to resize, `Delete` removes, `Esc`
    cancels placing.
 5. **Download signed PDF** writes the marks into a copy named

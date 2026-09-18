@@ -316,7 +316,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
   .work { flex-direction: column; }
   .rail { width: auto; border-left: 0; border-top: 1px solid var(--line); max-height: 44vh; }
   .rail-scroll { padding: 14px 16px calc(16px + env(safe-area-inset-bottom, 0px)); gap: 16px; }
-  .tool-grid { grid-template-columns: repeat(4, 1fr); }
+  .tool-grid { grid-template-columns: repeat(3, 1fr); }
   .tool { flex-direction: column; gap: 4px; padding: 8px 4px; font-size: 12px; }
   .pages { padding: 16px 16px 90px; gap: 34px; }
   .desk-tools { margin-right: 10px; }
