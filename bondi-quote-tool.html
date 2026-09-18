@@ -3213,6 +3213,7 @@ function renderIsoView(d) {
   const keyIds = [], keyRows = [];
   const mkUnit = (b, bench) => {
     const dm = isoDims(b.item);
+    if (bench === 'back' && dm.mount === 'bench' && dm.kind !== 'cash' && dm.kind !== 'custom') { dm.mount = 'lowered'; dm.h = Math.max(120, Math.min(dm.h, 700)); }
     const builtIn = dm.mount === 'under' || dm.mount === 'lowered' || dm.kind === 'keg' || dm.kind === 'chest';
     const depth = builtIn ? 600 : Math.min(dm.d, 570), inset = builtIn ? 0 : 30;
     const u0 = Math.max(0, b.x), u1 = Math.min(L, b.x + b.wMM);
@@ -3237,6 +3238,9 @@ function renderIsoView(d) {
   const knobs = (u0, u1, v, z, n, r) => { for (let i = 0; i < n; i++) g += circleFront(u0 + (u1 - u0) * (i + 0.5) / n, v, z, r, 'fill="#111827"'); };
   const drawUnit = o => {
     const { u0, u1, v0, v1, kind, h } = o, w = u1 - u0, name = (o.item.name || '').toLowerCase();
+    // Built into the kitchen bench: the body sits in a lowered bench so its working surface is level with the bench
+    const sunk = o.mount === 'lowered' && !/griddle|chargrill|stove/.test(kind);
+    const Z0 = sunk ? BH - h : BH, Z1 = sunk ? BH : BH + h;
     switch (kind) {
       case 'fryer': {
         const top = 880;
@@ -3291,41 +3295,41 @@ function renderIsoView(d) {
           }
           else doors(u0, u1, v1, 100, h - 60, Math.max(1, Math.round(w / 650)), true);
         } else {   // benchtop display / salad bar: pans under a glass hood
-          g += contact(u0, u1, v0, v1, BH, 0.12);
-          g += box(u0, u1, v0, v1, BH, BH + h * 0.45, STEEL);
+          if (!sunk) g += contact(u0, u1, v0, v1, BH, 0.12);
+          g += box(u0, u1, v0, v1, Z0, Z0 + h * 0.45, STEEL);
           const pans = Math.max(2, Math.min(6, Math.round(w / 330))), pw = (w - 40 - (pans - 1) * 15) / pans, pc = ['#84cc16', '#ef4444', '#facc15', '#22c55e', '#fb923c', '#a3e635'];
-          for (let i = 0; i < pans; i++) { const a = u0 + 20 + i * (pw + 15); g += hpoly([[a, v0 + 40], [a + pw, v0 + 40], [a + pw, v1 - 40], [a, v1 - 40]], BH + h * 0.45 + 1, `fill="${pc[i % 6]}" stroke="#9ca3af" stroke-width="0.5"`); }
-          g += box(u0 + 10, u1 - 10, v0 + 10, v1 - 10, BH + h * 0.45, BH + h, '#bfe3f7', 0.5);
+          for (let i = 0; i < pans; i++) { const a = u0 + 20 + i * (pw + 15); g += hpoly([[a, v0 + 40], [a + pw, v0 + 40], [a + pw, v1 - 40], [a, v1 - 40]], Z0 + h * 0.45 + 1, `fill="${pc[i % 6]}" stroke="#9ca3af" stroke-width="0.5"`); }
+          g += box(u0 + 10, u1 - 10, v0 + 10, v1 - 10, Z0 + h * 0.45, Z1, '#bfe3f7', 0.5);
         }
         break; }
       case 'oven': {
-        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        g += box(u0, u1, v0, v1, Z0, Z1, STEEL);
         const layers = /double|2 layer|2-layer|conveyor/.test(name) && !/conveyor/.test(name) ? 2 : 1;
         for (let i = 0; i < layers; i++) {
-          const zb = BH + h * (i + 0.12) / layers, zt = BH + h * (i + 0.82) / layers, a = [P(u0 + w * 0.18, v1, zb)];
+          const zb = Z0 + h * (i + 0.12) / layers, zt = Z0 + h * (i + 0.82) / layers, a = [P(u0 + w * 0.18, v1, zb)];
           for (let t = 0; t <= 8; t++) a.push(P(u0 + w * (0.18 + 0.64 * t / 8), v1, zb + (zt - zb) * Math.sin(Math.PI * t / 8)));
           a.push(P(u0 + w * 0.82, v1, zb));
           g += poly(a, 'fill="#1f2937"');
         }
-        knobs(u1 - Math.min(160, w * 0.2), u1 - 20, v1, BH + h * 0.5, 1, 18);
+        knobs(u1 - Math.min(160, w * 0.2), u1 - 20, v1, Z0 + h * 0.5, 1, 18);
         break; }
       case 'coffee': {
-        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        g += box(u0, u1, v0, v1, Z0, Z1, STEEL);
         const n = w >= 550 ? 2 : 1;
-        for (let i = 0; i < n; i++) g += circleFront(u0 + w * (i + 0.5) / n, v1, BH + h * 0.45, Math.min(w / (n * 4.2), h * 0.17), 'fill="#374151"');
-        g += poly([P(u0 + 20, v1, BH + 30), P(u1 - 20, v1, BH + 30), P(u1 - 20, v1, BH + 65), P(u0 + 20, v1, BH + 65)], 'fill="#9ca3af"');
-        g += line3(P(u0 + 30, v0 + 50, BH + h + 1), P(u1 - 30, v0 + 50, BH + h + 1), 'stroke="#6b7280" stroke-width="1"');
-        g += line3(P(u1, v1 - 90, BH + h * 0.75), P(u1 + 110, v1 + 30, BH + h * 0.35), 'stroke="#374151" stroke-width="1.6" stroke-linecap="round"');   // steam wand
+        for (let i = 0; i < n; i++) g += circleFront(u0 + w * (i + 0.5) / n, v1, Z0 + h * 0.45, Math.min(w / (n * 4.2), h * 0.17), 'fill="#374151"');
+        g += poly([P(u0 + 20, v1, Z0 + 30), P(u1 - 20, v1, Z0 + 30), P(u1 - 20, v1, Z0 + 65), P(u0 + 20, v1, Z0 + 65)], 'fill="#9ca3af"');
+        g += line3(P(u0 + 30, v0 + 50, Z1 + 1), P(u1 - 30, v0 + 50, Z1 + 1), 'stroke="#6b7280" stroke-width="1"');
+        g += line3(P(u1, v1 - 90, Z0 + h * 0.75), P(u1 + 110, v1 + 30, Z0 + h * 0.35), 'stroke="#374151" stroke-width="1.6" stroke-linecap="round"');   // steam wand
         break; }
       case 'bain': {
-        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
+        g += box(u0, u1, v0, v1, Z0, Z1, STEEL);
         const cols = Math.max(1, Math.min(6, Math.round(w / 220))), rows = (v1 - v0) > 480 ? 2 : 1, cw = (w - 40 - (cols - 1) * 20) / cols, ch = ((v1 - v0) - 40 - (rows - 1) * 20) / rows;
-        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { const a = u0 + 20 + c * (cw + 20), b = v0 + 20 + r * (ch + 20); g += hpoly([[a, b], [a + cw, b], [a + cw, b + ch], [a, b + ch]], BH + h + 1, 'fill="#8fb8dc" stroke="#4b5563" stroke-width="0.5"'); }
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { const a = u0 + 20 + c * (cw + 20), b = v0 + 20 + r * (ch + 20); g += hpoly([[a, b], [a + cw, b], [a + cw, b + ch], [a, b + ch]], Z1 + 1, 'fill="#8fb8dc" stroke="#4b5563" stroke-width="0.5"'); }
         break; }
       case 'warmer': {
-        g += box(u0, u1, v0, v1, BH, BH + 130, STEEL);
-        g += box(u0 + 10, u1 - 10, v0 + 10, v1 - 10, BH + 130, BH + h, '#bfe3f7', 0.62);
-        for (let i = 1; i <= 2; i++) g += line3(P(u0 + 15, v0 + 15, BH + 130 + (h - 130) * i / 3), P(u1 - 15, v0 + 15, BH + 130 + (h - 130) * i / 3), 'stroke="#6b7280" stroke-width="0.6"');
+        g += box(u0, u1, v0, v1, Z0, Z0 + 130, STEEL);
+        g += box(u0 + 10, u1 - 10, v0 + 10, v1 - 10, Z0 + 130, Z1, '#bfe3f7', 0.62);
+        for (let i = 1; i <= 2; i++) g += line3(P(u0 + 15, v0 + 15, Z0 + 130 + (h - 130) * i / 3), P(u1 - 15, v0 + 15, Z0 + 130 + (h - 130) * i / 3), 'stroke="#6b7280" stroke-width="0.6"');
         break; }
       case 'keg': {
         g += box(u0, u1, v0, v1, 0, BH, FRIDGE);
@@ -3336,14 +3340,15 @@ function renderIsoView(d) {
         for (let i = 0; i < taps; i++) g += line3(P(cu - 60 + 120 * (i + 0.5) / taps, cv + 60, BH + 330), P(cu - 60 + 120 * (i + 0.5) / taps, cv + 190, BH + 300), 'stroke="#111827" stroke-width="1.8" stroke-linecap="round"');
         break; }
       case 'drinks': {
-        g += box(u0, u1, v0, v1, BH, BH + h * 0.45, STEEL);
+        g += box(u0, u1, v0, v1, Z0, Z0 + h * 0.45, STEEL);
         const n = /3/.test(name) ? 3 : (/double|2/.test(name) ? 2 : 1), bw = (w - 30 - (n - 1) * 20) / n;
-        for (let i = 0; i < n; i++) { const a = u0 + 15 + i * (bw + 20); g += box(a, a + bw, v0 + 20, v1 - 20, BH + h * 0.45, BH + h, i % 2 ? '#fbbf24' : '#f87171', 0.75); }
+        for (let i = 0; i < n; i++) { const a = u0 + 15 + i * (bw + 20); g += box(a, a + bw, v0 + 20, v1 - 20, Z0 + h * 0.45, Z1, i % 2 ? '#fbbf24' : '#f87171', 0.75); }
         break; }
       case 'sink': {
-        g += box(u0, u1, v0, v1, BH, BH + 200, STEEL);
+        const st = sunk ? BH : BH + 200;
+        if (!sunk) g += box(u0, u1, v0, v1, BH, st, STEEL);
         const n = w >= 900 ? 2 : 1, bw = (w - 60 - (n - 1) * 30) / n;
-        for (let i = 0; i < n; i++) { const a = u0 + 30 + i * (bw + 30); g += hpoly([[a, v0 + 40], [a + bw, v0 + 40], [a + bw, v1 - 40], [a, v1 - 40]], BH + 201, 'fill="#7c8590"'); }
+        for (let i = 0; i < n; i++) { const a = u0 + 30 + i * (bw + 30); g += hpoly([[a, v0 + 40], [a + bw, v0 + 40], [a + bw, v1 - 40], [a, v1 - 40]], st + 1, 'fill="#7c8590"'); }
         tap(u0 + w / 2, v0 + 25);
         break; }
       case 'cash': {
@@ -3362,12 +3367,12 @@ function renderIsoView(d) {
         break; }
       case 'custom': g += box(u0, u1, v0, v1, BH, BH + h, '#6d28d9'); break;
       case 'prep': {
-        g += box(u0, u1, v0, v1, BH, BH + h * 0.4, STEEL);
-        g += box(u0 + w * 0.2, u1 - w * 0.2, v0 + 40, v1 - 40, BH + h * 0.4, BH + h, isoShade(STEEL, 0.9));
+        g += box(u0, u1, v0, v1, Z0, Z0 + h * 0.4, STEEL);
+        g += box(u0 + w * 0.2, u1 - w * 0.2, v0 + 40, v1 - 40, Z0 + h * 0.4, Z1, isoShade(STEEL, 0.9));
         break; }
       default: {
-        g += box(u0, u1, v0, v1, BH, BH + h, STEEL);
-        g += hpoly([[u0 + 25, v0 + 25], [u1 - 25, v0 + 25], [u1 - 25, v1 - 25], [u0 + 25, v1 - 25]], BH + h + 1, 'fill="rgba(0,0,0,0.08)"');
+        g += box(u0, u1, v0, v1, Z0, Z1, STEEL);
+        g += hpoly([[u0 + 25, v0 + 25], [u1 - 25, v0 + 25], [u1 - 25, v1 - 25], [u0 + 25, v1 - 25]], Z1 + 1, 'fill="rgba(0,0,0,0.08)"');
       }
     }
   };
