@@ -253,7 +253,9 @@ details.allspecs td:last-child{text-align:right;font-weight:700}
 /* Hero stage for a real-background photo: fills the panel edge to edge instead of the cutout treatment */
 .hero__stage--photo{padding:0;background:var(--navy-deep);height:min(72vw,360px)}
 .hero__stage--photo img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center 72%;mix-blend-mode:normal}
-@media(min-width:900px){.hero__stage--photo{height:auto;padding:0}.hero__stage--photo img{max-height:none;object-position:center}}
+@media(min-width:900px){.hero__stage--photo{height:auto;padding:0}.hero__stage--photo img{max-height:none;object-position:center;transform:scale(1.2);transform-origin:100% 58%}}
+/* Category tiles: crop from the top so the watermark baked into the photos stays out of frame */
+.tile img{object-position:center 85%}
 
 /* Tap targets: pills keep their 38 px look, the hit area grows to 44 px */
 .presets button,.seg button{position:relative}

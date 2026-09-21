@@ -68,7 +68,7 @@ module.exports = function home(ctx) {
 
 ${fit({
     site, rows: fitRows, img,
-    heading: 'Will it fit down the side of your house?',
+    heading: 'What size will fit your site?',
     lead: 'Measure the narrowest point between you and the job: a side gate, a path, the gap beside the carport. Slide to that width and see which excavators get through with their tracks pulled in.',
     note: `Widths are with the tracks retracted. Once you're through, the tracks widen again for stability.${heightNote}`,
   }).replace('class="section section--grey"', 'class="section"')}

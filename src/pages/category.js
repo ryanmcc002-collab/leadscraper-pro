@@ -71,7 +71,7 @@ module.exports = function categoryPages(ctx) {
 
 ${fitRows.length ? fit({
       site, rows: fitRows, img,
-      heading: 'Will it fit down the side of your house?',
+      heading: 'What size will fit your site?',
       lead: copy.fitLead,
       note: "Widths are with the tracks retracted. Once you're through, the tracks widen again for stability.",
     }).replace('class="section section--grey"', 'class="section"') : ''}
