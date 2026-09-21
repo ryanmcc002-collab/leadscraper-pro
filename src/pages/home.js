@@ -6,6 +6,8 @@ const estimator = require('../partials/estimator');
 const enquiry = require('../partials/enquiry');
 
 const FEATURED = ['r13-pro', 'r18-pro', 'r22-pro', 'rs06'];
+/* Hero photo: a real-background shot that fills the stage. Set to null to fall back to the first featured machine's cutout. */
+const HERO_PHOTO = { image: 'images/r18-pro-excavator/02.webp', slug: 'r18-pro' };
 /* Category tile photos are a design choice, so they live here rather than in machines.json. */
 const TILES = [
   { href: '/excavators/', label: 'Excavators', img: 'images/r18-pro-excavator/05.webp', count: ms => `${ms.filter(m => m.category === 'excavators').length} machines` },
@@ -40,7 +42,9 @@ module.exports = function home(ctx) {
       </div>
       <ul class="ticks"><li>Kubota diesel engines</li><li>Pre-delivery serviced</li><li>Finance available</li></ul>
     </div>
-    <div class="hero__stage">${img(hero.images.primary, { alt: `Rippa ${hero.name} ${hero.type.toLowerCase()}`, eager: true, sizes: '(min-width: 900px) 50vw, 92vw' })}</div>
+    ${HERO_PHOTO
+    ? `<div class="hero__stage hero__stage--photo">${img(HERO_PHOTO.image, { alt: `Rippa ${(bySlug(HERO_PHOTO.slug) || hero).name} ${(bySlug(HERO_PHOTO.slug) || hero).type.toLowerCase()}`, eager: true, sizes: '(min-width: 900px) 50vw, 100vw' })}</div>`
+    : `<div class="hero__stage">${img(hero.images.primary, { alt: `Rippa ${hero.name} ${hero.type.toLowerCase()}`, eager: true, sizes: '(min-width: 900px) 50vw, 92vw' })}</div>`}
   </div>
   <div class="hazard" aria-hidden="true"></div>
 </section>

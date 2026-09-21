@@ -250,6 +250,11 @@ details.allspecs td:last-child{text-align:right;font-weight:700}
 .fit__name a{color:inherit;text-decoration:none}
 .fit__name a:hover{color:var(--blue)}
 
+/* Hero stage for a real-background photo: fills the panel edge to edge instead of the cutout treatment */
+.hero__stage--photo{padding:0;background:var(--navy-deep);height:min(72vw,360px)}
+.hero__stage--photo img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center 72%;mix-blend-mode:normal}
+@media(min-width:900px){.hero__stage--photo{height:auto;padding:0}.hero__stage--photo img{max-height:none;object-position:center}}
+
 /* Tap targets: pills keep their 38 px look, the hit area grows to 44 px */
 .presets button,.seg button{position:relative}
 .presets button::before,.seg button::before{content:"";position:absolute;inset:-3px 0}
