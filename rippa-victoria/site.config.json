@@ -1,0 +1,28 @@
+{
+  "businessName": "Rippa Victoria",
+  "legalName": "Rippa Victoria",
+  "domain": "rippavictoria.com.au",
+  "siteUrl": "https://rippavictoria.com.au",
+  "phone": "0423 499 172",
+  "phoneHref": "tel:+61423499172",
+  "email": "sales@rippavictoria.com.au",
+  "contactName": "Min",
+  "serviceArea": "Melbourne and regional Victoria",
+  "serviceAreaLong": "We deliver across Melbourne and regional Victoria, and can quote delivery interstate.",
+  "finance": {
+    "provider": "OnlyForks Finance",
+    "link": "https://onlyforksfinance.com.au",
+    "annualRatePct": 9.9,
+    "defaultDepositPct": 10,
+    "defaultTermYears": 5,
+    "minTermYears": 1,
+    "maxTermYears": 5,
+    "buttonLabel": "Ask about finance",
+    "disclaimer": "Estimate only. Not a quote or an offer of finance. Subject to lender approval. Rates, fees and terms vary."
+  },
+  "builtBy": {
+    "name": "Can AI Help?",
+    "url": "https://canaihelp.com.au"
+  },
+  "DEMO": true
+}

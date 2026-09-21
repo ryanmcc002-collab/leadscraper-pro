@@ -1,0 +1,101 @@
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap hero-copy">
+    <h1 id="hero-h">Pick the right excavator by looking at it.</h1>
+    <p class="lede">Six machines drawn to scale beside a person, a side gate and a ute. Slide the gate to your access width. Tap a machine to see what it's for.</p>
+  </div>
+  <div class="lineup" id="lineup" data-gate-default="{{gateDefault}}">
+    <div class="lineup-scroll" tabindex="0" aria-label="The range, drawn to scale. Scroll sideways.">
+      <div class="lu-track">
+{{{lineupItems}}}
+      </div>
+      <div class="lu-captions" aria-hidden="true">
+{{{lineupCaptions}}}
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="lu-controls">
+        <div class="control">
+          <div class="control-head">
+            <label for="gate">How wide is your access?</label>
+            <output class="control-value" id="gate-out" for="gate">{{gateDefaultFmt}} mm</output>
+          </div>
+          <input type="range" id="gate" min="{{gateMin}}" max="{{gateMax}}" step="{{gateStep}}" value="{{gateDefault}}" aria-describedby="gate-help">
+          <div class="control-scale"><span>{{gateMinFmt}} mm</span><span>{{gateMaxFmt}} mm</span></div>
+          <p class="lu-status" id="gate-help">Measured at the narrowest point: a side gate, a path between the house and the fence, a doorway.</p>
+        </div>
+        <div class="control">
+          <div class="control-head"><span class="control-title" id="job-title">What's the job?</span></div>
+          <div class="chips" role="group" aria-labelledby="job-title">
+            <button type="button" class="chip" data-job="" aria-pressed="true">Any job</button>
+{{{jobChips}}}
+          </div>
+          <p class="lu-status" id="job-status" aria-live="polite"></p>
+        </div>
+      </div>
+      <p class="lu-status visually-hidden" id="lu-live" aria-live="polite"></p>
+      <div class="plate" id="lu-plate" hidden aria-live="polite">
+        <span class="rivet"></span>
+        <div class="plate-head">
+          <h3 id="lp-name"></h3>
+          <span class="plate-price" id="lp-price"></span>
+          <span class="plate-weekly"><span id="lp-weekly"></span> <span class="est">a week, estimate</span></span>
+        </div>
+        <ul class="plate-lines" id="lp-lines"></ul>
+        <p class="plate-tow">Transport weight <strong id="lp-tow"></strong>. Check your vehicle's tow rating.</p>
+        <p class="plate-status label" id="lp-status"></p>
+        <div class="btn-row">
+          <a class="btn" id="lp-see" href="#">See the machine</a>
+          <a class="btn btn-secondary" id="lp-enquire" href="#enquire">Enquire</a>
+        </div>
+      </div>
+      <p class="lu-status">Prefer a list? <a href="{{root}}excavators/">See the range with every number written out.</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="why" aria-labelledby="why-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="why-h">Why buy from Rippa Victoria</h2>
+      <p class="lede">We are the Rippa dealer for Victoria. You buy from a person you can ring, and the machine gets set up before it leaves the yard.</p>
+    </div>
+    <ul class="rows">
+      <li><h3>Honest sizing</h3><p>Most people buy a size too big or too small. Tell us the jobs and the access and we will tell you which machine, even if it is the cheaper one.</p></li>
+      <li><h3>Set up before delivery</h3><p>Every machine is fluid-checked, torqued, run in and tested before it goes on the trailer. See the full list below.</p></li>
+      <li><h3>Parts and support in Victoria</h3><p>Filters, pins, teeth and hoses in stock locally. If something goes wrong you ring {{contactName}}, not an overseas call centre.</p></li>
+      <li><h3>Delivery across the state</h3><p>{{serviceAreaLong}}</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="pre-delivery" aria-labelledby="pd-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="pd-h">What the pre-delivery service covers</h2>
+      <p class="lede">A new machine off the ship is not ready to work. This is what we do to every one before you get it.</p>
+    </div>
+    <ul class="checks">
+{{{preDelivery}}}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="finance" aria-labelledby="fin-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="fin-h">What it costs a week</h2>
+      <p class="lede">Pick a machine, set a deposit and a term, and see a rough weekly figure. Finance is arranged through {{financeProvider}}.</p>
+    </div>
+{{{estimator}}}
+  </div>
+</section>
+
+<section class="section" id="enquire" aria-labelledby="enq-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="enq-h">Ask about a machine</h2>
+      <p class="lede">Tell us the job and your access and we will come back with a straight answer. Or ring {{contactName}} on <a href="{{phoneHref}}">{{phone}}</a>.</p>
+    </div>
+{{{enquiryForm}}}
+  </div>
+</section>

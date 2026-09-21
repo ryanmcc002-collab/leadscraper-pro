@@ -1,0 +1,468 @@
+{
+  "_notes": [
+    "Single source of truth for every machine page, the line-up and the finance estimator.",
+    "All dimensions in millimetres, all weights in kilograms, prices in AUD including GST.",
+    "Prices are another dealer's placeholders. Every machine stays confirmed:false until Min has checked it.",
+    "widthMin is the narrowest transport width with tracks retracted. widthMax is tracks fully out.",
+    "Spec sources: Rippa manufacturer pages and dealer listings found by search (rippa.com, rippa.us, rippapnw.com, gjequip.ca). See README for what to check."
+  ],
+  "jobs": [
+    {
+      "key": "trenching",
+      "label": "Trenching for plumbing and electrical"
+    },
+    {
+      "key": "landscaping",
+      "label": "Backyard and landscaping"
+    },
+    {
+      "key": "farm",
+      "label": "Farm and fencing"
+    },
+    {
+      "key": "postholes",
+      "label": "Post holes"
+    },
+    {
+      "key": "demolition",
+      "label": "Small demolition"
+    }
+  ],
+  "references": {
+    "person": {
+      "label": "1.8 m person",
+      "height": 1800
+    },
+    "ute": {
+      "label": "Dual-cab ute",
+      "length": 5300,
+      "height": 1850
+    },
+    "gate": {
+      "label": "Side gate",
+      "height": 1800,
+      "min": 700,
+      "max": 2000,
+      "default": 1000,
+      "step": 10
+    }
+  },
+  "machines": [
+    {
+      "slug": "r10-petrol",
+      "name": "R10 Mini Excavator, petrol",
+      "shortName": "R10 petrol",
+      "model": "R10",
+      "price": 9999,
+      "status": "in stock",
+      "confirmed": false,
+      "operatingWeight": 1000,
+      "transportWeight": 930,
+      "widthMin": 750,
+      "widthMax": 1000,
+      "height": 2200,
+      "length": 2430,
+      "trackLength": 1250,
+      "digDepth": 1830,
+      "reach": 3230,
+      "dumpHeight": 1700,
+      "engine": "Briggs & Stratton 420cc petrol, 13.5 hp",
+      "engineType": "petrol",
+      "cabType": "canopy",
+      "included": [
+        "bucket-300",
+        "bucket-600",
+        "thumb",
+        "ripper",
+        "quick-hitch"
+      ],
+      "goodFor": [
+        "landscaping",
+        "postholes",
+        "trenching"
+      ],
+      "summary": [
+        "The lightest machine in the range. Fits through a 750 mm gap with the tracks pulled in.",
+        "Runs on unleaded, so there is no diesel to organise and it starts like a mower.",
+        "Sized for backyard jobs: garden beds, footings, short trenches and post holes."
+      ],
+      "meaning": {
+        "operatingWeight": "About one tonne with a driver on board. Light enough for a standard car trailer if the trailer is rated for it.",
+        "transportWeight": "What you are actually towing, without a driver. Add the trailer weight before you compare with your tow rating.",
+        "widthMin": "Narrow enough for most side gates and paths between houses. Push the tracks out to 1,000 mm on site for stability.",
+        "height": "Clears a standard garage door and most carports.",
+        "length": "Shorter than a small car. Turns around in a courtyard.",
+        "digDepth": "Digs to 1.8 m. Enough for footings, drainage and garden retaining walls. Not enough for a deep sewer connection.",
+        "reach": "Reaches 3.2 m from the centre of the machine. You can sit on a path and dig a bed without driving on the lawn.",
+        "dumpHeight": "Lifts the bucket 1.7 m off the ground. Loads a wheelbarrow or a low trailer, not a tipper.",
+        "engine": "Petrol, like a ride-on mower. Simpler to fuel and service. Uses more fuel per hour than the diesel.",
+        "trackLength": "The length of track on the ground. Longer tracks mean more stability when the arm is stretched out."
+      },
+      "photos": []
+    },
+    {
+      "slug": "r10-diesel",
+      "name": "R10 Mini Excavator, Kubota diesel",
+      "shortName": "R10 diesel",
+      "model": "R10",
+      "price": 13999,
+      "status": "in stock",
+      "confirmed": false,
+      "operatingWeight": 1165,
+      "transportWeight": 1090,
+      "widthMin": 750,
+      "widthMax": 1000,
+      "height": 2200,
+      "length": 2430,
+      "trackLength": 1250,
+      "digDepth": 1843,
+      "reach": 3230,
+      "dumpHeight": 1700,
+      "engine": "Kubota D722 diesel, 3 cylinder, 10.2 kW",
+      "engineType": "diesel",
+      "cabType": "canopy",
+      "included": [
+        "bucket-300",
+        "bucket-600",
+        "thumb",
+        "ripper",
+        "quick-hitch"
+      ],
+      "goodFor": [
+        "landscaping",
+        "postholes",
+        "trenching"
+      ],
+      "summary": [
+        "Same size as the petrol R10, with a Kubota diesel that will run all day on a jerry can.",
+        "Fits through a 750 mm gap with the tracks pulled in.",
+        "The pick if you are using it every week rather than every few months."
+      ],
+      "meaning": {
+        "operatingWeight": "Just over a tonne with a driver on board. Still within reach of a good car trailer, but check the trailer's rating.",
+        "transportWeight": "What you are actually towing, without a driver. Add the trailer weight before you compare with your tow rating.",
+        "widthMin": "Narrow enough for most side gates and paths between houses. Push the tracks out to 1,000 mm on site for stability.",
+        "height": "Clears a standard garage door and most carports.",
+        "length": "Shorter than a small car. Turns around in a courtyard.",
+        "digDepth": "Digs to 1.8 m. Enough for footings, drainage and garden retaining walls. Not enough for a deep sewer connection.",
+        "reach": "Reaches 3.2 m from the centre of the machine. You can sit on a path and dig a bed without driving on the lawn.",
+        "dumpHeight": "Lifts the bucket 1.7 m off the ground. Loads a wheelbarrow or a low trailer, not a tipper.",
+        "engine": "A proper Kubota diesel. Cheaper to run per hour, easier to get serviced, and it holds its value.",
+        "trackLength": "The length of track on the ground. Longer tracks mean more stability when the arm is stretched out."
+      },
+      "photos": []
+    },
+    {
+      "slug": "r13-pro",
+      "name": "R13 Pro Mini Excavator",
+      "shortName": "R13 Pro",
+      "model": "R13 Pro",
+      "price": 18499,
+      "status": "in stock",
+      "confirmed": false,
+      "operatingWeight": 1320,
+      "transportWeight": 1240,
+      "widthMin": 750,
+      "widthMax": 990,
+      "height": 2289,
+      "length": 2924,
+      "trackLength": 1450,
+      "digDepth": 2044,
+      "reach": 3346,
+      "dumpHeight": 1950,
+      "engine": "Kubota D722 diesel, 3 cylinder, 10.2 kW",
+      "engineType": "diesel",
+      "cabType": "canopy",
+      "included": [
+        "bucket-300",
+        "bucket-450",
+        "bucket-900",
+        "thumb",
+        "ripper",
+        "quick-hitch"
+      ],
+      "goodFor": [
+        "trenching",
+        "landscaping",
+        "postholes"
+      ],
+      "summary": [
+        "Still 750 mm wide with the tracks in, but digs 2 m deep. The narrow machine for plumbers.",
+        "Pilot controls and a swing boom, so you can dig along a fence line without turning the machine.",
+        "The most popular size for trade work inside built-up areas."
+      ],
+      "meaning": {
+        "operatingWeight": "About 1.3 tonne with a driver on board. Needs a plant trailer rather than a car trailer.",
+        "transportWeight": "What you are actually towing, without a driver. With a plant trailer this lands around 2 tonne, so a dual-cab ute is the usual tow vehicle.",
+        "widthMin": "Same 750 mm as the R10 with the tracks pulled in. Gets through a side gate, then widens to 990 mm for stability.",
+        "height": "Clears a standard garage door with a little to spare.",
+        "length": "About the length of a small hatchback.",
+        "digDepth": "Digs to 2 m. Enough for most residential sewer and stormwater connections.",
+        "reach": "Reaches 3.3 m from the centre of the machine. Dig a trench and place the spoil to one side without moving.",
+        "dumpHeight": "Lifts the bucket close to 2 m. Loads a tandem trailer or a ute tray.",
+        "engine": "A Kubota diesel. Cheaper to run per hour, easier to get serviced, and it holds its value.",
+        "trackLength": "The length of track on the ground. Longer tracks mean more stability when the arm is stretched out."
+      },
+      "photos": []
+    },
+    {
+      "slug": "r15",
+      "name": "R15 Small Excavator",
+      "shortName": "R15",
+      "model": "R15",
+      "price": 17700,
+      "status": "arriving",
+      "confirmed": false,
+      "operatingWeight": 1500,
+      "transportWeight": 1420,
+      "widthMin": 983,
+      "widthMax": 1220,
+      "height": 2350,
+      "length": 2952,
+      "trackLength": 1550,
+      "digDepth": 2300,
+      "reach": 3950,
+      "dumpHeight": 2050,
+      "engine": "Kubota D722 diesel, 3 cylinder, 10.2 kW",
+      "engineType": "diesel",
+      "cabType": "canopy",
+      "included": [
+        "bucket-300",
+        "bucket-600",
+        "thumb",
+        "ripper",
+        "quick-hitch"
+      ],
+      "goodFor": [
+        "landscaping",
+        "farm",
+        "postholes",
+        "trenching"
+      ],
+      "summary": [
+        "A wider, steadier stance than the R13 for the same money, at the cost of side-gate access.",
+        "Good value if your jobs are on open blocks, acreage or new builds without fences yet.",
+        "Digs to 2.3 m with a longer reach, so it covers more ground from one spot."
+      ],
+      "meaning": {
+        "operatingWeight": "About 1.5 tonne with a driver on board. Plant trailer territory.",
+        "transportWeight": "What you are actually towing, without a driver. Add the trailer weight before you compare with your tow rating.",
+        "widthMin": "Just under 1 m with the tracks in. Too wide for many side gates but very stable once the tracks are out to 1,220 mm.",
+        "height": "Clears a standard garage door with a little to spare.",
+        "length": "About the length of a small hatchback.",
+        "digDepth": "Digs to 2.3 m. Deep enough for septic tanks and most rural drainage.",
+        "reach": "Reaches almost 4 m from the centre of the machine. Fewer moves on a long fence line.",
+        "dumpHeight": "Lifts the bucket just over 2 m. Loads a tandem trailer or a ute tray with room to spare.",
+        "engine": "A Kubota diesel. Cheaper to run per hour, easier to get serviced, and it holds its value.",
+        "trackLength": "The length of track on the ground. Longer tracks mean more stability when the arm is stretched out."
+      },
+      "photos": []
+    },
+    {
+      "slug": "r18-pro",
+      "name": "R18 Pro Excavator",
+      "shortName": "R18 Pro",
+      "model": "R18 Pro",
+      "price": 24999,
+      "status": "in stock",
+      "confirmed": false,
+      "operatingWeight": 1818,
+      "transportWeight": 1740,
+      "widthMin": 989,
+      "widthMax": 1309,
+      "height": 2400,
+      "length": 3400,
+      "trackLength": 1650,
+      "digDepth": 2420,
+      "reach": 3975,
+      "dumpHeight": 2182,
+      "engine": "Kubota D902 diesel, 3 cylinder, 11.8 kW",
+      "engineType": "diesel",
+      "cabType": "canopy",
+      "included": [
+        "bucket-300",
+        "bucket-450",
+        "bucket-900",
+        "thumb",
+        "ripper",
+        "quick-hitch"
+      ],
+      "goodFor": [
+        "trenching",
+        "landscaping",
+        "farm",
+        "demolition",
+        "postholes"
+      ],
+      "summary": [
+        "The all-rounder. Digs to 2.4 m, lifts over a tandem trailer and still gets through a 1 m opening.",
+        "Load-sensing hydraulics, so it does two things at once without slowing down.",
+        "The right size for a plumber or landscaper who wants one machine for everything."
+      ],
+      "meaning": {
+        "operatingWeight": "About 1.8 tonne with a driver on board. Tows on a plant trailer behind a dual-cab ute.",
+        "transportWeight": "What you are actually towing, without a driver. With a plant trailer this lands around 2.5 tonne. Most dual-cab utes are rated to 3.5 tonne.",
+        "widthMin": "Just under 1 m with the tracks in. Fits most side gates and driveways. Out to 1,309 mm on site.",
+        "height": "Clears a standard garage door. Check the roof height if you are working under a carport.",
+        "length": "About the length of a small sedan.",
+        "digDepth": "Digs to 2.4 m. Deep enough for stormwater and septic trenches, pool plumbing and most footings.",
+        "reach": "Reaches almost 4 m from the centre of the machine. Dig a trench and stack the spoil well clear of the edge.",
+        "dumpHeight": "Lifts the bucket to 2.2 m. Loads a tandem trailer, a ute tray or a small tipper.",
+        "engine": "A Kubota diesel with a bit more grunt than the R13 and R15. Cheaper to run per hour and easy to get serviced.",
+        "trackLength": "The length of track on the ground. Longer tracks mean more stability when the arm is stretched out."
+      },
+      "photos": []
+    },
+    {
+      "slug": "r22-pro",
+      "name": "R22 Pro Excavator",
+      "shortName": "R22 Pro",
+      "model": "R22 Pro",
+      "price": 29790,
+      "status": "order in",
+      "confirmed": false,
+      "operatingWeight": 2371,
+      "transportWeight": 2290,
+      "widthMin": 1300,
+      "widthMax": 1500,
+      "height": 2450,
+      "length": 3949,
+      "trackLength": 1800,
+      "digDepth": 2293,
+      "reach": 4143,
+      "dumpHeight": 2497,
+      "engine": "Kubota D1105 diesel, 3 cylinder, 18.2 kW",
+      "engineType": "diesel",
+      "cabType": "cab",
+      "included": [
+        "bucket-300",
+        "bucket-450",
+        "bucket-900",
+        "thumb",
+        "ripper",
+        "quick-hitch"
+      ],
+      "goodFor": [
+        "farm",
+        "demolition",
+        "trenching",
+        "landscaping"
+      ],
+      "summary": [
+        "The biggest in the range, with an enclosed cab and air conditioning.",
+        "Lifts the bucket 2.5 m, so it loads a tipper. Built for farms, acreage and demolition.",
+        "Too wide for a side gate. If your jobs are on open ground, this is the one."
+      ],
+      "meaning": {
+        "operatingWeight": "About 2.4 tonne with a driver on board. This plus a plant trailer is at the limit of a dual-cab ute.",
+        "transportWeight": "What you are actually towing, without a driver. Add the trailer weight and check it against your tow rating carefully. A 3.5 tonne rating is the minimum.",
+        "widthMin": "1.3 m with the tracks in. Won't fit a side gate. Fine for driveways, farm gates and open sites.",
+        "height": "Clears a standard garage door, just. The cab is the tallest point.",
+        "length": "About the length of a small sedan with the bucket resting on the ground.",
+        "digDepth": "Digs to 2.3 m. Deep enough for septic, stormwater and dam work.",
+        "reach": "Reaches over 4 m from the centre of the machine. The longest reach in the range.",
+        "dumpHeight": "Lifts the bucket to 2.5 m. High enough to load a tipper truck.",
+        "engine": "The biggest Kubota in the range. Runs the hydraulics hard all day with a three-pump system.",
+        "trackLength": "The length of track on the ground. Longer tracks mean more stability when the arm is stretched out."
+      },
+      "photos": []
+    }
+  ],
+  "attachments": {
+    "bucket-300": {
+      "label": "300 mm trenching bucket",
+      "icon": "bucket",
+      "size": 300
+    },
+    "bucket-450": {
+      "label": "450 mm digging bucket",
+      "icon": "bucket",
+      "size": 450
+    },
+    "bucket-600": {
+      "label": "600 mm digging bucket",
+      "icon": "bucket",
+      "size": 600
+    },
+    "bucket-900": {
+      "label": "900 mm mud bucket",
+      "icon": "bucket",
+      "size": 900
+    },
+    "thumb": {
+      "label": "Hydraulic thumb",
+      "icon": "thumb"
+    },
+    "ripper": {
+      "label": "Ripper tyne",
+      "icon": "ripper"
+    },
+    "quick-hitch": {
+      "label": "Quick hitch",
+      "icon": "hitch"
+    }
+  },
+  "preDelivery": [
+    "Every fluid checked and topped: engine oil, hydraulic oil, coolant, grease points.",
+    "Track tension set and all track bolts torqued.",
+    "Every hose and fitting checked under pressure for leaks.",
+    "Controls tested through the full range, including the swing boom and thumb.",
+    "Engine run in and serviced before it leaves the yard.",
+    "Attachments fitted and checked on the hitch.",
+    "A walk-through with you at handover, in person or on video."
+  ],
+  "specHelp": {
+    "operatingWeight": {
+      "label": "Operating weight",
+      "help": "The machine ready to work: full of fuel, with a bucket on and a driver in the seat. This is the number to use when you are checking what a trailer, a truck or a driveway can take."
+    },
+    "transportWeight": {
+      "label": "Transport weight",
+      "help": "The machine on the trailer with no driver. Add the trailer's own weight (usually 500 to 800 kg for a plant trailer) and compare the total with your vehicle's braked towing capacity. Every dual-cab ute is different, so check the compliance plate."
+    },
+    "widthMin": {
+      "label": "Width, tracks in",
+      "help": "The narrowest the machine gets, with the tracks pulled in for transport. Measure your access at its tightest point and allow 50 mm of clearance either side. On site you push the tracks out again for stability."
+    },
+    "height": {
+      "label": "Height",
+      "help": "From the ground to the top of the canopy or cab. Compare with garage doors, carports and low branches on the way in. A standard single garage door opening is about 2.1 m high."
+    },
+    "length": {
+      "label": "Length",
+      "help": "Tip of the bucket to the back of the counterweight, with the bucket resting on the ground for transport. This is what has to fit on the trailer and turn around on site."
+    },
+    "digDepth": {
+      "label": "Dig depth",
+      "help": "From the ground to the teeth with the arm fully reached down and the tracks flat. Real-world depth is usually 10 to 15 per cent less because you are digging from a bench, not a flat pad. Most house drainage sits between 600 mm and 1.5 m down."
+    },
+    "reach": {
+      "label": "Reach",
+      "help": "From the centre of the machine to the teeth with the arm stretched out at ground level. More reach means fewer moves along a trench and the ability to dig where you cannot drive."
+    },
+    "dumpHeight": {
+      "label": "Dump height",
+      "help": "How high the bucket lip gets with the arm raised. To load a tandem trailer you need about 1.5 m. A ute tray needs about 1.2 m. A small tipper needs 2.2 m or more."
+    },
+    "engine": {
+      "label": "Engine",
+      "help": "Petrol engines are cheaper up front and simpler to look after. Diesels use less fuel per hour, last longer under load and are what most tradies expect. All the Kubota engines here are three-cylinder industrial diesels with parts available Australia-wide."
+    },
+    "trackLength": {
+      "label": "Track on the ground",
+      "help": "The length of rubber track touching the ground. Longer tracks spread the weight, which matters on soft lawns and when the arm is stretched out with a full bucket."
+    }
+  },
+  "specOrder": [
+    "digDepth",
+    "widthMin",
+    "operatingWeight",
+    "transportWeight",
+    "reach",
+    "dumpHeight",
+    "height",
+    "length",
+    "engine",
+    "trackLength"
+  ]
+}

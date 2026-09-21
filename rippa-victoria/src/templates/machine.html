@@ -1,0 +1,86 @@
+<article>
+  <div class="wrap machine-top">
+    <div>
+      <div class="gallery" id="gallery">
+{{{gallery}}}
+      </div>
+{{{galleryThumbs}}}
+      <p class="gallery-note">{{galleryNote}}</p>
+    </div>
+    <div class="machine-buy">
+      <span class="status-tag">{{statusLabel}}</span>
+      <h1>{{name}}</h1>
+      <div class="price-line">
+        <span class="price-big">{{priceFmt}}</span>
+        <span class="price-week">about {{weeklyFmt}} a week</span>
+      </div>
+      <p class="price-note">Weekly figure is an estimate with {{depositPct}}% deposit over {{termYears}} years. Price includes the attachment package and GST.</p>
+      <ul class="summary-lines">
+{{{summaryLines}}}
+      </ul>
+      <div class="btn-row">
+        <a class="btn" href="#enquire">Enquire about the {{shortName}}</a>
+        <a class="btn btn-secondary" href="{{phoneHref}}">Call {{phone}}</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" aria-labelledby="spec-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="spec-h">The numbers, and what they mean for you</h2>
+        <p class="lede">Tap any line for the longer version.</p>
+      </div>
+      <div class="plate spec-plate">
+        <span class="rivet"></span>
+        <ul class="spec-list">
+{{{specs}}}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="inc-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="inc-h">What's in the box</h2>
+        <p class="lede">The attachment package that comes with the {{shortName}}, drawn to relative size.</p>
+      </div>
+      <ul class="included">
+{{{included}}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pd-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="pd-h">Pre-delivery checks</h2>
+        <p class="lede">Done on every machine before it leaves the yard.</p>
+      </div>
+      <ul class="checks">
+{{{preDelivery}}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="finance" aria-labelledby="fin-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="fin-h">What the {{shortName}} costs a week</h2>
+        <p class="lede">Set a deposit and a term. Finance is arranged through {{financeProvider}}.</p>
+      </div>
+{{{estimator}}}
+    </div>
+  </section>
+
+  <section class="section" id="enquire" aria-labelledby="enq-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="enq-h">Enquire about the {{shortName}}</h2>
+        <p class="lede">Tell us the job and your access. Or ring {{contactName}} on <a href="{{phoneHref}}">{{phone}}</a>.</p>
+      </div>
+{{{enquiryForm}}}
+    </div>
+  </section>
+</article>

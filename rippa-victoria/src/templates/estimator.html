@@ -1,0 +1,33 @@
+<form class="estimator" data-estimator data-rate="{{rate}}" data-min-term="{{minTerm}}" data-max-term="{{maxTerm}}" onsubmit="return false">
+  <div>
+    <div class="field">
+      <label for="{{id}}-machine">Machine</label>
+      <select id="{{id}}-machine" data-est-machine>
+{{{options}}}
+      </select>
+    </div>
+    <div class="field">
+      <div class="control-head">
+        <label for="{{id}}-deposit">Deposit</label>
+        <output class="control-value" data-est-deposit-out for="{{id}}-deposit">{{depositPct}}%</output>
+      </div>
+      <input type="range" id="{{id}}-deposit" min="0" max="50" step="5" value="{{depositPct}}" data-est-deposit>
+      <div class="control-scale"><span>No deposit</span><span>50%</span></div>
+    </div>
+    <div class="field">
+      <div class="control-head">
+        <label for="{{id}}-term">Term</label>
+        <output class="control-value" data-est-term-out for="{{id}}-term">{{termYears}} years</output>
+      </div>
+      <input type="range" id="{{id}}-term" min="{{minTerm}}" max="{{maxTerm}}" step="1" value="{{termYears}}" data-est-term>
+      <div class="control-scale"><span>{{minTerm}} year</span><span>{{maxTerm}} years</span></div>
+    </div>
+  </div>
+  <div class="est-result" aria-live="polite">
+    <div class="est-week"><span data-est-week>{{weeklyFmt}}</span> <small>a week</small></div>
+    <p class="est-breakdown" data-est-breakdown>{{breakdown}}</p>
+    <p class="est-disclaimer">{{disclaimer}}</p>
+    <p><a class="btn" href="#enquire" data-finance-ask>{{buttonLabel}}</a></p>
+    <p class="est-provider">Finance through <a href="{{providerLink}}" rel="noopener">{{provider}}</a>. Rate used here: {{rate}}% a year, for illustration.</p>
+  </div>
+</form>

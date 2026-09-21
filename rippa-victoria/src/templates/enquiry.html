@@ -1,0 +1,34 @@
+<form class="form" data-enquiry action="{{formAction}}" method="post" novalidate>
+  <p class="form-flag" data-finance-flag hidden>This is a finance enquiry. We will include {{provider}} in the reply.</p>
+  <input type="hidden" name="enquiryType" value="general" data-enquiry-type>
+  <div>
+    <label for="{{id}}-name">Your name</label>
+    <input id="{{id}}-name" name="name" type="text" autocomplete="name" required>
+  </div>
+  <div>
+    <label for="{{id}}-phone">Phone</label>
+    <input id="{{id}}-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+  </div>
+  <div>
+    <label for="{{id}}-email">Email</label>
+    <input id="{{id}}-email" name="email" type="email" autocomplete="email" required>
+  </div>
+  <div>
+    <label for="{{id}}-machine">Machine</label>
+    <select id="{{id}}-machine" name="machine" data-enquiry-machine>
+      <option value="">Not sure yet</option>
+{{{options}}}
+    </select>
+  </div>
+  <div>
+    <label for="{{id}}-message">The job and your access</label>
+    <textarea id="{{id}}-message" name="message" placeholder="For example: stormwater trenches on suburban blocks, side gate about 900 mm, towing with a Ranger."></textarea>
+    <p class="hint">Rough is fine. We will ask the rest on the phone.</p>
+  </div>
+  <div><button class="btn" type="submit" data-enquiry-submit>{{submitLabel}}</button></div>
+  <div class="form-done" data-enquiry-done hidden tabindex="-1">
+    <h3>Thanks, we have your enquiry.</h3>
+    <p data-enquiry-done-text>{{contactName}} will ring you within one business day. If it's urgent, call <a href="{{phoneHref}}">{{phone}}</a>.</p>
+{{{leadflow}}}
+  </div>
+</form>
