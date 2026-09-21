@@ -1,0 +1,11 @@
+{
+  "name": "rippa-victoria",
+  "version": "1.0.0",
+  "description": "Rippa Victoria: static site built from data/machines.json and data/site.config.json",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "serve": "node serve.js"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,32 @@
+{
+  "business_name": "Rippa Victoria",
+  "domain": "rippavictoria.com.au",
+  "phone_display": "0423 499 172",
+  "phone_href": "tel:+61423499172",
+  "email": "TODO: Min's enquiry email",
+  "location": "TODO: yard suburb, Victoria",
+  "service_area": "Victoria",
+  "brand": {
+    "navy": "#14226B",
+    "blue": "#0B63CE",
+    "yellow": "#FFC20E"
+  },
+  "finance": {
+    "provider": "OnlyForks Finance",
+    "url": "https://onlyforksfinance.com.au",
+    "rate_pct": 9.95,
+    "rate_confirmed": false,
+    "default_term_months": 60,
+    "default_deposit_pct": 0,
+    "disclaimer": "Estimate only. Not a quote or an offer of finance. Subject to lender approval. Rates, fees and terms vary."
+  },
+  "fit_tool": {
+    "clearance_mm": 50,
+    "min_mm": 700,
+    "max_mm": 1600,
+    "default_mm": 900
+  },
+  "demo": true,
+  "concept_footer": "Concept preview by Can AI Help? Specs, prices and stock to be confirmed.",
+  "enquiry_form_action": "TODO: URL the live enquiry form posts to (HubSpot form endpoint or similar). Used only when demo is false."
+}

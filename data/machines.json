@@ -1,0 +1,762 @@
+[
+  {
+    "slug": "r10-petrol",
+    "source_slug": "r10-mini-excavator-petrol",
+    "name": "R10 Petrol",
+    "type": "1 tonne mini excavator",
+    "price": 9999,
+    "status": "in-stock",
+    "tagline": "The lowest-cost way to own an excavator.",
+    "summary": [
+      "Under a tonne, so it's easy to move between jobs.",
+      "Tracks pull in to 912 mm for side access, then widen to 1,212 mm for stability while you dig.",
+      "Comes with two buckets, a rake and a ripper."
+    ],
+    "good_for": [
+      "backyard",
+      "post-holes",
+      "farm"
+    ],
+    "engine": {
+      "make": "Briggs & Stratton",
+      "model": null,
+      "fuel": "Petrol",
+      "power_kw": null,
+      "power_hp": null
+    },
+    "specs": {
+      "operating_weight_kg": 980,
+      "width_min_mm": 912,
+      "width_max_mm": 1212,
+      "length_mm": 2430,
+      "height_mm": 2201,
+      "ground_clearance_mm": 361,
+      "dig_depth_mm": 1833,
+      "reach_mm": 3233,
+      "dump_height_mm": 2247,
+      "dig_height_mm": 3021,
+      "hyd_flow_lpm": 18
+    },
+    "meanings": {
+      "width": "912 mm with the tracks in. You need a gap of about 1 m.",
+      "weight": "980 kg. Light enough for a plant trailer behind most utes. Add the trailer's weight and check your tow rating.",
+      "dig_depth": "Digs to 1.83 m. Deep enough for most house plumbing, electrical and drainage trenches.",
+      "reach": "Reaches 3.2 m from the machine, so you reposition less often.",
+      "engine": "Simple petrol engine. Cheapest to buy, and easy to service anywhere."
+    },
+    "included": [
+      "300 mm bucket",
+      "Trenching bucket",
+      "Rake",
+      "Ripper",
+      "Mechanical quick hitch",
+      "Auxiliary hydraulic couplings"
+    ],
+    "options": [
+      "Fully sealed cab",
+      "Full range of attachments"
+    ],
+    "warranty": [
+      "12 months factory parts warranty",
+      "Local support"
+    ],
+    "category": "excavators",
+    "published": true,
+    "badge": null,
+    "images": {
+      "primary": "images/r10-mini-excavator-petrol/02.webp",
+      "gallery": [
+        "images/r10-mini-excavator-petrol/02.webp",
+        "images/r10-mini-excavator-petrol/03.webp",
+        "images/r10-mini-excavator-petrol/01.webp",
+        "images/r10-mini-excavator-petrol/04.webp",
+        "images/r10-mini-excavator-petrol/05.webp",
+        "images/r10-mini-excavator-petrol/06.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "r10-diesel",
+    "source_slug": "r10-mini-excavator",
+    "name": "R10 Diesel",
+    "type": "1 tonne mini excavator",
+    "price": 13999,
+    "status": "in-stock",
+    "tagline": "The same compact machine with a Kubota diesel and a hydraulic thumb.",
+    "summary": [
+      "Kubota Z482 diesel with Kubota's Australia-wide engine warranty.",
+      "Hydraulic thumb included for picking up rocks, logs and rubbish.",
+      "Under a tonne, and 912 mm wide with the tracks in."
+    ],
+    "good_for": [
+      "backyard",
+      "post-holes",
+      "farm",
+      "trenching"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "Z482",
+      "fuel": "Diesel",
+      "power_kw": null,
+      "power_hp": 11.2
+    },
+    "specs": {
+      "operating_weight_kg": 980,
+      "width_min_mm": 912,
+      "width_max_mm": 1212,
+      "length_mm": 2430,
+      "height_mm": 2201,
+      "ground_clearance_mm": 361,
+      "dig_depth_mm": 1833,
+      "reach_mm": 3233,
+      "dump_height_mm": 2247,
+      "dig_height_mm": 3021,
+      "hyd_flow_lpm": 18
+    },
+    "meanings": {
+      "width": "912 mm with the tracks in. You need a gap of about 1 m.",
+      "weight": "980 kg. Light enough for a plant trailer behind most utes. Add the trailer's weight and check your tow rating.",
+      "dig_depth": "Digs to 1.83 m. Deep enough for most house plumbing, electrical and drainage trenches.",
+      "reach": "Reaches 3.2 m from the machine, so you reposition less often.",
+      "engine": "Kubota Z482 diesel, 11.2 hp. Engine warranty is handled by Kubota dealers Australia-wide."
+    },
+    "included": [
+      "300 mm bucket",
+      "Trenching bucket",
+      "Rake",
+      "Ripper",
+      "Hydraulic thumb",
+      "Mechanical quick hitch",
+      "Auxiliary hydraulic couplings"
+    ],
+    "options": [
+      "Fully sealed cab",
+      "Full range of attachments"
+    ],
+    "warranty": [
+      "Kubota engine warranty, Australia-wide",
+      "12 months factory parts warranty",
+      "Local support"
+    ],
+    "category": "excavators",
+    "published": true,
+    "badge": null,
+    "images": {
+      "primary": "images/r10-mini-excavator/02.webp",
+      "gallery": [
+        "images/r10-mini-excavator/02.webp",
+        "images/r10-mini-excavator/03.webp",
+        "images/r10-mini-excavator/01.webp",
+        "images/r10-mini-excavator/04.webp",
+        "images/r10-mini-excavator/05.webp",
+        "images/r10-mini-excavator/06.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "r13-pro",
+    "source_slug": "r13-pro-mini-excavator",
+    "name": "R13 Pro",
+    "type": "1.3 tonne mini excavator",
+    "price": 18499,
+    "status": "in-stock",
+    "badge": "Narrowest in the range",
+    "tagline": "The tight-access specialist. Tracks pull in to 750 mm.",
+    "summary": [
+      "Narrowest machine in the range: 750 mm with the tracks in.",
+      "Variable displacement pump, so you can track and dig at the same time.",
+      "Steel tracks with rubber pads. Tougher than rubber tracks, still kind to paving and lawn."
+    ],
+    "good_for": [
+      "trenching",
+      "backyard",
+      "post-holes"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "D722",
+      "fuel": "Diesel",
+      "power_kw": 10.2,
+      "power_hp": 13.97
+    },
+    "specs": {
+      "operating_weight_kg": 1165,
+      "width_min_mm": 750,
+      "width_max_mm": 990,
+      "length_mm": 2114,
+      "height_mm": 2289,
+      "ground_clearance_mm": 400,
+      "dig_depth_mm": 1843,
+      "reach_mm": 3346,
+      "dump_height_mm": 2289,
+      "dig_height_mm": 3015,
+      "dig_force_kn": 9.8,
+      "hyd_flow_lpm": 25,
+      "fuel_tank_l": 10
+    },
+    "meanings": {
+      "width": "750 mm with the tracks in. Goes through a standard 900 mm side gate with room to spare.",
+      "weight": "1,165 kg. Add the trailer's weight and check it against your tow rating.",
+      "dig_depth": "Digs to 1.84 m. Deep enough for most house plumbing, electrical and drainage trenches.",
+      "reach": "Reaches 3.3 m from the machine, so you reposition less often.",
+      "engine": "Kubota D722 three-cylinder diesel, 14 hp. Engine warranty is handled by Kubota dealers Australia-wide."
+    },
+    "included": [
+      "General purpose bucket",
+      "Trenching bucket",
+      "Mud bucket",
+      "Ripper",
+      "Rake",
+      "Hydraulic thumb",
+      "Quick hitch"
+    ],
+    "options": [
+      "Cab",
+      "Air conditioning",
+      "Hydraulic quick hitch"
+    ],
+    "warranty": [
+      "Kubota engine warranty, handled by Kubota dealers Australia-wide",
+      "12 months on the hydraulic pump",
+      "Parts and servicing support"
+    ],
+    "category": "excavators",
+    "published": true,
+    "images": {
+      "primary": "images/r13-pro-mini-excavator/04.webp",
+      "gallery": [
+        "images/r13-pro-mini-excavator/04.webp",
+        "images/r13-pro-mini-excavator/03.webp",
+        "images/r13-pro-mini-excavator/02.webp",
+        "images/r13-pro-mini-excavator/05.webp",
+        "images/r13-pro-mini-excavator/06.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "r15",
+    "source_slug": "r15-small-excavator",
+    "name": "R15",
+    "type": "1.5 tonne mini excavator",
+    "price": 17700,
+    "status": "in-stock",
+    "tagline": "More weight for steadier digging.",
+    "summary": [
+      "1.46 tonnes gives it a more planted feel in the trench.",
+      "Same Kubota D722 diesel as the R13 Pro.",
+      "Tracks pull in to 890 mm for side access."
+    ],
+    "good_for": [
+      "trenching",
+      "backyard",
+      "farm",
+      "post-holes"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "D722",
+      "fuel": "Diesel",
+      "power_kw": 10.2,
+      "power_hp": 13.97
+    },
+    "specs": {
+      "operating_weight_kg": 1460,
+      "width_min_mm": 890,
+      "width_max_mm": 1190,
+      "length_mm": 2327,
+      "height_mm": 2243,
+      "ground_clearance_mm": 427,
+      "dig_depth_mm": 1806,
+      "reach_mm": 3274,
+      "dump_height_mm": 2277,
+      "dig_height_mm": 3046,
+      "dig_force_kn": 10.2,
+      "hyd_flow_lpm": 21.6,
+      "fuel_tank_l": 20
+    },
+    "meanings": {
+      "width": "890 mm with the tracks in. A 900 mm side gate is too tight, so you need about 1 m.",
+      "weight": "1,460 kg. Add the trailer's weight and check it against your tow rating.",
+      "dig_depth": "Digs to 1.81 m. Deep enough for most house plumbing, electrical and drainage trenches.",
+      "reach": "Reaches 3.3 m from the machine, so you reposition less often.",
+      "engine": "Kubota D722 three-cylinder diesel, 14 hp. Engine warranty is handled by Kubota dealers Australia-wide."
+    },
+    "included": [
+      "General purpose bucket",
+      "Trenching bucket",
+      "Ripper",
+      "Rake",
+      "Hydraulic quick hitch"
+    ],
+    "options": [
+      "Cab",
+      "Handrail"
+    ],
+    "warranty": [
+      "Kubota engine warranty, handled by Kubota dealers Australia-wide",
+      "12 months on the hydraulic pump",
+      "Parts and servicing support"
+    ],
+    "category": "excavators",
+    "published": true,
+    "badge": null,
+    "images": {
+      "primary": "images/r15-small-excavator/03.webp",
+      "gallery": [
+        "images/r15-small-excavator/03.webp",
+        "images/r15-small-excavator/05.webp",
+        "images/r15-small-excavator/06.webp",
+        "images/r15-small-excavator/02.webp",
+        "images/r15-small-excavator/07.webp",
+        "images/r15-small-excavator/08.webp",
+        "images/r15-small-excavator/09.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "r18-pro",
+    "source_slug": "r18-pro-excavator",
+    "name": "R18 Pro",
+    "type": "1.8 tonne mini excavator",
+    "price": 24999,
+    "status": "in-stock",
+    "badge": "Deepest digger",
+    "tagline": "The all-rounder. Digs to 2.4 m and reaches nearly 4 m.",
+    "summary": [
+      "Digs 2.42 m deep, the deepest in the range.",
+      "Variable piston pump with 41 L/min of flow to run attachments properly.",
+      "Hydraulic thumb and quick hitch fitted. Sealed cab available."
+    ],
+    "good_for": [
+      "trenching",
+      "farm",
+      "demolition",
+      "post-holes"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "D902",
+      "fuel": "Diesel",
+      "power_kw": 11.8,
+      "power_hp": 16.1
+    },
+    "specs": {
+      "operating_weight_kg": 1818,
+      "width_min_mm": 989,
+      "width_max_mm": 1309,
+      "length_mm": 2403,
+      "height_mm": 2322,
+      "ground_clearance_mm": 486,
+      "dig_depth_mm": 2420,
+      "reach_mm": 3975,
+      "dump_height_mm": 2182,
+      "dig_height_mm": 3187,
+      "dig_force_kn": 12.8,
+      "hyd_flow_lpm": 41.4,
+      "fuel_tank_l": 24
+    },
+    "meanings": {
+      "width": "989 mm with the tracks in. You need a gap of about 1.1 m.",
+      "weight": "1,818 kg. Add the trailer's weight and check it against your tow rating.",
+      "dig_depth": "Digs to 2.42 m. Deep enough for deeper stormwater and sewer runs, footings and tank holes.",
+      "reach": "Reaches almost 4 m from the machine.",
+      "engine": "Kubota D902 three-cylinder diesel, 16 hp. Engine warranty is handled by Kubota dealers Australia-wide."
+    },
+    "included": [
+      "400 mm digging bucket",
+      "Hydraulic thumb",
+      "Quick hitch",
+      "Swing boom",
+      "Retractable tracks"
+    ],
+    "options": [
+      "Fully sealed cab",
+      "Rake, grab, ripper and breaker attachments"
+    ],
+    "warranty": [
+      "Kubota engine warranty, handled by Kubota dealers Australia-wide",
+      "12 months on the hydraulic pump",
+      "Parts and servicing support"
+    ],
+    "category": "excavators",
+    "published": true,
+    "images": {
+      "primary": "images/r18-pro-excavator/02.webp",
+      "gallery": [
+        "images/r18-pro-excavator/02.webp",
+        "images/r18-pro-excavator/04.webp",
+        "images/r18-pro-excavator/05.webp",
+        "images/r18-pro-excavator/03.webp",
+        "images/r18-pro-excavator/06.webp",
+        "images/r18-pro-excavator/07.webp",
+        "images/r18-pro-excavator/08.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "r22-pro",
+    "source_slug": "r22-pro-excavator",
+    "name": "R22 Pro",
+    "type": "2.3 tonne mini excavator",
+    "price": 29790,
+    "status": "arriving",
+    "badge": "Enclosed cab",
+    "tagline": "The big one. Enclosed cab with air conditioning.",
+    "summary": [
+      "2.4 tonnes with a 25 hp Kubota D1105.",
+      "Fully enclosed cab with air conditioning for all-day work in any weather.",
+      "67 L/min load-sensing hydraulics for breakers, augers and grabs."
+    ],
+    "good_for": [
+      "trenching",
+      "farm",
+      "demolition"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "D1105",
+      "fuel": "Diesel",
+      "power_kw": 18.2,
+      "power_hp": 24.75
+    },
+    "specs": {
+      "operating_weight_kg": 2372,
+      "width_min_mm": 1300,
+      "width_max_mm": 1500,
+      "length_mm": 2824,
+      "height_mm": 2361,
+      "ground_clearance_mm": 510,
+      "dig_depth_mm": 2391,
+      "reach_mm": 4143,
+      "dump_height_mm": 2496,
+      "dig_height_mm": 3761,
+      "dig_force_kn": 18.4,
+      "hyd_flow_lpm": 67.2,
+      "fuel_tank_l": 28
+    },
+    "meanings": {
+      "width": "1,300 mm with the tracks in. Needs driveway or double-gate access.",
+      "weight": "2,372 kg. With a trailer this gets close to a 3.5 t tow rating, so check before you buy.",
+      "dig_depth": "Digs to 2.39 m. Deep enough for deeper stormwater and sewer runs, footings and tank holes.",
+      "reach": "Reaches more than 4 m from the machine.",
+      "engine": "Kubota D1105 three-cylinder diesel, 25 hp. Engine warranty is handled by Kubota dealers Australia-wide."
+    },
+    "included": [
+      "400 mm digging bucket",
+      "Hydraulic thumb",
+      "Quick hitch",
+      "Swing boom",
+      "Enclosed cab with air conditioning"
+    ],
+    "options": [
+      "Rake, grab, ripper and breaker attachments"
+    ],
+    "warranty": [
+      "Kubota engine warranty, handled by Kubota dealers Australia-wide",
+      "12 months on the hydraulic pump",
+      "Parts and servicing support"
+    ],
+    "category": "excavators",
+    "published": true,
+    "images": {
+      "primary": "images/r22-pro-excavator/02.webp",
+      "gallery": [
+        "images/r22-pro-excavator/02.webp",
+        "images/r22-pro-excavator/03.webp",
+        "images/r22-pro-excavator/04.webp",
+        "images/r22-pro-excavator/05.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "rs03",
+    "source_slug": "rs03-skid-steer-loader",
+    "name": "RS03",
+    "type": "Stand-on mini loader",
+    "price": 6750,
+    "status": "in-stock",
+    "tagline": "Retire the shovel and the wheelbarrow.",
+    "summary": [
+      "13.5 hp Briggs & Stratton petrol engine.",
+      "Triple pumps, so you can run an attachment while you're moving.",
+      "Two sets of high-flow couplings for attachments."
+    ],
+    "good_for": [
+      "backyard",
+      "farm"
+    ],
+    "engine": {
+      "make": "Briggs & Stratton",
+      "model": "XR2100",
+      "fuel": "Petrol",
+      "power_kw": null,
+      "power_hp": 13.5
+    },
+    "specs": {},
+    "meanings": {
+      "engine": "13.5 hp petrol. Simple, cheap to run and easy to service."
+    },
+    "included": [],
+    "options": [
+      "Wide range of attachments"
+    ],
+    "warranty": [],
+    "category": "skid-steers",
+    "published": true,
+    "badge": null,
+    "images": {
+      "primary": "images/rs03-skid-steer-loader/03.webp",
+      "gallery": [
+        "images/rs03-skid-steer-loader/03.webp",
+        "images/rs03-skid-steer-loader/02.jpg",
+        "images/rs03-skid-steer-loader/04.jpg",
+        "images/rs03-skid-steer-loader/05.jpg",
+        "images/rs03-skid-steer-loader/06.jpg"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "rs04",
+    "source_slug": "rs04-skid-steer-loader",
+    "name": "RS04",
+    "type": "Stand-on mini loader",
+    "price": 10890,
+    "status": "in-stock",
+    "tagline": "Kubota diesel in a compact stand-on loader.",
+    "summary": [
+      "Kubota Z482 water-cooled diesel.",
+      "Triple pump hydraulics with fixed and variable auxiliary outlets.",
+      "Simple mechanical controls and easy service access."
+    ],
+    "good_for": [
+      "backyard",
+      "farm",
+      "post-holes"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "Z482",
+      "fuel": "Diesel",
+      "power_kw": null,
+      "power_hp": null
+    },
+    "specs": {},
+    "meanings": {
+      "engine": "Kubota Z482 diesel. The same engine as the R10 Diesel excavator."
+    },
+    "included": [],
+    "options": [
+      "4-in-1 bucket",
+      "Auger and bits",
+      "Pallet forks",
+      "Trencher",
+      "Dozer blade",
+      "Concrete breaker"
+    ],
+    "warranty": [],
+    "category": "skid-steers",
+    "published": true,
+    "badge": null,
+    "images": {
+      "primary": "images/rs04-skid-steer-loader/03.webp",
+      "gallery": [
+        "images/rs04-skid-steer-loader/03.webp",
+        "images/rs04-skid-steer-loader/02.webp",
+        "images/rs04-skid-steer-loader/05.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "rs06",
+    "source_slug": "rippa-rs06-skid-steer-loader",
+    "name": "RS06",
+    "type": "Commercial stand-on loader",
+    "price": 19990,
+    "status": "in-stock",
+    "badge": "600 kg rated load",
+    "tagline": "The commercial stand-on. Lifts 600 kg.",
+    "summary": [
+      "25 hp Kubota D1105 diesel.",
+      "Two-speed travel, digital display and pilot controls.",
+      "High auxiliary flow to run the full range of attachments."
+    ],
+    "good_for": [
+      "farm",
+      "backyard",
+      "post-holes"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "D1105",
+      "fuel": "Diesel",
+      "power_kw": 18.2,
+      "power_hp": 24.4
+    },
+    "specs": {
+      "rated_load_kg": 600
+    },
+    "meanings": {
+      "rated_load": "600 kg rated load. Moves a full pallet of pavers or a bulk bag of soil.",
+      "engine": "Kubota D1105 diesel, 24 hp. 12-month Kubota engine warranty through any Kubota industrial dealer."
+    },
+    "included": [],
+    "options": [
+      "Wide range of attachments"
+    ],
+    "warranty": [
+      "12-month Kubota industrial engine warranty, parts and labour"
+    ],
+    "category": "skid-steers",
+    "published": true,
+    "images": {
+      "primary": "images/rippa-rs06-skid-steer-loader/01.webp",
+      "gallery": [
+        "images/rippa-rs06-skid-steer-loader/01.webp",
+        "images/rippa-rs06-skid-steer-loader/02.webp",
+        "images/rippa-rs06-skid-steer-loader/03.webp",
+        "images/rippa-rs06-skid-steer-loader/04.webp",
+        "images/rippa-rs06-skid-steer-loader/05.webp",
+        "images/rippa-rs06-skid-steer-loader/06.webp"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "rs07",
+    "source_slug": "rs07-skid-steer-loader",
+    "name": "RS07",
+    "type": "Cab skid steer loader",
+    "price": 24990,
+    "status": "order-in",
+    "tagline": "A sit-in skid steer with four-pump hydraulics.",
+    "summary": [
+      "Kubota D1105 diesel.",
+      "Four-pump hydraulic system with 172 L/min total flow.",
+      "Quick coupler swaps attachments in about 30 seconds."
+    ],
+    "good_for": [
+      "farm",
+      "demolition"
+    ],
+    "engine": {
+      "make": "Kubota",
+      "model": "D1105",
+      "fuel": "Diesel",
+      "power_kw": null,
+      "power_hp": null
+    },
+    "specs": {
+      "hyd_flow_lpm": 172.2
+    },
+    "meanings": {
+      "hyd_flow": "172 L/min total hydraulic flow. Enough to run augers, breakers and other hungry attachments.",
+      "engine": "Kubota D1105 diesel."
+    },
+    "included": [],
+    "options": [
+      "4-in-1 bucket",
+      "Auger",
+      "Hydraulic breaker",
+      "Ripper",
+      "Dozer blade"
+    ],
+    "warranty": [],
+    "category": "skid-steers",
+    "published": true,
+    "badge": null,
+    "images": {
+      "primary": "images/rs07-skid-steer-loader/02.jpg",
+      "gallery": [
+        "images/rs07-skid-steer-loader/02.jpg",
+        "images/rs07-skid-steer-loader/03.jpg",
+        "images/rs07-skid-steer-loader/05.jpg",
+        "images/rs07-skid-steer-loader/06.jpg",
+        "images/rs07-skid-steer-loader/07.jpg"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  },
+  {
+    "slug": "rs05-rynoquip",
+    "source_slug": "rs-05-skid-steer-22hp-honda",
+    "name": "Rynoquip RS-05",
+    "type": "Stand-on mini loader",
+    "price": 13999,
+    "status": "in-stock",
+    "published": false,
+    "note": "Appears to be the NSW operator's own branded machine. Hidden until Min confirms she sells it.",
+    "tagline": "Honda V-twin power with high auxiliary flow.",
+    "summary": [
+      "Honda GX690 V-twin petrol engine.",
+      "480 kg rated capacity with the ballast pack.",
+      "More than 40 L/min of auxiliary flow for mulchers, trenchers and stump grinders."
+    ],
+    "good_for": [
+      "farm",
+      "backyard"
+    ],
+    "engine": {
+      "make": "Honda",
+      "model": "GX690",
+      "fuel": "Petrol",
+      "power_kw": null,
+      "power_hp": null
+    },
+    "specs": {
+      "operating_weight_kg": 900,
+      "rated_load_kg": 480,
+      "hyd_flow_lpm": 40
+    },
+    "meanings": {},
+    "included": [
+      "4-in-1 bucket"
+    ],
+    "options": [],
+    "warranty": [
+      "12 months parts warranty"
+    ],
+    "category": "skid-steers",
+    "badge": null,
+    "images": {
+      "primary": "images/rs-05-skid-steer-22hp-honda/02.jpg",
+      "gallery": [
+        "images/rs-05-skid-steer-22hp-honda/02.jpg",
+        "images/rs-05-skid-steer-22hp-honda/01.jpg",
+        "images/rs-05-skid-steer-22hp-honda/03.jpg",
+        "images/rs-05-skid-steer-22hp-honda/04.jpg"
+      ]
+    },
+    "price_confirmed": false,
+    "status_confirmed": false,
+    "specs_confirmed": false
+  }
+]
