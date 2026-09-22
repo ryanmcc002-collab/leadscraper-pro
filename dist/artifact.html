@@ -445,7 +445,7 @@ kbd {
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v41';
+  BFT.VERSION = 'v42';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -3769,6 +3769,68 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 
   // When the shell length changes, long-wall openings keep their relative
   // position (a centred servery stays centred) and always stay on the wall.
+  // U-shape at any time: add/remove the bench across the drawbar end and
+  // move the sink(s) onto/off it. Every item keeps its own dimensions —
+  // only positions (and 90° rotation for sinks) change.
+  function findEndBench() {
+    const { iW } = store.interior();
+    return store.project.items.find((i) => i.catId === 'bench' && i.x < 5 && i.d >= iW - 5);
+  }
+
+  function toggleEndBench() {
+    store.checkpoint();
+    const p = store.project;
+    const { iL, iW } = store.interior();
+    const S = BFT.STANDARD;
+    const eb = findEndBench();
+    const sideBenches = p.items.filter((i) => i.catId === 'bench' && i !== eb && i.w > i.d);
+    const sinks = p.items.filter((i) => i.sym === 'sink' && i.catId !== 'handwash');
+    if (!eb) {
+      const nb = BFT.itemFromCatalog('bench', 0, 0, 0);
+      nb.w = S.endBenchDepth;
+      nb.d = iW;
+      nb.h = p.trailer.worktopHeight;
+      nb.kg = Math.max(15, Math.round(iW * 0.022));
+      p.items.push(nb);
+      // side benches start after the end bench, meeting it cleanly
+      for (const b of sideBenches) {
+        if (b.x < S.endBenchDepth) {
+          b.w = Math.max(200, b.w - (S.endBenchDepth - b.x));
+          b.x = S.endBenchDepth;
+          b.kg = Math.max(15, Math.round(b.w * 0.022));
+        }
+      }
+      // sinks rotate onto the end bench, centred as a group across the width
+      const total = sinks.reduce((a, s) => a + s.w, 0) + Math.max(0, sinks.length - 1) * 50;
+      let cursor = Math.round((iW - total) / 2 / 10) * 10;
+      for (const s of sinks) {
+        s.rot = 90;
+        s.x = 0;
+        s.y = U.clamp(cursor, 0, iW - s.w);
+        cursor += s.w + 50;
+      }
+    } else {
+      p.items = p.items.filter((i) => i !== eb);
+      for (const b of sideBenches) {
+        if (Math.abs(b.x - S.endBenchDepth) < 5) {
+          b.w += b.x;
+          b.x = 0;
+          b.kg = Math.max(15, Math.round(b.w * 0.022));
+        }
+      }
+      // sinks that were on the end bench go back to the rear of the cook bench
+      let rear = iL;
+      for (const s of sinks) {
+        if (s.rot !== 90 || s.x > S.endBenchDepth + 5) continue;
+        s.rot = 0;
+        s.x = rear - s.w;
+        s.y = iW - s.d;
+        rear -= s.w + 50;
+      }
+    }
+    commit();
+  }
+
   function repositionFeatures(oldL, newL) {
     if (oldL === newL) return;
     for (const f of store.project.features || []) {
@@ -3815,6 +3877,17 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     }));
     numInput(el, 'Bench height (mm)', t.worktopHeight, upd((v) => (t.worktopHeight = v)));
     numInput(el, 'Axles (1 or 2)', t.axles, upd((v) => (t.axles = U.clamp(Math.round(v), 1, 2))));
+
+    // flip to/from the U-shape end-bench layout on any existing design
+    const ubBtn = document.createElement('button');
+    ubBtn.textContent = findEndBench()
+      ? '⇄ Remove drawbar-end bench (back to galley)'
+      : '⇄ Sink & bench across drawbar (U-shape)';
+    ubBtn.title = 'Adds/removes the bench across the drawbar end and moves the sink onto/off it — same sizes, positions only';
+    ubBtn.style.width = '100%';
+    ubBtn.style.marginTop = '4px';
+    ubBtn.onclick = () => { toggleEndBench(); refreshTrailerPanel(); };
+    el.appendChild(ubBtn);
 
     const advBtn = document.createElement('button');
     advBtn.textContent = trailerAdvancedOpen ? 'Hide advanced ▴' : 'Advanced (standard sizes) ▾';
