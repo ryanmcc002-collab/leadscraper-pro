@@ -1493,8 +1493,13 @@ function init() {
 }
 
 function exportBackup() {
-  const quotes = localStorage.getItem('bondi_quotes') || '{}';
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(quotes);
+  // Full export: every saved quote plus any custom inventory, so the whole setup moves in one file
+  const bundle = {
+    format: 'bondi-quote-tool-backup', version: 2, exportedAt: new Date().toISOString(),
+    quotes: JSON.parse(localStorage.getItem('bondi_quotes') || '{}'),
+    inventory: JSON.parse(localStorage.getItem('bondi_inventory') || 'null')
+  };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bundle, null, 2));
   const downloadAnchor = document.createElement('a');
   const date = new Date().toISOString().split('T')[0];
   
@@ -1524,11 +1529,14 @@ function importBackup(input) {
         return;
       }
       
+      // Accepts both the full bundle (quotes + inventory) and the older plain quotes file
+      const isBundle = importedData.format === 'bondi-quote-tool-backup';
+      const quotesIn = isBundle ? (importedData.quotes || {}) : importedData;
       const currentQuotes = JSON.parse(localStorage.getItem('bondi_quotes') || '{}');
-      const merged = Object.assign({}, currentQuotes, importedData);
-      
+      const merged = Object.assign({}, currentQuotes, quotesIn);
       localStorage.setItem('bondi_quotes', JSON.stringify(merged));
-      alert('Backup files restored cleanly! Your historical Quote Library is safe.');
+      if (isBundle && importedData.inventory) { localStorage.setItem('bondi_inventory', JSON.stringify(importedData.inventory)); CATEGORIES = importedData.inventory; if (typeof renderCategories === 'function') renderCategories(); }
+      alert(`Restored ${Object.keys(quotesIn).length} quote${Object.keys(quotesIn).length === 1 ? '' : 's'}${isBundle && importedData.inventory ? ' and your custom inventory' : ''}.`);
       
       if(document.getElementById('loadModal').style.display === 'flex') {
         openLoadModal();
