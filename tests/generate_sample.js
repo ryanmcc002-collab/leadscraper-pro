@@ -15,12 +15,16 @@ const BFT = globalThis.BFT;
 
 const project = BFT.defaultProject();
 const scene = BFT.views.buildSheet(project);
-const dxf = BFT.dxf.dxfFromScene(scene, BFT.layers);
+const dxf = BFT.dxf.embedProject(BFT.dxf.dxfFromScene(scene, BFT.layers), project);
+const backDxf = BFT.dxf.projectFromDXF(dxf);
+if (JSON.stringify(backDxf) !== JSON.stringify(project)) {
+  throw new Error('DXF-embedded project did not round-trip');
+}
 
 const out = path.join(__dirname, 'sample.dxf');
 fs.writeFileSync(out, dxf);
 console.log('wrote', out, '(' + dxf.length + ' bytes,',
-  scene.items.length + ' scene items)');
+  scene.items.length + ' scene items, embedded project round-trip OK)');
 
 // customer PDF with the project embedded, for validate_pdf.py round-trip
 const pdf = BFT.pdf.pdfFromScene(BFT.views.buildCustomerSheet(project), BFT.layers, {

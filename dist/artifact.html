@@ -272,7 +272,7 @@ kbd {
         <button id="btn-print">Print current view</button>
         <div class="menu-sep"></div>
         <button id="btn-save">Save project…</button>
-        <button id="btn-open" title="Open a .bft.json project — or a Customer PDF made by this app, to edit its layout">Open project / customer PDF…</button>
+        <button id="btn-open" title="Open a .bft.json project — or a Customer PDF / Factory DXF made by this app, to edit its layout">Open project / PDF / DXF…</button>
         <button id="btn-new">New project</button>
         <div class="menu-sep"></div>
         <button id="btn-clear-ann">Clear my measurements/notes</button>
@@ -281,7 +281,7 @@ kbd {
         <div id="menu-version" class="menu-ver"></div>
       </div>
     </div>
-    <input type="file" id="file-open" accept=".json,.bft.json,application/json,.pdf,application/pdf" style="display:none">
+    <input type="file" id="file-open" accept=".json,.bft.json,application/json,.pdf,application/pdf,.dxf" style="display:none">
     <button id="btn-drawer-right" class="drawer-btn" title="Trailer settings">⚙</button>
   </div>
 
@@ -445,7 +445,7 @@ kbd {
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v40';
+  BFT.VERSION = 'v41';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -1982,7 +1982,36 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     return L.join('\r\n') + '\r\n';
   }
 
-  BFT.dxf = { dxfFromScene, esc };
+  function b64e(s) {
+    if (typeof btoa === 'function') return btoa(unescape(encodeURIComponent(s)));
+    return Buffer.from(s, 'utf8').toString('base64');
+  }
+  function b64d(b) {
+    if (typeof atob === 'function') return decodeURIComponent(escape(atob(b)));
+    return Buffer.from(b, 'base64').toString('utf8');
+  }
+
+  // The whole project rides inside the exported DXF as 999 comment lines —
+  // legal DXF that CAD programs ignore — so the app can re-open its own
+  // factory DXFs the same way it re-opens customer PDFs. Note: re-saving
+  // the file from a CAD program strips comments, losing the embedded copy.
+  function embedProject(dxf, project) {
+    const b64 = b64e(JSON.stringify(project));
+    const L = ['999', 'BFTPROJ-BEGIN v1'];
+    for (let i = 0; i < b64.length; i += 980) L.push('999', 'BFTPROJ:' + b64.slice(i, i + 980));
+    L.push('999', 'BFTPROJ-END', '');
+    return L.join('\r\n') + dxf;
+  }
+
+  function projectFromDXF(text) {
+    if (text.indexOf('BFTPROJ-BEGIN') < 0) return null;
+    const lines = text.match(/^BFTPROJ:[A-Za-z0-9+/=]+\s*$/gm);
+    if (!lines) return null;
+    const b64 = lines.map((l) => l.replace(/^BFTPROJ:/, '').trim()).join('');
+    return JSON.parse(b64d(b64));
+  }
+
+  BFT.dxf = { dxfFromScene, esc, embedProject, projectFromDXF };
 })(typeof window !== 'undefined' ? window : globalThis);
 if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 
@@ -3901,7 +3930,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     try {
       const p = store.project;
       const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
-      const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
+      const dxf = BFT.dxf.embedProject(BFT.dxf.dxfFromScene(sc, BFT.layers), p);
       BFT.exporters.download(fileBase() + (sheetMode ? '-factory' : '-plan') + '.dxf', dxf, 'application/dxf');
     } catch (e) {
       BFT.exporters.noteToast('DXF export failed: ' + (e && e.message ? e.message : e) +
@@ -3931,7 +3960,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     reader.onload = () => {
       try {
         let p;
-        if (/\.pdf$/i.test(file.name) || /^%PDF/.test(reader.result)) {
+        if (/\.dxf$/i.test(file.name) || /^\s*999\r?\n|^\s{0,2}0\r?\nSECTION/.test(reader.result)) {
+          p = BFT.dxf.projectFromDXF(reader.result);
+          if (!p) throw new Error('this DXF has no embedded design data. Only Factory DXFs exported from ' + BFT.VERSION + ' or newer can be re-opened, and re-saving the file in a CAD program strips the data — use the original exported DXF, the customer PDF, or the .bft.json project file');
+        } else if (/\.pdf$/i.test(file.name) || /^%PDF/.test(reader.result)) {
           p = BFT.pdf.projectFromPDF(reader.result);
           if (!p) throw new Error('this PDF has no embedded design data. Only Customer PDFs exported from ' + BFT.VERSION + ' or newer can be re-opened — for older drawings ask for the .bft.json project file');
         } else {

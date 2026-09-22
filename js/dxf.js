@@ -197,7 +197,36 @@
     return L.join('\r\n') + '\r\n';
   }
 
-  BFT.dxf = { dxfFromScene, esc };
+  function b64e(s) {
+    if (typeof btoa === 'function') return btoa(unescape(encodeURIComponent(s)));
+    return Buffer.from(s, 'utf8').toString('base64');
+  }
+  function b64d(b) {
+    if (typeof atob === 'function') return decodeURIComponent(escape(atob(b)));
+    return Buffer.from(b, 'base64').toString('utf8');
+  }
+
+  // The whole project rides inside the exported DXF as 999 comment lines —
+  // legal DXF that CAD programs ignore — so the app can re-open its own
+  // factory DXFs the same way it re-opens customer PDFs. Note: re-saving
+  // the file from a CAD program strips comments, losing the embedded copy.
+  function embedProject(dxf, project) {
+    const b64 = b64e(JSON.stringify(project));
+    const L = ['999', 'BFTPROJ-BEGIN v1'];
+    for (let i = 0; i < b64.length; i += 980) L.push('999', 'BFTPROJ:' + b64.slice(i, i + 980));
+    L.push('999', 'BFTPROJ-END', '');
+    return L.join('\r\n') + dxf;
+  }
+
+  function projectFromDXF(text) {
+    if (text.indexOf('BFTPROJ-BEGIN') < 0) return null;
+    const lines = text.match(/^BFTPROJ:[A-Za-z0-9+/=]+\s*$/gm);
+    if (!lines) return null;
+    const b64 = lines.map((l) => l.replace(/^BFTPROJ:/, '').trim()).join('');
+    return JSON.parse(b64d(b64));
+  }
+
+  BFT.dxf = { dxfFromScene, esc, embedProject, projectFromDXF };
 })(typeof window !== 'undefined' ? window : globalThis);
 if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 

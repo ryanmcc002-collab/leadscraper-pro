@@ -1018,7 +1018,7 @@
     try {
       const p = store.project;
       const sc = sheetMode ? BFT.views.buildSheet(p) : BFT.views.buildPlan(p, {});
-      const dxf = BFT.dxf.dxfFromScene(sc, BFT.layers);
+      const dxf = BFT.dxf.embedProject(BFT.dxf.dxfFromScene(sc, BFT.layers), p);
       BFT.exporters.download(fileBase() + (sheetMode ? '-factory' : '-plan') + '.dxf', dxf, 'application/dxf');
     } catch (e) {
       BFT.exporters.noteToast('DXF export failed: ' + (e && e.message ? e.message : e) +
@@ -1048,7 +1048,10 @@
     reader.onload = () => {
       try {
         let p;
-        if (/\.pdf$/i.test(file.name) || /^%PDF/.test(reader.result)) {
+        if (/\.dxf$/i.test(file.name) || /^\s*999\r?\n|^\s{0,2}0\r?\nSECTION/.test(reader.result)) {
+          p = BFT.dxf.projectFromDXF(reader.result);
+          if (!p) throw new Error('this DXF has no embedded design data. Only Factory DXFs exported from ' + BFT.VERSION + ' or newer can be re-opened, and re-saving the file in a CAD program strips the data — use the original exported DXF, the customer PDF, or the .bft.json project file');
+        } else if (/\.pdf$/i.test(file.name) || /^%PDF/.test(reader.result)) {
           p = BFT.pdf.projectFromPDF(reader.result);
           if (!p) throw new Error('this PDF has no embedded design data. Only Customer PDFs exported from ' + BFT.VERSION + ' or newer can be re-opened — for older drawings ask for the .bft.json project file');
         } else {
