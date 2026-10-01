@@ -115,7 +115,7 @@
     // or over it, so overlaps with those never warn.
     const isSurface = (r) => {
       const it = r.it;
-      if (it.catId === 'bench' || it.catId === 'counter') return true;
+      if (it.catId === 'bench' || it.catId === 'endbench' || it.catId === 'counter') return true;
       if (it.sym === 'fridge') return true;
       const c = BFT.catalogById(it.catId);
       return !!(c && /refrigeration/i.test(c.cat || ''));
@@ -598,14 +598,31 @@
     rebuild();
     refreshProps();
     refreshBalancePanel();
+    updateUShapeLabel(); // adding/deleting an end bench changes what the toggle will do
+  }
+
+  function updateUShapeLabel() {
+    const b = document.getElementById('btn-ushape');
+    if (!b) return;
+    b.textContent = findEndBench()
+      ? '⇄ Remove drawbar-end bench (back to galley)'
+      : '⇄ Sink & bench across drawbar (U-shape)';
   }
 
   function addItem(catId) {
     store.checkpoint();
     const { iL, iW } = store.interior();
     const it = BFT.itemFromCatalog(catId);
-    it.x = Math.round((iL - it.w) / 2 / 10) * 10;
-    it.y = Math.round((iW - it.d) / 2 / 10) * 10;
+    if (catId === 'endbench') {
+      // lands straight across the drawbar end, full interior width
+      it.d = iW;
+      it.h = store.project.trailer.worktopHeight || it.h;
+      it.x = 0;
+      it.y = 0;
+    } else {
+      it.x = Math.round((iL - it.w) / 2 / 10) * 10;
+      it.y = Math.round((iW - it.d) / 2 / 10) * 10;
+    }
     store.project.items.push(it);
     selection = { type: 'item', id: it.id };
     setMode('plan');
@@ -862,7 +879,7 @@
   // only positions (and 90° rotation for sinks) change.
   function findEndBench() {
     const { iW } = store.interior();
-    return store.project.items.find((i) => i.catId === 'bench' && i.x < 5 && i.d >= iW - 5);
+    return store.project.items.find((i) => (i.catId === 'bench' || i.catId === 'endbench') && i.x < 5 && i.d >= iW - 5);
   }
 
   function toggleEndBench() {
@@ -968,6 +985,7 @@
 
     // flip to/from the U-shape end-bench layout on any existing design
     const ubBtn = document.createElement('button');
+    ubBtn.id = 'btn-ushape';
     ubBtn.textContent = findEndBench()
       ? '⇄ Remove drawbar-end bench (back to galley)'
       : '⇄ Sink & bench across drawbar (U-shape)';

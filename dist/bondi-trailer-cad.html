@@ -451,7 +451,7 @@ kbd {
 
   // Bump on every release — shown in the toolbar so a cached old build is
   // obvious at a glance.
-  BFT.VERSION = 'v42';
+  BFT.VERSION = 'v43';
 
   const U = {
     clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); },
@@ -542,6 +542,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     { id: 'hood',      en: 'Exhaust Hood (overhead)', zh: '排烟罩', w: 2000, d: 200, h: 500, sym: 'hood', overhead: true, cat: 'Cooking' },
 
     { id: 'bench',     en: 'Bench Space',      zh: '工作台',   w: 900,  d: 650, h: 850,  sym: 'plain', cat: 'Benches' },
+    { id: 'endbench',  en: 'Drawbar End Bench', zh: '车头工作台', w: 600, d: 2020, h: 850, kg: 45, sym: 'plain', cat: 'Benches' },
     { id: 'counter',   en: 'Cash Counter',     zh: '收银台',   w: 900,  d: 600, h: 850,  sym: 'plain', cat: 'Benches' },
     { id: 'shelf',     en: 'Shelf Unit',       zh: '货架',     w: 900,  d: 450, h: 1800, sym: 'cross', cat: 'Benches' },
 
@@ -1068,7 +1069,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
       const name = displayName(item);
       const size = u.fmt(item.w) + 'x' + u.fmt(item.d) + 'x' + u.fmt(item.h) + 'H';
 
-      if (item.catId === 'bench') {
+      if (item.catId === 'bench' || item.catId === 'endbench') {
         const box = benchLabel(sc, project, item, ox, oy, lang, nameOnly);
         if (box) placed.push(box);
         continue;
@@ -1496,7 +1497,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 
     const onSide = (it) => {
       const [, fd] = u.footprint(it);
-      if (it.catId === 'bench' && fd > iW * 0.8) return true; // U-shape end bench shows in both
+      if ((it.catId === 'bench' || it.catId === 'endbench') && fd > iW * 0.8) return true; // U-shape end bench shows in both
       const cy = it.y + fd / 2;
       return side === 'top' ? cy >= iW / 2 : cy < iW / 2;
     };
@@ -1504,7 +1505,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 
     // benches first (the datum everything lines up to)
     let sideBenchH = benchH;
-    for (const b of items.filter((i) => i.catId === 'bench')) {
+    for (const b of items.filter((i) => i.catId === 'bench' || i.catId === 'endbench')) {
       const [fw] = u.footprint(b);
       sc.rect('EQUIP', b.x, 0, fw, b.h);
       sideBenchH = b.h;
@@ -3033,7 +3034,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     // or over it, so overlaps with those never warn.
     const isSurface = (r) => {
       const it = r.it;
-      if (it.catId === 'bench' || it.catId === 'counter') return true;
+      if (it.catId === 'bench' || it.catId === 'endbench' || it.catId === 'counter') return true;
       if (it.sym === 'fridge') return true;
       const c = BFT.catalogById(it.catId);
       return !!(c && /refrigeration/i.test(c.cat || ''));
@@ -3516,14 +3517,31 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
     rebuild();
     refreshProps();
     refreshBalancePanel();
+    updateUShapeLabel(); // adding/deleting an end bench changes what the toggle will do
+  }
+
+  function updateUShapeLabel() {
+    const b = document.getElementById('btn-ushape');
+    if (!b) return;
+    b.textContent = findEndBench()
+      ? '⇄ Remove drawbar-end bench (back to galley)'
+      : '⇄ Sink & bench across drawbar (U-shape)';
   }
 
   function addItem(catId) {
     store.checkpoint();
     const { iL, iW } = store.interior();
     const it = BFT.itemFromCatalog(catId);
-    it.x = Math.round((iL - it.w) / 2 / 10) * 10;
-    it.y = Math.round((iW - it.d) / 2 / 10) * 10;
+    if (catId === 'endbench') {
+      // lands straight across the drawbar end, full interior width
+      it.d = iW;
+      it.h = store.project.trailer.worktopHeight || it.h;
+      it.x = 0;
+      it.y = 0;
+    } else {
+      it.x = Math.round((iL - it.w) / 2 / 10) * 10;
+      it.y = Math.round((iW - it.d) / 2 / 10) * 10;
+    }
     store.project.items.push(it);
     selection = { type: 'item', id: it.id };
     setMode('plan');
@@ -3780,7 +3798,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
   // only positions (and 90° rotation for sinks) change.
   function findEndBench() {
     const { iW } = store.interior();
-    return store.project.items.find((i) => i.catId === 'bench' && i.x < 5 && i.d >= iW - 5);
+    return store.project.items.find((i) => (i.catId === 'bench' || i.catId === 'endbench') && i.x < 5 && i.d >= iW - 5);
   }
 
   function toggleEndBench() {
@@ -3886,6 +3904,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.BFT;
 
     // flip to/from the U-shape end-bench layout on any existing design
     const ubBtn = document.createElement('button');
+    ubBtn.id = 'btn-ushape';
     ubBtn.textContent = findEndBench()
       ? '⇄ Remove drawbar-end bench (back to galley)'
       : '⇄ Sink & bench across drawbar (U-shape)';

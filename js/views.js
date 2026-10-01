@@ -135,7 +135,7 @@
       const name = displayName(item);
       const size = u.fmt(item.w) + 'x' + u.fmt(item.d) + 'x' + u.fmt(item.h) + 'H';
 
-      if (item.catId === 'bench') {
+      if (item.catId === 'bench' || item.catId === 'endbench') {
         const box = benchLabel(sc, project, item, ox, oy, lang, nameOnly);
         if (box) placed.push(box);
         continue;
@@ -563,7 +563,7 @@
 
     const onSide = (it) => {
       const [, fd] = u.footprint(it);
-      if (it.catId === 'bench' && fd > iW * 0.8) return true; // U-shape end bench shows in both
+      if ((it.catId === 'bench' || it.catId === 'endbench') && fd > iW * 0.8) return true; // U-shape end bench shows in both
       const cy = it.y + fd / 2;
       return side === 'top' ? cy >= iW / 2 : cy < iW / 2;
     };
@@ -571,7 +571,7 @@
 
     // benches first (the datum everything lines up to)
     let sideBenchH = benchH;
-    for (const b of items.filter((i) => i.catId === 'bench')) {
+    for (const b of items.filter((i) => i.catId === 'bench' || i.catId === 'endbench')) {
       const [fw] = u.footprint(b);
       sc.rect('EQUIP', b.x, 0, fw, b.h);
       sideBenchH = b.h;

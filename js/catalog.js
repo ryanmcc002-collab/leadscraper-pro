@@ -19,6 +19,7 @@
     { id: 'hood',      en: 'Exhaust Hood (overhead)', zh: '排烟罩', w: 2000, d: 200, h: 500, sym: 'hood', overhead: true, cat: 'Cooking' },
 
     { id: 'bench',     en: 'Bench Space',      zh: '工作台',   w: 900,  d: 650, h: 850,  sym: 'plain', cat: 'Benches' },
+    { id: 'endbench',  en: 'Drawbar End Bench', zh: '车头工作台', w: 600, d: 2020, h: 850, kg: 45, sym: 'plain', cat: 'Benches' },
     { id: 'counter',   en: 'Cash Counter',     zh: '收银台',   w: 900,  d: 600, h: 850,  sym: 'plain', cat: 'Benches' },
     { id: 'shelf',     en: 'Shelf Unit',       zh: '货架',     w: 900,  d: 450, h: 1800, sym: 'cross', cat: 'Benches' },
 
